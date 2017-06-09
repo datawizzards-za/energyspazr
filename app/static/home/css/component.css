@@ -20,7 +20,11 @@ html, body, .perspective {
 }
 
 .container {
-	background-image: url('../img/home_bg_1.jpg');
+	background-image: url('../img/home_bg_1.jpg'); /*  no-repeat center center fixed; */
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
 	min-height: 100%;
 	position: relative;
 	outline: 1px solid rgba(0,0,0,0);
