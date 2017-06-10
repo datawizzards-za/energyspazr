@@ -15,9 +15,23 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
+
+from app.forms import LoginForm, RegistrationForm
+from registration.backends.hmac.views import RegistrationView
 
 urlpatterns = [
         url(r'^\Z', include('app.urls')),
         url(r'^app/', include('app.urls')),
+        url(r'^accounts/login/$', auth_views.login,
+        {'template_name':'registration/login.html',
+                                       'authentication_form': LoginForm},
+                                        name='login'),
+        url(r'^accounts/register/$', RegistrationView.as_view(
+                template_name='registration/registration_form.html',
+                form_class=RegistrationForm), name='register'),
+        #{'template_name':'registration/registration_form.html',
+        #                               'form_class': RegistrationForm},
+        url(r'^accounts/', include('registration.backends.hmac.urls')),
         url(r'^admin/', admin.site.urls),
 ]

@@ -28,6 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app'
+    'app',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -117,6 +119,11 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+#Registration settings
+ACCOUNT_ACTIVATION_DAYS = 7
+REGISTRATION_DEFAULT_FROM_EMAIL = 'ofentswel@gmail.com'
+REGISTRATION_FORM_PATH = 'app.forms.RegistrationForm'
 
 
 # Static files (CSS, JavaScript, Images)

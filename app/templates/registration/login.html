@@ -1,0 +1,64 @@
+{% extends "app/auth_layout.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Sign In
+{% endblock %}
+
+{% block content %}
+<section class="login-content">
+    <div class="logo">
+      <h1>Vali</h1>
+    </div>
+    <div class="login-box">
+      {% crispy form %}
+
+      <form class="forget-form" action="index.html">
+        <h3 class="login-head"><i class="fa fa-lg fa-fw fa-lock"></i>Forgot Password ?</h3>
+        <div class="form-group">
+          <label class="control-label">EMAIL</label>
+          <input class="form-control" type="text" placeholder="Email">
+        </div>
+        <div class="form-group btn-container">
+          <button class="btn btn-primary btn-block">RESET<i class="fa fa-unlock fa-lg"></i></button>
+        </div>
+        <div class="form-group mt-20">
+          <p class="semibold-text mb-0"><a data-toggle="flip"><i class="fa fa-angle-left fa-fw"></i> Back to Login</a></p>
+        </div>
+      </form>
+    </div>
+  </section>
+
+<p>{% trans "Forgot your password?" %} <a href="{% url 'auth_password_reset' %}">{% trans "Reset it" %}</a>.</p>
+<p>{% trans "Not a member?" %} <a href="{% url 'registration_register' %}">{% trans "Register" %}</a>.</p>
+{% endblock %}
+
+
+{% comment %}
+**registration/login.html**
+
+It's your responsibility to provide the login form in a template called
+registration/login.html by default. This template gets passed four
+template context variables:
+
+``form``
+    A Form object representing the login form. See the forms
+    documentation for more on Form objects.
+
+``next``
+    The URL to redirect to after successful login. This may contain a
+    query string, too.
+
+``site``
+    The current Site, according to the SITE_ID setting. If you don't
+    have the site framework installed, this will be set to an instance
+    of RequestSite, which derives the site name and domain from the
+    current HttpRequest.
+
+``site_name``
+    An alias for site.name. If you don't have the site framework
+    installed, this will be set to the value of
+    request.META['SERVER_NAME']. For more on sites, see The
+    "sites" framework.
+{% endcomment %}

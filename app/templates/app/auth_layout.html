@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% load staticfiles %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- CSS-->
+    <link rel="stylesheet" type="text/css" href="{% static 'app/css/main.css' %}">
+    <title>
+        {% block title %}
+        {% endblock%}
+    </title>
+  </head>
+  <body>
+    <section class="material-half-bg">
+      <div class="cover">
+
+      </div>
+    </section>
+    {% block content %}
+    {% endblock %}
+  </body>
+  <script src="{% static 'app/js/jquery-2.1.4.min.js' %}"></script>
+  <script src="{% static 'app/js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'app/js/plugins/pace.min.js' %}"></script>
+  <script src="{% static 'app/js/main.js' %}"></script>
+</html>
