@@ -20,7 +20,8 @@ class SigninForm(AuthenticationForm):
         HTML('<h3 class="login-head"><i class="fa fa-lg fa-fw fa-user">'\
             '</i>SIGN IN</h3>'),
         Div(
-            Field('username', css_class='form-control text-center', placeholder='Email Address', autofocus=True),
+            Field('username', css_class='form-control text-center',
+                  placeholder='Email Address', autofocus=True),
             css_class='form-group'
         ),
         Div(
@@ -59,7 +60,7 @@ class SignupForm(UserCreationForm):
     
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email']
+        fields = ['username', 'first_name', 'last_name', 'email']
 
     helper = FormHelper()
     helper.form_method = 'POST'
@@ -68,6 +69,14 @@ class SignupForm(UserCreationForm):
     helper.layout = Layout(
         HTML('<h3 class="login-head"><i class="fa fa-lg fa-fw fa-user">' \
              '</i>SIGN UP</h3>'),
+        Div(
+            Div(
+                Field('username', css_class='form-control text-center',
+                      placeholder='Username'),
+                css_class='col-md-12'
+            ),
+            css_class='row mb-20'
+        ),
         Div(
             Div(
                 Field('first_name', css_class='form-control text-center', placeholder='First Name', autofocus=True),

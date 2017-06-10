@@ -150,5 +150,6 @@ CRISPY_CLASS_CONVERTERS = {'textinput': ""}
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+LOGIN_REDIRECT_URL = '/app/dashboard/'
 
 SITE_ID = 1
