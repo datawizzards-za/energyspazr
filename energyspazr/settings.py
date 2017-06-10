@@ -151,5 +151,6 @@ CRISPY_CLASS_CONVERTERS = {'textinput': ""}
 
 STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = '/app/dashboard/'
+LOGIN_URL = 'signin'
 
 SITE_ID = 1

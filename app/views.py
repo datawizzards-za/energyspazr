@@ -1,11 +1,13 @@
 from django.shortcuts import render, HttpResponseRedirect, HttpResponse
 from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from app.forms import FinancierUpdateAccountForm
 from app.models import Financier, PhysicalAddress
 #from django.contrib.auth.models import User
 
 # Create your views here.
-class Dashboard(View):
+class Dashboard(LoginRequiredMixin, View):
     template_name = 'app/index.html'
 
     def get(self, request, *args, **kwargs):
