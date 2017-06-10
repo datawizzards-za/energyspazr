@@ -22,16 +22,18 @@ from registration.backends.hmac.views import RegistrationView
 from app.views import FinancierUpdateAccount
 
 urlpatterns = [
-        url(r'^\Z', include('app.urls')),
-        url(r'^app/', include('app.urls')),
-        url(r'^app/financier/', FinancierUpdateAccount.as_view(), name='financier'),
-        url(r'^accounts/signin/$', auth_views.login,
-            {'template_name':'registration/signin.html',
-                                       'authentication_form': SigninForm},
-                                        name='signin'),
-        url(r'^accounts/signup/$', RegistrationView.as_view(
-                template_name='registration/signup.html',
-                form_class=SignupForm), name='signup'),
-        url(r'^accounts/', include('registration.backends.hmac.urls')),
-        url(r'^admin/', admin.site.urls),
+    url(r'^\Z', include('app.urls')),
+    url(r'^app/', include('app.urls')),
+    url(r'^app/financier/', FinancierUpdateAccount.as_view(),
+        name='financier'),
+    url(r'^accounts/signin/$', auth_views.login,
+        {'template_name': 'registration/signin.html',
+         'authentication_form': SigninForm}, name='signin'),
+    url(r'^logout/$', auth_views.logout,
+        {'next_page': '/accounts/signin/'}, name='auth_logout'),
+    url(r'^accounts/signup/$', RegistrationView.as_view(
+        template_name='registration/signup.html',
+        form_class=SignupForm), name='signup'),
+    url(r'^accounts/', include('registration.backends.hmac.urls')),
+    url(r'^admin/', admin.site.urls),
 ]
