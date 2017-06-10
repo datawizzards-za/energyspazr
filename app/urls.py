@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 
-from app.views import Dashboard, Home, Widget
+from app.views import Dashboard, Home, FinancierUpdateAccount
 
 
 #from registration.backends.default.views import RegistrationView
@@ -29,7 +29,7 @@ urlpatterns = [
     url(r'^app/$', Dashboard.as_view(), name='dashboard'),
     url(r'^dashboard/$', Dashboard.as_view(), name='dashboard'),
     url(r'^home/$', Home.as_view(), name='home'),
-    url(r'^widget/$', Widget.as_view(), name='widget'),
+    url(r'^financier/$', FinancierUpdateAccount.as_view(), name='financier'),
 
 
     #url(r'^register/$', Registration.as_view()),

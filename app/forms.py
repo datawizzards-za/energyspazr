@@ -5,6 +5,8 @@ from crispy_forms.helper import FormHelper, Layout
 from crispy_forms.layout import Submit, HTML, Div, Field
 from crispy_forms.bootstrap import FormActions
 from django import forms
+from django.forms import ModelForm
+from app.models import Financier
 
 class SigninForm(AuthenticationForm):
     
@@ -69,23 +71,23 @@ class SignupForm(UserCreationForm):
     helper.layout = Layout(
         HTML('<h3 class="login-head"><i class="fa fa-lg fa-fw fa-user">' \
              '</i>SIGN UP</h3>'),
-        Div(
-            Div(
-                Field('username', css_class='form-control text-center',
-                      placeholder='Username'),
-                css_class='col-md-12'
-            ),
-            css_class='row mb-20'
-        ),
-        Div(
-            Div(
-                Field('first_name', css_class='form-control text-center', placeholder='First Name', autofocus=True),
-                css_class='col-md-12'
-            ),
-            css_class='row mb-20'
-        ),
-        Div(
-            Div(
+             Div(
+                 Div(
+                     Field('username', css_class='form-control text-center',
+                        placeholder='Username'),
+                        css_class='col-md-12'
+                 ),
+                 css_class='row mb-20'
+             ),
+             Div(
+                 Div(
+                     Field('first_name', css_class='form-control text-center', placeholder='First Name', autofocus=True),
+                     css_class='col-md-12'
+                 ),
+                 css_class='row mb-20'
+             ),
+             Div(
+                 Div(
                 Field('last_name', css_class='form-control text-center', placeholder='Last Name'),
                 css_class='col-md-12'
             ),
@@ -120,8 +122,55 @@ class SignupForm(UserCreationForm):
         Div(
             Div(
                 HTML('<br /><p class="semibold-text mb-0 text-center">' \
-                     "<a href='{% url 'signin' %}'>Already Registered?</a></p>")
-            ),
-            css_class='form-group'
-        )
+                    "<a href='{% url 'signin' %}'>Already Registered?</a></p>")
+                 ),
+                 css_class='form-group'
+             )
+    )
+
+class FinancierUpdateAccountForm(ModelForm):
+    
+    class Meta:
+        model = Financier
+        fields =  ['company_name', 'company_reg', 'contact_number']
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.form_show_labels = False
+
+    helper.layout = Layout(
+        HTML('<h3 class="login-head"><i class="fa fa-lg fa-fw fa-user">' \
+             '</i>ACCOUNT DETAILS</h3>'),
+             Div(
+                 Div(
+                     Field('company_name', css_class='form-control text-center', placeholder='Compay Name'),
+                     css_class='col-md-12'
+                     ),
+                     css_class='row mb-20'
+             ),
+             Div(
+                 Div(
+                     Field('company_reg', css_class='form-control text-center ', placeholder='Company Reg. Number'),
+                     css_class='col-md-12'
+                 ),
+                 css_class='row mb-20'
+             ),
+             Div(
+                 Div(
+                     Field('contact_number', css_class='form-control text-center ', placeholder='Contact Number'),
+                     css_class='col-md-12'
+                 ),
+                 css_class='row mb-20'
+             ),
+             Div(
+                 FormActions(Submit('login', 'PROCEED', css_class='btn btn-primary btn-block')),
+                 css_class='form-group btn-container'
+             ),
+             Div(
+                 Div(
+                     HTML('<br /><p class="semibold-text mb-0 text-center">' \
+                     "<a href='{% url 'home' %}'>Cancel Registration Process</a></p>")
+                 ),
+                 css_class='form-group'
+             )
     )
