@@ -135,3 +135,5 @@ REGISTRATION_FORM_PATH = 'app.forms.RegistrationForm'
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+SITE_ID = 1
