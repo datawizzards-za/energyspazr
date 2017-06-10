@@ -104,7 +104,7 @@ class SignupForm(UserCreationForm):
             css_class='row mb-20'
         ),
         Div(
-            FormActions(Submit('login', 'SIGN UP',
+            FormActions(Submit('signup', 'SIGN UP',
                                css_class='btn btn-primary btn-block')),
             css_class='form-group btn-container'
         ),

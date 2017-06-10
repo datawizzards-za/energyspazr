@@ -43,8 +43,6 @@ INSTALLED_APPS = [
     'crispy_forms',
 ]
 
-ACCOUNT_ACTIVATION_DAYS = 7
-REGISTRATION_AUTO_LOGIN = False
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -125,9 +123,27 @@ USE_L10N = True
 USE_TZ = True
 
 #Registration settings
+EMAIL_USE_TLS = True
 ACCOUNT_ACTIVATION_DAYS = 7
-REGISTRATION_DEFAULT_FROM_EMAIL = 'ofentswel@gmail.com'
 REGISTRATION_FORM_PATH = 'app.forms.RegistrationForm'
+REGISTRATION_AUTO_LOGIN = False
+SEND_ACTIVATION_EMAIL = True
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'simobackoff@gmail.com'
+EMAIL_HOST_PASSWORD = 'Fe8horpL'
+EMAIL_PORT = 587
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+REGISTRATION_DEFAULT_FROM_EMAIL = 'simobackoff@gmail.com'
+INCLUDE_REGISTER_URL = True
+INCLUDE_AUTH_URLS = True
+
+
+
+# Crispy Forms Settings
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+CRISPY_CLASS_CONVERTERS = {'textinput': ""}
 
 
 # Static files (CSS, JavaScript, Images)
@@ -135,4 +151,4 @@ REGISTRATION_FORM_PATH = 'app.forms.RegistrationForm'
 
 STATIC_URL = '/static/'
 
-SITE_ID = 1
+SITE_ID = 2
