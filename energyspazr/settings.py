@@ -151,4 +151,4 @@ CRISPY_CLASS_CONVERTERS = {'textinput': ""}
 
 STATIC_URL = '/static/'
 
-SITE_ID = 2
+SITE_ID = 1
