@@ -1,9 +1,6 @@
 from django.shortcuts import render, HttpResponseRedirect, HttpResponse
 from django.views import View
 
-#from registration.backends.default.views import RegistrationView as RegView
-from app.forms import RegistrationForm
-
 # Create your views here.
 class Dashboard(View):
     template_name = 'app/index.html'
@@ -36,6 +33,3 @@ class Widget(View):
         """
 
         return render(request, self.template_name)
-
-# class Registration(RegView):
-#     form_class = RegistrationForm

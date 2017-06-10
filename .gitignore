@@ -1,3 +1,7 @@
+# Migration DIR #
+#################
+migrations
+
 # Python files #
 ##################
 *.pyc
