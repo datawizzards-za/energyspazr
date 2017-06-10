@@ -19,10 +19,12 @@ from django.contrib.auth import views as auth_views
 
 from app.forms import SigninForm, SignupForm
 from registration.backends.hmac.views import RegistrationView
+from app.views import FinancierUpdateAccount
 
 urlpatterns = [
         url(r'^\Z', include('app.urls')),
         url(r'^app/', include('app.urls')),
+        url(r'^app/financier/', FinancierUpdateAccount.as_view(), name='financier'),
         url(r'^accounts/signin/$', auth_views.login,
             {'template_name':'registration/signin.html',
                                        'authentication_form': SigninForm},
