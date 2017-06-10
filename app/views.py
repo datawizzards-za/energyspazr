@@ -75,3 +75,55 @@ class FinancierUpdateAccount(View):
         
         return render(request, self.template_name, context)
 
+
+class OurProducts(View):
+    template_name = 'home/products.html'
+
+    def get(self, request, *args, **kwargs):
+        """
+
+        """
+
+        return render(request, self.template_name)
+
+
+class PVT(View):
+    template_name = 'home/pvt.html'
+
+    def get(self, request, *args, **kwargs):
+        """
+
+        """
+
+        return render(request, self.template_name)
+
+class SolarGeyser(View):
+    template_name = 'home/geyser.html'
+
+    def get(self, request, *args, **kwargs):
+        """
+
+        """
+
+        return render(request, self.template_name)
+
+
+class SolarComponent(View):
+    template_name = 'home/component.html'
+
+    def get(self, request, *args, **kwargs):
+        """
+
+        """
+
+        return render(request, self.template_name)
+
+class Register(View):
+    template_name = 'home/register.html'
+
+    def get(self, request, *args, **kwargs):
+        """
+
+        """
+
+        return render(request, self.template_name)

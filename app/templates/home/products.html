@@ -35,16 +35,14 @@
                         <p>Click on this button to see the content being pushed away in 3D to reveal a navigation or other items.</p>
                     </div>
                     <div class="column">
-                        <nav class="codrops-demos hvr-pulse">
-                            <p><button id="showMenu">Get Started</button></p>
+                        <nav class="codrops-demos">
+                            <a class="hvr-pop" href="{% url 'pvt' %}">PVT</a>
+                            <a class="hvr-pop" href="{% url 'geyser' %}">Solar Geyser</a>
+                            <a class="hvr-pop" href="{% url 'component' %}">Solar Component</a>
                         </nav>
                     </div>
                     <div class="related">
-                        <p>
-                            PS: Our partners are extensively vetted before they join our platform.
-                            <br />We are working tirelessly to ensure competitive pricing and high quality products.
-                            <br />We are an independent third-party between our clients and partners, our advice is 100% impartial!
-                        </p>
+                        
                         <p class="hvr-pulse">
                             <i>
                                 Powered by <a href="http://www.itechhub.co.za" target="_blank">iTechHub</a>
@@ -54,16 +52,7 @@
                 </div><!-- /main -->
             </div><!-- wrapper -->
         </div><!-- /container -->
-        <nav class="outer-nav right vertical">
-            <a href="{% url 'home' %}" class="hvr-pop">Home</a>
-            <a href="{% url 'our_products' %}" class="hvr-pop">Products</a>
-            <a href="#" class="hvr-pop">Get Finance</a>
-            <a href="{% url 'register' %}" class="hvr-pop">Create Account</a>
-            <a href="{% url 'signin' %}" class="hvr-pop">Login</a>
-        </nav>
     </div><!-- /perspective -->
-    
-    {% include 'app/js.html' %}
     <script src="{% static 'home/js/classie.js' %}"></script>
     <script src="{% static 'home/js/menu.js' %}"></script>
 </body>
