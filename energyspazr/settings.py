@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
-
+from energyspazr.auth import PostgreSQLAuth
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -28,6 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app'
+    'app',
+    'crispy_forms',
 ]
 
 ACCOUNT_ACTIVATION_DAYS = 7
@@ -81,8 +83,12 @@ WSGI_APPLICATION = 'energyspazr.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': PostgreSQLAuth.app_db['NAME'],
+        'HOST': PostgreSQLAuth.app_db['HOST'],
+        'USER': PostgreSQLAuth.app_db['USER'],
+        'PORT': PostgreSQLAuth.app_db['PORT'],
+        'PASSWORD': PostgreSQLAuth.app_db['PASS'],
     }
 }
 
@@ -118,6 +124,11 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+#Registration settings
+ACCOUNT_ACTIVATION_DAYS = 7
+REGISTRATION_DEFAULT_FROM_EMAIL = 'ofentswel@gmail.com'
+REGISTRATION_FORM_PATH = 'app.forms.RegistrationForm'
 
 
 # Static files (CSS, JavaScript, Images)
