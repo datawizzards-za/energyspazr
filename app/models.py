@@ -15,7 +15,7 @@ class PhysicalAddress(models.Model):
 
 class Client(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    contact_number = models.TextField()
+    contact_number = models.CharField(max_length=40)
     physical_address = models.OneToOneField(PhysicalAddress, 
                                             on_delete=models.CASCADE)
 

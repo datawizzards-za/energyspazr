@@ -104,7 +104,7 @@ class SignupForm(UserCreationForm):
              )
     )
 
-class FinancierUpdateAccountForm(forms.Form):
+class FinancierUpdateAccountForm(ModelForm):
     
     class Meta:
         model = Financier
@@ -126,7 +126,7 @@ class FinancierUpdateAccountForm(forms.Form):
              ),
              Div(
                  Div(
-                     Field('company_reg_number', css_class='form-control text-center ', placeholder='Company Reg. Number'),
+                     Field('company_reg', css_class='form-control text-center ', placeholder='Company Reg. Number'),
                      css_class='col-md-12'
                  ),
                  css_class='row mb-20'
