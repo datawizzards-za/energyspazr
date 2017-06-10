@@ -145,7 +145,7 @@ class FinancierUpdateAccountForm(forms.Form):
              Div(
                  Div(
                      HTML('<br /><p class="semibold-text mb-0 text-center">' \
-                     "<a href='{% url '#' %}'>Cancel Registration Process</a></p>")
+                     "<a href='{% url 'home' %}'>Cancel Registration Process</a></p>")
                  ),
                  css_class='form-group'
              )
