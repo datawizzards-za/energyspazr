@@ -7,7 +7,16 @@
 {% endblock %}
 
 {% block content %}
-{% crispy form %}
+<section class="login-content">
+    <div class="logo">
+      <h1>Vali</h1>
+    </div>
+    <div class="col-md-4 animated zoomIn">
+        <div class="card login-box">
+            {% crispy form %}
+        </div>
+    </div>
+</section>
 {% endblock %}
 
 {% comment %}

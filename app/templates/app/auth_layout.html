@@ -15,11 +15,11 @@
   <body>
     <section class="material-half-bg">
       <div class="cover">
+    {% block content %}
+    {% endblock %}
 
       </div>
     </section>
-    {% block content %}
-    {% endblock %}
   </body>
   <script src="{% static 'app/js/jquery-2.1.4.min.js' %}"></script>
   <script src="{% static 'app/js/bootstrap.min.js' %}"></script>
