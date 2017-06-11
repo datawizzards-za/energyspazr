@@ -5,7 +5,7 @@ from app.forms import FinancierUpdateAccountForm, UserRoleForm
 from app.models import Financier, PhysicalAddress, UserRole, Province
 from django.contrib.auth.mixins import LoginRequiredMixin
 from app.forms import FinancierUpdateAccountForm, PVTOrderForm
-from app.models import Financier, PhysicalAddress, Appliance
+from app.models import Financier, PhysicalAddress, Appliance, PVTSystem
 #from django.contrib.auth.models import User
 from registration.backends.hmac.views import ActivationView
 
@@ -237,9 +237,9 @@ class OrderPVTSystem(View):
     def post(self, request, *args, **kwargs):
         """
         """
-        form = self.form_class()
+        form = self.form_class(request.POST)
         if form.is_valid():
-            appliances_model = self.appliances_model_class(request)
+            appliances_model = self.appliances_model_class(request.POST)
 
             user = request.user
             intended_use = form.cleaned_data['intended_use']
@@ -247,7 +247,7 @@ class OrderPVTSystem(View):
             property_type = form.cleaned_data['property_type']
             roof_inclination = form.cleaned_data['roof_inclination']
 
-            possible_appliances = appliances_model.objects.create(
+            possible_appliances = appliances_model.objects.create(name =
                 form.cleaned_data['name'])
             
             PVTSystem.objects.create(
