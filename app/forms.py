@@ -80,20 +80,6 @@ class SignupForm(UserCreationForm):
                  css_class='row mb-20'
              ),
              Div(
-                 Div(
-                     Field('first_name', css_class='form-control text-center', placeholder='First Name', autofocus=True),
-                     css_class='col-md-12'
-                 ),
-                 css_class='row mb-20'
-             ),
-             Div(
-                 Div(
-                Field('last_name', css_class='form-control text-center', placeholder='Last Name'),
-                css_class='col-md-12'
-            ),
-            css_class='row mb-20'
-        ),
-        Div(
             Div(
                 Field('email', css_class='form-control text-center', placeholder='Email Address'),
                 css_class='col-md-12'
@@ -123,9 +109,8 @@ class SignupForm(UserCreationForm):
             Div(
                 HTML('<br /><p class="semibold-text mb-0 text-center">' \
                     "<a href='{% url 'signin' %}'>Already Registered?</a></p>")
-                 ),
-                 css_class='form-group'
-             )
+            ),
+            css_class='form-group')
     )
 
 class FinancierUpdateAccountForm(ModelForm):

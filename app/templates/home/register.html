@@ -1,24 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="no-js">
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
-    <meta name="viewport" content="width=device-width, initial-scale=1"> 
-    <title>energyspazr.com</title>
-    <meta name="description" content="Perspective Page View Navigation: Transforms the page in 3D to reveal a menu" />
-    <meta name="keywords" content="3d page, menu, navigation, mobile, perspective, css transform, web development, web design" />
-    <meta name="author" content="Codrops" />
-    {% load staticfiles  %}
-    <link rel="shortcut icon" type="image/png" href="{% static 'common/icon.png' %}"/>
-    <link rel="shortcut icon" href="{% static 'app/images/favicon.ico' %}'">
-    <link rel="stylesheet" type="text/css" href="{% static 'home/css/normalize.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'home/css/demo.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'home/css/component.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'common/css/animate.min.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'common/css/hover-min.css' %}" />
-    <!-- csstransforms3d-shiv-cssclasses-prefixed-teststyles-testprop-testallprops-prefixes-domprefixes-load --> 
-    <script src="{% static 'home/js/modernizr.custom.25376.js' %}"></script>
-
+    {% include "home/head.html" %} 
 </head>
 <body>
     <div id="perspective" class="perspective effect-rotateleft">
@@ -59,6 +42,7 @@
             </div><!-- wrapper -->
         </div><!-- /container -->
     </div><!-- /perspective -->
+    {% load staticfiles  %}
     <script src="{% static 'home/js/classie.js' %}"></script>
     <script src="{% static 'home/js/menu.js' %}"></script>
 </body>

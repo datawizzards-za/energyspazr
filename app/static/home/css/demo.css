@@ -13,7 +13,7 @@
 
 body {
 	background: #ddd;
-	color: #000000;
+	color: #e86a32;
 	font-weight: 400;
 	font-size: 16px;
 	font-family: 'Lato', Calibri, Arial, sans-serif;
@@ -60,6 +60,7 @@ a:hover, a:focus {
 	font-weight: 800;
 	font-size: 2.8em;
 	line-height: 1.3;
+        color: #000;
 }
 
 .codrops-header span {
@@ -191,6 +192,10 @@ button {
 .related a {
 	font-weight: 700;
 	font-size: 0.9em;
+}
+
+.related a, i {
+    color: #000;
 }
 
 @media screen and (max-width: 46.0625em) {
