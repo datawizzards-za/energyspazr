@@ -1,0 +1,44 @@
+- model: app.Province
+  pk: 1
+  fields:
+    name: The Eastern Cape
+
+- model: app.Province
+  pk: 2
+  fields:
+    name: The Free State
+
+- model: app.Province
+  pk: 3
+  fields:
+    name: Gauteng
+
+- model: app.Province
+  pk: 4
+  fields:
+    name: KwaZulu-Natal
+
+- model: app.Province
+  pk: 5
+  fields:
+    name: Limpopo
+
+- model: app.Province
+  pk: 6
+  fields:
+    name: Mpumalanga
+
+- model: app.Province
+  pk: 7
+  fields:
+    name: The Northern Cape
+
+- model: app.Province
+  pk: 8
+  fields:
+    name: North West
+
+- model: app.Province
+  pk: 9
+  fields:
+    name: The Western Cape

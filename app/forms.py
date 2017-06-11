@@ -8,6 +8,7 @@ from django import forms
 from django.forms import ModelForm
 from app.models import Financier
 
+
 class SigninForm(AuthenticationForm):
     
     class Meta(AuthenticationForm):
@@ -120,10 +121,23 @@ class SignupForm(UserCreationForm):
     )
 
 class FinancierUpdateAccountForm(ModelForm):
+
+    def __init__(self, provinces_choices, *args, **kwargs):
+        super(FinancierUpdateAccountForm, self).__init__(*args, **kwargs)
+        self.fields['province'].choices =  provinces_choices
+
+    building_name = forms.CharField(max_length=30)
+    street_name = forms.CharField(max_length=30)
+    province = forms.ChoiceField(choices=(), required=True)
+    city = forms.CharField(max_length=30)
+    suburb = forms.CharField(max_length=30)
+    zip_code = forms.IntegerField()
+    
     
     class Meta:
         model = Financier
-        fields =  ['company_name', 'company_reg', 'contact_number']
+        fields =  ['company_name', 'company_reg', 'contact_number', 
+                   'web_address']
 
     helper = FormHelper()
     helper.form_method = 'POST'
@@ -135,21 +149,56 @@ class FinancierUpdateAccountForm(ModelForm):
              Div(
                  Div(
                      Field('company_name', css_class='form-control text-center', placeholder='Compay Name'),
-                     css_class='col-md-12'
+                     css_class='col-md-6'
                      ),
+                 Div(
+                     Field('company_reg', css_class='form-control text-center ', placeholder='Company Reg. Number'),
+                     css_class='col-md-6'
+                 ),
                      css_class='row mb-20'
              ),
              Div(
                  Div(
-                     Field('company_reg', css_class='form-control text-center ', placeholder='Company Reg. Number'),
-                     css_class='col-md-12'
+                     Field('contact_number', css_class='form-control text-center ', placeholder='Contact Number'),
+                     css_class='col-md-6'
+                 ),
+                 Div(
+                     Field('web_address', css_class='form-control text-center ', placeholder='Web Address'),
+                     css_class='col-md-6'
+                 ),
+                 css_class='row mb-20'
+             ),
+             HTML('<h5 class="text-center">Physical Address</h5><hr>'),
+             Div(
+                 Div(
+                     Field('building_name', css_class='form-control text-center ', placeholder='Building Name'),
+                     css_class='col-md-6'
+                 ),
+                 Div(
+                     Field('street_name', css_class='form-control text-center ', placeholder='Street Name'),
+                     css_class='col-md-6'
                  ),
                  css_class='row mb-20'
              ),
              Div(
                  Div(
-                     Field('contact_number', css_class='form-control text-center ', placeholder='Contact Number'),
-                     css_class='col-md-12'
+                     Field('province', css_class='form-control text-center ', placeholder='Provice'),
+                     css_class='col-md-6'
+                 ),
+                 Div(
+                     Field('city', css_class='form-control text-center ', placeholder='City'),
+                     css_class='col-md-6'
+                 ),
+                 css_class='row mb-20'
+             ),
+             Div(
+                 Div(
+                     Field('suburb', css_class='form-control text-center ', placeholder='Suburb'),
+                     css_class='col-md-6'
+                 ),
+                 Div(
+                     Field('zip_code', css_class='form-control text-center ', placeholder='ZIP Code'),
+                     css_class='col-md-6'
                  ),
                  css_class='row mb-20'
              ),
@@ -164,4 +213,25 @@ class FinancierUpdateAccountForm(ModelForm):
                  ),
                  css_class='form-group'
              )
+    )
+
+
+class UserRoleForm(forms.Form):
+
+    def __init__(self, role_choices,  *args, **kwargs):
+        super(UserRoleForm, self).__init__(*args, **kwargs)
+        self.fields['role'].choices = role_choices
+
+    role = forms.ChoiceField(choices=(), required=True)
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.form_id = 'role_form'
+    helper.layout = Layout(
+        'role',
+         Div(
+             FormActions(Submit('proceed', 'PROCEED',
+                         css_class='btn btn-primary btn-block')),
+                         css_class='form-group btn-container'
+         ),
     )

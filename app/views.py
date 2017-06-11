@@ -1,10 +1,11 @@
-from django.shortcuts import render, HttpResponseRedirect, HttpResponse
+from django.shortcuts import render, HttpResponseRedirect, HttpResponse, \
+    reverse, redirect
 from django.views import View
+from app.forms import FinancierUpdateAccountForm, UserRoleForm
+from app.models import Financier, PhysicalAddress, UserRole, Province
 from django.contrib.auth.mixins import LoginRequiredMixin
-
-from app.forms import FinancierUpdateAccountForm
-from app.models import Financier, PhysicalAddress
 #from django.contrib.auth.models import User
+from registration.backends.hmac.views import ActivationView
 
 # Create your views here.
 class Dashboard(LoginRequiredMixin, View):
@@ -29,7 +30,19 @@ class Home(View):
         return render(request, self.template_name)
 
 
-class FinancierUpdateAccount(View):
+class ActivateUser(ActivationView):
+    
+    def activate(self, *args, **kwargs):
+        user =  super(ActivateUser, self).activate(*args, **kwargs)
+        if user:
+            print "Authenticated: ", user.is_authenticated
+        return user
+
+    def get_success_url(self, user):
+        return ('user_roles', (), {})
+
+
+class FinancierUpdateAccount(LoginRequiredMixin, View):
     template_name = 'registration/financier_update_account.html'
     form_class = FinancierUpdateAccountForm
     address_model_class = PhysicalAddress
@@ -38,7 +51,7 @@ class FinancierUpdateAccount(View):
         """
 
         """
-        form = self.form_class()
+        form = self.form_class(self.provinces_choices(), request.POST)
         if form.is_valid():
             address_model = self.address_model_class(request)
 
@@ -47,11 +60,13 @@ class FinancierUpdateAccount(View):
             company_reg = form.cleaned_data['company_reg']
             contact_number = form.cleaned_data['contact_number']
             web_address = form.cleaned_data['web_address']
-            physical_address = address_model.objects.create(
+            province_id = form.cleaned_data['province']
+            province = Province.objects.filter(pk=province_id)[0]
+            physical_address = self.address_model_class.objects.create(
                 building_name=form.cleaned_data['contact_number'],
                 street_name=form.cleaned_data['street_name'],
                 suburb=form.cleaned_data['suburb'],
-                province=form.cleaned_data['province'],
+                province=province,
                 city=form.cleaned_data['city'],
                 zip_code=form.cleaned_data['zip_code']
             )
@@ -63,6 +78,9 @@ class FinancierUpdateAccount(View):
                 contact_number=contact_number,
                 web_address=web_address,
                 physical_address=physical_address)
+
+            return redirect(reverse('dashboard'))
+
             
         return render(request , self.template_name)
         
@@ -70,12 +88,51 @@ class FinancierUpdateAccount(View):
     
         """
         """
-        
-        form = self.form_class()
-
+        form = self.form_class(self.provinces_choices())
         context = {'form':form}
         
         return render(request, self.template_name, context)
+
+    def provinces_choices(self):
+        provinces = Province.objects.all()
+        return tuple([[p.pk, p.name] for p in provinces])
+
+
+
+class UserRoleView(LoginRequiredMixin, View):
+
+    template_name = 'app/user_roles_form.html'
+    form_class = UserRoleForm
+    model_class = UserRole
+
+    def get(self, request, *args, **kwargs):
+        """
+        """
+        form = self.form_class(self.get_form_choices())
+        context = {'form':form}
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(self.get_form_choices(), request.POST)
+
+        if form.is_valid():
+            user = request.user
+            role_id = int(form.cleaned_data['role'])
+            role = self.model_class.objects.filter(pk=role_id)[0]
+            user.role = role
+            user.save()
+
+            if role.name == 'Financier':
+                return redirect(reverse('financier'))
+            else:
+                return redirect(reverse('dashboard'))
+
+        context = {'form':form}
+        return render(request, self.template_name, context)
+
+    def get_form_choices(self):
+        roles = self.model_class.objects.all()
+        return tuple([[role.pk, role.name] for role in roles])
 
 
 class OurProducts(View):
