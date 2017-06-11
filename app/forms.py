@@ -6,7 +6,7 @@ from crispy_forms.layout import Submit, HTML, Div, Field
 from crispy_forms.bootstrap import FormActions
 from django import forms
 from django.forms import ModelForm
-from app.models import Financier
+from app.models import Financier, Appliance
 
 class SigninForm(AuthenticationForm):
     
@@ -155,6 +155,60 @@ class FinancierUpdateAccountForm(ModelForm):
                  Div(
                      HTML('<br /><p class="semibold-text mb-0 text-center">' \
                      "<a href='{% url 'home' %}'>Cancel Registration Process</a></p>")
+                 ),
+                 css_class='form-group'
+             )
+    )
+
+
+class PVTOrderForm(ModelForm):
+    
+    class Meta:
+        model = Appliance
+        fields =  ['name'] #'property_type', 'roof_inclination', 'intended_use', 'possible_appliances']
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.form_show_labels = False
+
+    helper.layout = Layout(
+        HTML('<h3 class="login-head">PVT SYSTEM</h3>'),
+             Div(
+                 Div(
+                     Field('property_type', css_class='form-control text-center', placeholder='Type of Property'),
+                     css_class='col-md-12'
+                     ),
+                     css_class='row mb-20'
+             ),
+             Div(
+                 Div(
+                     Field('roof_inclination', css_class='form-control text-center ', placeholder='Type of Roof'),
+                     css_class='col-md-12'
+                 ),
+                 css_class='row mb-20'
+             ),
+             Div(
+                 Div(
+                     Field('intended_use', css_class='form-control text-center ', placeholder='Intended Use?'),
+                     css_class='col-md-12'
+                 ),
+                 css_class='row mb-20'
+             ),
+             Div(
+                 Div(
+                     Field('name', css_class='form-control text-center ', placeholder='Select Appliances you\'re Powering'),
+                     css_class='col-md-12'
+                 ),
+                 css_class='row mb-20'
+             ),
+             Div(
+                 FormActions(Submit('login', 'PROCEED', css_class='btn btn-primary btn-block')),
+                 css_class='form-group btn-container'
+             ),
+             Div(
+                 Div(
+                     HTML('<br /><p class="semibold-text mb-0 text-center">' \
+                     "<a href='{% url 'our_products' %}'>GO BACK</a></p>")
                  ),
                  css_class='form-group'
              )
