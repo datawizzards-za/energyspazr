@@ -44,7 +44,6 @@ urlpatterns = [
     url(r'^home/products/component/', SolarComponent.as_view(), name='component'),
     url(r'^home/register/', Register.as_view(), name='register'),
 
-
     #url(r'^register/$', Registration.as_view()),
 
     #url(r'^accounts/', include('registration.backends.default.urls')),
