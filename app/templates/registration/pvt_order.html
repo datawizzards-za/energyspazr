@@ -7,13 +7,21 @@
     <div class="logo">
         <h1>energyspazr.com</h1>
     </div>
-    <div class="col-md-4 animated zoomIn">
+    <div class="col-md-6 animated zoomIn">
         <div class="card login-box">
             {% crispy form %}
         </div>
     </div>
 </section>
 {% endblock %}
+{% block extrajs %}
+{% load staticfiles %}
+<script type="text/javascript" src="{% static 'app/js/plugins/select2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'app/js/plugins/bootstrap-datepicker.min.js' %}"></script>
+<script type="text/javascript">
+    $('#property_type').select2();
+</script>
+{% endblock%}
 
 {% comment %}
 **registration/registration_form.html**

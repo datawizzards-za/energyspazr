@@ -236,45 +236,72 @@ class PVTOrderForm(ModelForm):
 
     helper.layout = Layout(
         HTML('<h3 class="login-head">PVT SYSTEM</h3>'),
-             Div(
-                 Div(
-                     Field('property_type', css_class='form-control text-center', placeholder='Type of Property'),
-                     css_class='col-md-12'
-                     ),
-                     css_class='row mb-20'
+        Div(
+            HTML("<label class='control-label col-md-7'> \
+            What type of property do you have?</label>"),
+            Div(
+                Field('property_type', css_class='form-control text-center',
+                      placeholder='Type of Property'),
+                css_class='col-md-5'
+                ),
+            css_class='form-group form-horizontal'
+                """
+                HTML("<select class'form-control col-md-5' id='property_type' /> \
+                <optgroup> \
+                <option>House</option> <option>Flat</option> \
+                </optgroup>"),
+                css_class='col-md-5 card-body'
+                ), """
+        ),
+        Div(
+            HTML("<label class='control-label col-md-7'> \
+            What is the inclination of your roof? \
+            </label>"),
+            Div(
+                Field('roof_inclination', css_class='form-control text-center',
+                      placeholder='Select Roof'),
+                css_class='col-md-5'
+                ),
+            css_class='form-group form-horizontal'
+        ),
+        Div(
+            HTML("<label class='control-label col-md-7'> \
+            What do you intend to use this sytem for? \
+            </label>"),
+            Div(
+                Field('intended_use', css_class='form-control text-center',
+                      placeholder='Type of Property'),
+                css_class='col-md-5'
+                ),
+                css_class='form-group form-horizontal'
              ),
-             Div(
-                 Div(
-                     Field('roof_inclination', css_class='form-control text-center ', placeholder='Type of Roof'),
-                     css_class='col-md-12'
-                 ),
-                 css_class='row mb-20'
+        Div(
+            HTML("<label class='control-label col-md-7'> \
+            Which of these appliances you want to power \
+            </label>"),
+            Div(
+                Field('name', css_class='form-control text-center',
+                      placeholder='Select multiple appliances'),
+                css_class='col-md-5'
+                ),
+                css_class='form-group form-horizontal'
              ),
-             Div(
-                 Div(
-                     Field('intended_use', css_class='form-control text-center ', placeholder='Intended Use?'),
-                     css_class='col-md-12'
-                 ),
-                 css_class='row mb-20'
-             ),
-             Div(
-                 Div(
-                     Field('name', css_class='form-control text-center ', placeholder='Select Appliances you\'re Powering'),
-                     css_class='col-md-12'
-                 ),
-                 css_class='row mb-20'
-             ),
-             Div(
-                 FormActions(Submit('login', 'PROCEED', css_class='btn btn-primary btn-block')),
-                 css_class='form-group btn-container'
-             ),
-             Div(
-                 Div(
-                     HTML('<br /><p class="semibold-text mb-0 text-center">' \
-                     "<a href='{% url 'our_products' %}'>GO BACK</a></p>")
-                 ),
-                 css_class='form-group'
-             )
+        Div(
+            Div(
+                HTML(""),
+                css_class='col-md-4'
+                ),
+            Div(
+                HTML("<a class='btn btn-default btn-block icon-btn' \
+                 href='{% url 'our_products' %}'> Cancel</a>"),
+                css_class='col-md-4'
+                ),
+            Div(
+                FormActions(Submit('login', 'PROCEED', css_class='btn btn-primary btn-block')),
+                css_class='col-md-4'
+                ),
+            css_class='card-footer'
+        ),
     )
 
 
