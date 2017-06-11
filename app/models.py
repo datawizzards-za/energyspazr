@@ -34,6 +34,10 @@ class Financier(Client):
     web_address = models.URLField(null=True) 
 
 
+class Service(models.Model):
+    name = models.CharField(max_length=100)
+
+
 class System(models.Model):
     name = models.CharField(max_length=100)
     service = models.PositiveSmallIntegerField()

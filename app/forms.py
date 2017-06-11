@@ -6,7 +6,7 @@ from crispy_forms.layout import Submit, HTML, Div, Field
 from crispy_forms.bootstrap import FormActions
 from django import forms
 from django.forms import ModelForm
-from app.models import Financier, Appliance
+from app.models import Financier, Appliance, SupplierInstaller
 
 
 class SigninForm(AuthenticationForm):
@@ -144,8 +144,102 @@ class FinancierUpdateAccountForm(ModelForm):
     helper.form_show_labels = False
 
     helper.layout = Layout(
-        HTML('<h3 class="login-head"><i class="fa fa-lg fa-fw fa-user">' \
-         '</i>FINANCIER ACCOUNT DETAILS</h3>'),
+        HTML('<h3 class="login-head">ACCOUNT DETAILS</h3>'),
+         Div(
+             Div(
+                 Field('company_name', css_class='form-control text-center', placeholder='Compay Name'),
+                 css_class='col-md-6'
+                 ),
+             Div(
+                 Field('company_reg', css_class='form-control text-center ', placeholder='Company Reg. Number'),
+                 css_class='col-md-6'
+             ),
+                 css_class='row mb-20'
+         ),
+         Div(
+             Div(
+                 Field('contact_number', css_class='form-control text-center ', placeholder='Contact Number'),
+                 css_class='col-md-6'
+             ),
+             Div(
+                 Field('web_address', css_class='form-control text-center ', placeholder='Web Address'),
+                 css_class='col-md-6'
+             ),
+             css_class='row mb-20'
+         ),
+         HTML('<h5 class="text-center">Physical Address</h5><hr>'),
+         Div(
+             Div(
+                 Field('building_name', css_class='form-control text-center ', placeholder='Building Name'),
+                 css_class='col-md-6'
+             ),
+             Div(
+                 Field('street_name', css_class='form-control text-center ', placeholder='Street Name'),
+                 css_class='col-md-6'
+             ),
+             css_class='row mb-20'
+         ),
+         Div(
+             Div(
+                 Field('province', css_class='form-control text-center ', placeholder='Provice'),
+                 css_class='col-md-6'
+             ),
+             Div(
+                 Field('city', css_class='form-control text-center ', placeholder='City'),
+                 css_class='col-md-6'
+             ),
+             css_class='row mb-20'
+         ),
+         Div(
+             Div(
+                 Field('suburb', css_class='form-control text-center ', placeholder='Suburb'),
+                 css_class='col-md-6'
+             ),
+             Div(
+                 Field('zip_code', css_class='form-control text-center ', placeholder='ZIP Code'),
+                 css_class='col-md-6'
+             ),
+             css_class='row mb-20'
+         ),
+         Div(
+             FormActions(Submit('login', 'PROCEED', css_class='btn btn-primary btn-block')),
+             css_class='form-group btn-container'
+         ),
+         Div(
+             Div(
+                 HTML('<br /><p class="semibold-text mb-0 text-center">' \
+                 "<a href='{% url 'home' %}'>Cancel Registration Process</a></p>")
+             ),
+             css_class='form-group'
+         )
+    )
+
+
+class SupplierInstallerUpdateAccountForm(ModelForm):
+
+    def __init__(self, provinces_choices, *args, **kwargs):
+        super(SupplierInstallerUpdateAccountForm, self).__init__(*args, **kwargs)
+        self.fields['province'].choices =  provinces_choices
+
+    building_name = forms.CharField(max_length=30)
+    street_name = forms.CharField(max_length=30)
+    province = forms.ChoiceField(choices=(), required=True)
+    city = forms.CharField(max_length=30)
+    suburb = forms.CharField(max_length=30)
+    zip_code = forms.IntegerField()
+    
+    
+    class Meta:
+        model = SupplierInstaller
+        fields =  ['company_name', 'company_reg', 'contact_number', 
+                   'web_address']
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.form_show_labels = False
+
+    helper.layout = Layout(
+        HTML('<h3 class="login-head">ACCOUNT DETAILS</h3>'),
          Div(
              Div(
                  Field('company_name', css_class='form-control text-center', placeholder='Compay Name'),
