@@ -4,11 +4,14 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+class Province(models.Model):
+    name = models.CharField(max_length=30)
+
 class PhysicalAddress(models.Model):
     building_name = models.CharField(max_length=30)
     street_name = models.CharField(max_length=30)
     suburb = models.CharField(max_length=30)
-    province = models.CharField(max_length=30)
+    province = models.OneToOneField(Province, on_delete=models.CASCADE)
     city = models.CharField(max_length=30)
     zip_code = models.IntegerField()
 
@@ -22,7 +25,7 @@ class Client(models.Model):
     contact_number = models.CharField(max_length=40)
     physical_address = models.OneToOneField(PhysicalAddress, 
                                             on_delete=models.CASCADE)
-    role = models.OneToOneField(UserRole, on_delete=models.CASCADE)
+    role = models.OneToOneField(UserRole, on_delete=models.CASCADE, null=True)
 
 
 class Financier(Client):
