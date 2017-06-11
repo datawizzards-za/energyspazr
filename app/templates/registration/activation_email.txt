@@ -1,19 +1,19 @@
 {% load i18n %}
 {% blocktrans with site_name=site.name %}
-You (or someone pretending to be you) have asked to register an account at
-{{ site_name }}.  If this wasn't you, please ignore this email
-and your address will be removed from our records.
-{% endblocktrans %}
-{% blocktrans %}
-To activate this account, please click the following link within the next
-{{ expiration_days }} days:
+Dear User, thank you for signing up on {{ site_name }}.
+
+Please click the link below and follow the instructions to activate your account.
 {% endblocktrans %}
 
 http://{{site.domain}}{% url 'registration_activate' activation_key %}
 
+{% blocktrans %}
+Note: this link will expire in {{ expiration_days }} days. 
+{% endblocktrans %}
+
 {% blocktrans with site_name=site.name %}
-Sincerely,
-{{ site_name }} Management
+Yours sincerely,
+{{ site_name }} 
 {% endblocktrans %}
 
 
