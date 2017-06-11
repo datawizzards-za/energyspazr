@@ -1,0 +1,19 @@
+- model: app.UserRole
+  pk: 1
+  fields:
+    name: Financier
+
+- model: app.UserRole
+  pk: 2
+  fields:
+    name: Installer
+
+- model: app.UserRole
+  pk: 3
+  fields:
+    name: Supplier
+
+- model: app.UserRole
+  pk: 4
+  fields:
+    name: Client

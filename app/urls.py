@@ -14,9 +14,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url, include
-
 from app.views import Dashboard, Home, FinancierUpdateAccount, OurProducts, PVT, \
-SolarComponent, SolarGeyser, Register, ClientOrder
+    SolarComponent, SolarGeyser, Register, ClientOrder, UserRoleView
 
 
 #from registration.backends.default.views import RegistrationView
@@ -37,6 +36,12 @@ urlpatterns = [
     url(r'^products/component/', SolarComponent.as_view(), name='component'),
     url(r'^register/', Register.as_view(), name='register'),
     url(r'^order/', ClientOrder.as_view(), name='order'),
+    url(r'^user_roles/$', UserRoleView.as_view(), name='user_roles'),
+    url(r'^home/products/', OurProducts.as_view(), name='our_products'),
+    url(r'^home/products/pvt/', PVT.as_view(), name='pvt'),
+    url(r'^home/products/geyser/', SolarGeyser.as_view(), name='geyser'),
+    url(r'^home/products/component/', SolarComponent.as_view(), name='component'),
+    url(r'^home/register/', Register.as_view(), name='register'),
 
 
     #url(r'^register/$', Registration.as_view()),

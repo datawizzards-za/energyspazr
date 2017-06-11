@@ -17,7 +17,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 
-from app.forms import SigninForm, SignupForm, PVTOrderForm
+from app.forms import SigninForm, SignupForm
 from registration.backends.hmac.views import RegistrationView
 from app.views import FinancierUpdateAccount, OrderPVTSystem
 
