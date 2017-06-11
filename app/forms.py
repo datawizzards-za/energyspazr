@@ -236,7 +236,13 @@ class PVTOrderForm(ModelForm):
     roof_inclination = forms.CharField(max_length=30)
     intended_use = forms.CharField(max_length=30)
     site_visit = forms.CharField(max_length=30)
-
+    # OPTIONS = (
+    #     ("AUT", "Austria"),
+    #     ("DEU", "Germany"),
+    #     ("NLD", "Neitherlands"),
+    # )
+    # name = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
+    #                                  choices=OPTIONS)
     class Meta:
         model = Appliance
         fields = ['name']

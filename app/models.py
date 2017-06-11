@@ -48,8 +48,8 @@ class Appliance(models.Model):
 
 
 class SystemOrder(models.Model):
-    need_finance = models.BooleanField()
-    include_installation = models.BooleanField()
+    need_finance = models.BooleanField(default=False)
+    include_installation = models.BooleanField(default=False)
 
 
 class GeyserSystemOrder(SystemOrder):
