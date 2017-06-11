@@ -36,4 +36,5 @@ urlpatterns = [
             ActivateUser.as_view(), name='registration_activate'),
         url(r'^accounts/', include('registration.backends.hmac.urls')),
         url(r'^admin/', admin.site.urls),
+        url('^accounts/', include('django.contrib.auth.urls')),
 ]
