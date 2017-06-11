@@ -36,5 +36,4 @@ urlpatterns = [
     url(r'^home/products/geyser/', SolarGeyser.as_view(), name='geyser'),
     url(r'^home/products/component/', SolarComponent.as_view(), name='component'),
     url(r'^home/register/', Register.as_view(), name='register'),
-
 ]
