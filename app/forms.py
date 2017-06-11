@@ -218,10 +218,18 @@ class FinancierUpdateAccountForm(ModelForm):
 
 class PVTOrderForm(ModelForm):
     
+    """def __init__(self, property_type, *args, **kwargs):
+        super(PVTOrderForm, self).__init__(*args, **kwargs)
+        self.fields['property_type'].choices =  property_type """
+    
+    property_type = forms.CharField(max_length=30)
+    roof_inclination = forms.CharField(max_length=30)
+    intended_use = forms.CharField(max_length=30)
+        
     class Meta:
         model = Appliance
-        fields =  ['name'] #'property_type', 'roof_inclination', 'intended_use', 'possible_appliances']
-
+        fields =  ['name']
+    
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.form_show_labels = False
