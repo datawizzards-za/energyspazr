@@ -19,13 +19,15 @@ from django.contrib.auth import views as auth_views
 
 from app.forms import SigninForm, SignupForm
 from registration.backends.hmac.views import RegistrationView
-from app.views import FinancierUpdateAccount, OrderPVTSystem
+from app.views import FinancierUpdateAccount, OrderPVTSystem, ActivateUser
 
 urlpatterns = [
     url(r'^\Z', include('app.urls')),
     url(r'^app/', include('app.urls')),
     url(r'^app/financier/', FinancierUpdateAccount.as_view(),
         name='financier'),
+    url(r'^accounts/activate/(?P<activation_key>[-:\w]+)/$', ActivateUser.as_view(),
+        name='registration_activate'),
     url(r'^app/pvt_order/', OrderPVTSystem.as_view(),
         name='pvt_order'),
     url(r'^accounts/signin/$', auth_views.login,

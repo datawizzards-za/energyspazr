@@ -33,15 +33,11 @@ class Home(View):
 
 
 class ActivateUser(ActivationView):
-    
-    def activate(self, *args, **kwargs):
-        user =  super(ActivateUser, self).activate(*args, **kwargs)
-        if user:
-            print "Authenticated: ", user.is_authenticated
-        return user
-
+    """
+    """
     def get_success_url(self, user):
         return ('user_roles', (), {})
+    
 
 
 class FinancierUpdateAccount(LoginRequiredMixin, View):
