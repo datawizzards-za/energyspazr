@@ -8,6 +8,7 @@ from django import forms
 from django.forms import ModelForm
 from app.models import Financier
 
+
 class SigninForm(AuthenticationForm):
     
     class Meta(AuthenticationForm):
@@ -173,4 +174,25 @@ class FinancierUpdateAccountForm(ModelForm):
                  ),
                  css_class='form-group'
              )
+    )
+
+
+class UserRoleForm(forms.Form):
+
+    def __init__(self, role_choices,  *args, **kwargs):
+        super(UserRoleForm, self).__init__(*args, **kwargs)
+        self.fields['role'].choices = role_choices
+
+    role = forms.ChoiceField(choices=(), required=True)
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.form_id = 'role_form'
+    helper.layout = Layout(
+        'role',
+         Div(
+             FormActions(Submit('proceed', 'PROCEED',
+                         css_class='btn btn-primary btn-block')),
+                         css_class='form-group btn-container'
+         ),
     )

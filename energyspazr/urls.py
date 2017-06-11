@@ -19,7 +19,7 @@ from django.contrib.auth import views as auth_views
 
 from app.forms import SigninForm, SignupForm
 from registration.backends.hmac.views import RegistrationView
-from app.views import FinancierUpdateAccount
+from app.views import FinancierUpdateAccount, ActivateUser
 
 urlpatterns = [
         url(r'^\Z', include('app.urls')),
@@ -32,6 +32,8 @@ urlpatterns = [
         url(r'^accounts/signup/$', RegistrationView.as_view(
                 template_name='registration/signup.html',
                 form_class=SignupForm), name='signup'),
+        url(r'^accounts/activate/(?P<activation_key>[-:\w]+)/$',
+            ActivateUser.as_view(), name='registration_activate'),
         url(r'^accounts/', include('registration.backends.hmac.urls')),
         url(r'^admin/', admin.site.urls),
 ]

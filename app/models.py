@@ -13,11 +13,16 @@ class PhysicalAddress(models.Model):
     zip_code = models.IntegerField()
 
 
+class UserRole(models.Model):
+    name = models.CharField(max_length=15)
+
+
 class Client(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     contact_number = models.CharField(max_length=40)
     physical_address = models.OneToOneField(PhysicalAddress, 
                                             on_delete=models.CASCADE)
+    role = models.OneToOneField(UserRole, on_delete=models.CASCADE)
 
 
 class Financier(Client):

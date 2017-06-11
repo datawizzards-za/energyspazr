@@ -1,8 +1,10 @@
-from django.shortcuts import render, HttpResponseRedirect, HttpResponse
+from django.shortcuts import render, HttpResponseRedirect, HttpResponse, \
+    reverse, redirect
 from django.views import View
-from app.forms import FinancierUpdateAccountForm
-from app.models import Financier, PhysicalAddress
+from app.forms import FinancierUpdateAccountForm, UserRoleForm
+from app.models import Financier, PhysicalAddress, UserRole
 #from django.contrib.auth.models import User
+from registration.backends.hmac.views import ActivationView
 
 # Create your views here.
 class Dashboard(View):
@@ -25,6 +27,18 @@ class Home(View):
         """
 
         return render(request, self.template_name)
+
+
+class ActivateUser(ActivationView):
+    
+    def activate(self, *args, **kwargs):
+        user =  super(ActivateUser, self).activate(*args, **kwargs)
+        if user:
+            print "Authenticated: ", user.is_authenticated
+        return user
+
+    def get_success_url(self, user):
+        return ('user_roles', (), {})
 
 
 class FinancierUpdateAccount(View):
@@ -75,3 +89,38 @@ class FinancierUpdateAccount(View):
         
         return render(request, self.template_name, context)
 
+
+class UserRoleView(View):
+
+    template_name = 'app/user_roles_form.html'
+    form_class = UserRoleForm
+    model_class = UserRole
+
+    def get(self, request, *args, **kwargs):
+        """
+        """
+        form = self.form_class(self.get_form_choices())
+        context = {'form':form}
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(self.get_form_choices(), request.POST)
+
+        if form.is_valid():
+            user = request.user
+            print "User: ", user
+            role_id = int(form.cleaned_data['role'])
+            print "ROLE_ID: ", role_id
+            role = self.model_class.objects.filter(pk=role_id)[0]
+            print role
+            user.role = role
+            user.save()
+            return redirect(reverse('financier'))
+
+        context = {'form':form}
+        return render(request, self.template_name, context)
+
+    def get_form_choices(self):
+        roles = self.model_class.objects.all()
+
+        return tuple([[role.pk, role.name] for role in roles])
