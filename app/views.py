@@ -3,11 +3,12 @@ from django.shortcuts import render, HttpResponseRedirect, HttpResponse, \
 from django.views import View
 from app.forms import FinancierUpdateAccountForm, UserRoleForm
 from app.models import Financier, PhysicalAddress, UserRole
+from django.contrib.auth.mixins import LoginRequiredMixin
 #from django.contrib.auth.models import User
 from registration.backends.hmac.views import ActivationView
 
 # Create your views here.
-class Dashboard(View):
+class Dashboard(LoginRequiredMixin, View):
     template_name = 'app/index.html'
 
     def get(self, request, *args, **kwargs):
@@ -124,3 +125,56 @@ class UserRoleView(View):
         roles = self.model_class.objects.all()
 
         return tuple([[role.pk, role.name] for role in roles])
+
+
+class OurProducts(View):
+    template_name = 'home/products.html'
+
+    def get(self, request, *args, **kwargs):
+        """
+
+        """
+
+        return render(request, self.template_name)
+
+
+class PVT(View):
+    template_name = 'home/pvt.html'
+
+    def get(self, request, *args, **kwargs):
+        """
+
+        """
+
+        return render(request, self.template_name)
+
+class SolarGeyser(View):
+    template_name = 'home/geyser.html'
+
+    def get(self, request, *args, **kwargs):
+        """
+
+        """
+
+        return render(request, self.template_name)
+
+
+class SolarComponent(View):
+    template_name = 'home/component.html'
+
+    def get(self, request, *args, **kwargs):
+        """
+
+        """
+
+        return render(request, self.template_name)
+
+class Register(View):
+    template_name = 'home/register.html'
+
+    def get(self, request, *args, **kwargs):
+        """
+
+        """
+
+        return render(request, self.template_name)
