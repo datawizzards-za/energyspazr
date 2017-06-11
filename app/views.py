@@ -4,6 +4,8 @@ from django.views import View
 from app.forms import FinancierUpdateAccountForm, UserRoleForm
 from app.models import Financier, PhysicalAddress, UserRole, Province
 from django.contrib.auth.mixins import LoginRequiredMixin
+from app.forms import FinancierUpdateAccountForm, PVTOrderForm
+from app.models import Financier, PhysicalAddress, Appliance
 #from django.contrib.auth.models import User
 from registration.backends.hmac.views import ActivationView
 
@@ -186,7 +188,6 @@ class Register(View):
         """
 
         return render(request, self.template_name)
-    
 
 class ClientOrder(View):
     template_name = 'app/client_order.html'
@@ -226,3 +227,46 @@ class ClientOrder(View):
         """
         """
         return render(request, self.template_name)
+
+
+class OrderPVTSystem(View):
+    template_name = 'registration/pvt_order.html'
+    form_class = PVTOrderForm
+    appliances_model_class = Appliance
+
+    def post(self, request, *args, **kwargs):
+        """
+        """
+        form = self.form_class()
+        if form.is_valid():
+            appliances_model = self.appliances_model_class(request)
+
+            user = request.user
+            intended_use = form.cleaned_data['intended_use']
+            site_visit = form.cleaned_data['site_visit']
+            property_type = form.cleaned_data['property_type']
+            roof_inclination = form.cleaned_data['roof_inclination']
+
+            possible_appliances = appliances_model.objects.create(
+                form.cleaned_data['name'])
+            
+            PVTSystem.objects.create(
+                user=user,
+                roof_inclination=roof_inclination,
+                property_type=property_type,
+                site_visit=site_visit,
+                possible_appliances=possible_appliances,
+                intended_use=intended_use)
+            
+        return render(request , self.template_name)
+        
+    def get(self, request, *args, **kwargs):
+    
+        """
+        """
+        
+        form = self.form_class()
+
+        context = {'form':form}
+        
+        return render(request, self.template_name, context)

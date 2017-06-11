@@ -6,7 +6,7 @@ from crispy_forms.layout import Submit, HTML, Div, Field
 from crispy_forms.bootstrap import FormActions
 from django import forms
 from django.forms import ModelForm
-from app.models import Financier
+from app.models import Financier, Appliance
 
 
 class SigninForm(AuthenticationForm):
@@ -214,6 +214,69 @@ class FinancierUpdateAccountForm(ModelForm):
              css_class='form-group'
          )
     )
+
+
+class PVTOrderForm(ModelForm):
+    
+    """def __init__(self, property_type, *args, **kwargs):
+        super(PVTOrderForm, self).__init__(*args, **kwargs)
+        self.fields['property_type'].choices =  property_type """
+    
+    property_type = forms.CharField(max_length=30)
+    roof_inclination = forms.CharField(max_length=30)
+    intended_use = forms.CharField(max_length=30)
+        
+    class Meta:
+        model = Appliance
+        fields =  ['name']
+    
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.form_show_labels = False
+
+    helper.layout = Layout(
+        HTML('<h3 class="login-head">PVT SYSTEM</h3>'),
+             Div(
+                 Div(
+                     Field('property_type', css_class='form-control text-center', placeholder='Type of Property'),
+                     css_class='col-md-12'
+                     ),
+                     css_class='row mb-20'
+             ),
+             Div(
+                 Div(
+                     Field('roof_inclination', css_class='form-control text-center ', placeholder='Type of Roof'),
+                     css_class='col-md-12'
+                 ),
+                 css_class='row mb-20'
+             ),
+             Div(
+                 Div(
+                     Field('intended_use', css_class='form-control text-center ', placeholder='Intended Use?'),
+                     css_class='col-md-12'
+                 ),
+                 css_class='row mb-20'
+             ),
+             Div(
+                 Div(
+                     Field('name', css_class='form-control text-center ', placeholder='Select Appliances you\'re Powering'),
+                     css_class='col-md-12'
+                 ),
+                 css_class='row mb-20'
+             ),
+             Div(
+                 FormActions(Submit('login', 'PROCEED', css_class='btn btn-primary btn-block')),
+                 css_class='form-group btn-container'
+             ),
+             Div(
+                 Div(
+                     HTML('<br /><p class="semibold-text mb-0 text-center">' \
+                     "<a href='{% url 'our_products' %}'>GO BACK</a></p>")
+                 ),
+                 css_class='form-group'
+             )
+    )
+
 
 
 class UserRoleForm(forms.Form):
