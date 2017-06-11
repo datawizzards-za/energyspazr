@@ -33,6 +33,11 @@ html, body, .perspective {
 	transform: translateZ(0) translateX(0) rotateY(0deg);
 }
 
+
+.container.bg {
+    background-image: url('../img/home_bg_2.jpg'); /*  no-repeat center center fixed; */
+}
+
 .container::after {
 	content: '';
 	position: absolute;
