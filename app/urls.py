@@ -13,20 +13,13 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include
+from django.conf.urls import url
 
 from app.views import Dashboard, Home, FinancierUpdateAccount, OurProducts, PVT, \
     SolarComponent, SolarGeyser, Register, ClientOrder, UserRoleView
 
-
-#from registration.backends.default.views import RegistrationView
-
-#from app.views import Registration
-
-
 urlpatterns = [
     url(r'^\Z', Home.as_view(), name='home'),
-    #url(r'^\Z', Dashboard.as_view(), name='dashboard'),
     url(r'^app/$', Dashboard.as_view(), name='dashboard'),
     url(r'^dashboard/$', Dashboard.as_view(), name='dashboard'),
     url(r'^home/$', Home.as_view(), name='home'),
@@ -43,10 +36,5 @@ urlpatterns = [
     url(r'^home/products/geyser/', SolarGeyser.as_view(), name='geyser'),
     url(r'^home/products/component/', SolarComponent.as_view(), name='component'),
     url(r'^home/register/', Register.as_view(), name='register'),
-
-
-    #url(r'^register/$', Registration.as_view()),
-
-    #url(r'^accounts/', include('registration.backends.default.urls')),
 
 ]

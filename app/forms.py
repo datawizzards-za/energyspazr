@@ -146,73 +146,84 @@ class FinancierUpdateAccountForm(ModelForm):
 
     helper.layout = Layout(
         HTML('<h3 class="login-head">FINANCIER ACCOUNT DETAILS</h3>'),
-         Div(
-             Div(
-                 Field('company_name', css_class='form-control text-center', placeholder='Compay Name'),
-                 css_class='col-md-6'
-                 ),
-             Div(
-                 Field('company_reg', css_class='form-control text-center ', placeholder='Company Reg. Number'),
-                 css_class='col-md-6'
-             ),
-                 css_class='row mb-20'
-         ),
-         Div(
-             Div(
-                 Field('contact_number', css_class='form-control text-center ', placeholder='Contact Number'),
-                 css_class='col-md-6'
-             ),
-             Div(
-                 Field('web_address', css_class='form-control text-center ', placeholder='Web Address'),
-                 css_class='col-md-6'
-             ),
-             css_class='row mb-20'
-         ),
-         HTML('<h5 class="text-center">Physical Address</h5><hr>'),
-         Div(
-             Div(
-                 Field('building_name', css_class='form-control text-center ', placeholder='Building Name'),
-                 css_class='col-md-6'
-             ),
-             Div(
-                 Field('street_name', css_class='form-control text-center ', placeholder='Street Name'),
-                 css_class='col-md-6'
-             ),
-             css_class='row mb-20'
-         ),
-         Div(
-             Div(
-                 Field('province', css_class='form-control text-center ', placeholder='Provice'),
-                 css_class='col-md-6'
-             ),
-             Div(
-                 Field('city', css_class='form-control text-center ', placeholder='City'),
-                 css_class='col-md-6'
-             ),
-             css_class='row mb-20'
-         ),
-         Div(
-             Div(
-                 Field('suburb', css_class='form-control text-center ', placeholder='Suburb'),
-                 css_class='col-md-6'
-             ),
-             Div(
-                 Field('zip_code', css_class='form-control text-center ', placeholder='ZIP Code'),
-                 css_class='col-md-6'
-             ),
-             css_class='row mb-20'
-         ),
-         Div(
-             FormActions(Submit('login', 'PROCEED', css_class='btn btn-primary btn-block')),
-             css_class='form-group btn-container'
-         ),
-         Div(
-             Div(
-                 HTML('<br /><p class="semibold-text mb-0 text-center">' \
-                 "<a href='{% url 'home' %}'>Cancel Registration Process</a></p>")
-             ),
-             css_class='form-group'
-         )
+        Div(
+            Div(
+                Field('company_name', css_class='form-control text-center',
+                      placeholder='Compay Name'),
+                css_class='col-md-6'
+            ),
+            Div(
+                Field('company_reg', css_class='form-control text-center ',
+                      placeholder='Company Reg. Number'),
+                css_class='col-md-6'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                Field('contact_number', css_class='form-control text-center ',
+                      placeholder='Contact Number'),
+                css_class='col-md-6'
+            ),
+            Div(
+                Field('web_address', css_class='form-control text-center ',
+                      placeholder='Web Address'),
+                css_class='col-md-6'
+            ),
+            css_class='row mb-20'
+        ),
+        HTML('<h5 class="text-center">Physical Address</h5><hr>'),
+        Div(
+            Div(
+                Field('building_name', css_class='form-control text-center ',
+                      placeholder='Building Name'),
+                css_class='col-md-6'
+            ),
+            Div(
+                Field('street_name', css_class='form-control text-center ',
+                      placeholder='Street Name'),
+                css_class='col-md-6'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                Field('province', css_class='form-control text-center ',
+                      placeholder='Provice'),
+                css_class='col-md-6'
+            ),
+            Div(
+                Field('city', css_class='form-control text-center ',
+                      placeholder='City'),
+                css_class='col-md-6'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                Field('suburb', css_class='form-control text-center ',
+                      placeholder='Suburb'),
+                css_class='col-md-6'
+            ),
+            Div(
+                Field('zip_code', css_class='form-control text-center ',
+                      placeholder='ZIP Code'),
+                css_class='col-md-6'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            FormActions(Submit('login', 'PROCEED',
+                               css_class='btn btn-primary btn-block')),
+            css_class='form-group btn-container'
+        ),
+        Div(
+            Div(
+                HTML('<br /><p class="semibold-text mb-0 text-center">' \
+                     "<a href='{% url 'home' %}'>Cancel Registration Process</a></p>")
+            ),
+            css_class='form-group'
+        )
     )
 
 
