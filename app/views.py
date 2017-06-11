@@ -1,7 +1,8 @@
 from django.shortcuts import render, HttpResponseRedirect, HttpResponse, \
     reverse, redirect
 from django.views import View
-from app.forms import FinancierUpdateAccountForm, UserRoleForm
+from app.forms import FinancierUpdateAccountForm, UserRoleForm,  \
+    SupplierInstallerUpdateAccountForm 
 from app.models import Financier, PhysicalAddress, UserRole, Province
 from django.contrib.auth.mixins import LoginRequiredMixin
 from app.forms import FinancierUpdateAccountForm, PVTOrderForm
@@ -79,8 +80,68 @@ class FinancierUpdateAccount(LoginRequiredMixin, View):
 
             return redirect(reverse('dashboard'))
 
+        form = self.form_class(self.provinces_choices())
+        context = {'form':form}
             
-        return render(request , self.template_name)
+        return render(request , self.template_name, context)
+        
+    def get(self, request, *args, **kwargs):
+    
+        """
+        """
+        form = self.form_class(self.provinces_choices())
+        context = {'form':form}
+        
+        return render(request, self.template_name, context)
+
+    def provinces_choices(self):
+        provinces = Province.objects.all()
+        return tuple([[p.pk, p.name] for p in provinces])
+
+
+class SupplierInstallerUpdateAccount(LoginRequiredMixin, View):
+    template_name = 'registration/financier_update_account.html'
+    form_class = SupplierInstallerUpdateAccountForm
+    address_model_class = PhysicalAddress
+
+    def post(self, request, *args, **kwargs):
+        """
+
+        """
+        form = self.form_class(self.provinces_choices(), request.POST)
+        if form.is_valid():
+            address_model = self.address_model_class(request)
+
+            user = request.user
+            company_name = form.cleaned_data['company_name']
+            company_reg = form.cleaned_data['company_reg']
+            contact_number = form.cleaned_data['contact_number']
+            web_address = form.cleaned_data['web_address']
+            province_id = form.cleaned_data['province']
+            province = Province.objects.filter(pk=province_id)[0]
+            physical_address = self.address_model_class.objects.create(
+                building_name=form.cleaned_data['contact_number'],
+                street_name=form.cleaned_data['street_name'],
+                suburb=form.cleaned_data['suburb'],
+                province=province,
+                city=form.cleaned_data['city'],
+                zip_code=form.cleaned_data['zip_code']
+            )
+
+            Financier.objects.create(
+                user=user,
+                company_name=company_name,
+                company_reg=company_reg,
+                contact_number=contact_number,
+                web_address=web_address,
+                physical_address=physical_address)
+
+            return redirect(reverse('dashboard'))
+
+        form = self.form_class(self.provinces_choices())
+        context = {'form':form}
+            
+        return render(request , self.template_name, context)
         
     def get(self, request, *args, **kwargs):
     
@@ -122,6 +183,8 @@ class UserRoleView(LoginRequiredMixin, View):
 
             if role.name == 'Financier':
                 return redirect(reverse('financier'))
+            elif role.name == 'Installer' or role.name == 'Supplier':
+                return redirect(reverse('supplier_installer'))
             else:
                 return redirect(reverse('dashboard'))
 
