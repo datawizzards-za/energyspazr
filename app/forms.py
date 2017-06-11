@@ -52,7 +52,7 @@ class SigninForm(AuthenticationForm):
         Div(
             Div(
                 HTML('<br /><p class="semibold-text mb-0">' \
-                     "<a href='{% url 'signup' %}'>Already Registered?</a></p>")
+                     "<a href='{% url 'signup' %}'>Not Registered?</a></p>")
             ),
             css_class='form-group text-center'
         )
