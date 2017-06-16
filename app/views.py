@@ -10,7 +10,7 @@ from app.models import Financier, PhysicalAddress, Appliance
 #from django.contrib.auth.models import User
 from registration.backends.hmac.views import ActivationView
 
-# Create your views here.
+
 class Dashboard(LoginRequiredMixin, View):
     template_name = 'app/index.html'
 
@@ -39,7 +39,6 @@ class ActivateUser(ActivationView):
     def get_success_url(self, user):
         return ('user_roles', (), {})
     
-
 
 class FinancierUpdateAccount(LoginRequiredMixin, View):
     template_name = 'registration/financier_update_account.html'
@@ -157,7 +156,6 @@ class SupplierInstallerUpdateAccount(LoginRequiredMixin, View):
         return tuple([[p.pk, p.name] for p in provinces])
 
 
-
 class UserRoleView(LoginRequiredMixin, View):
 
     template_name = 'app/user_roles_form.html'
@@ -238,6 +236,7 @@ class SolarComponent(View):
 
         return render(request, self.template_name)
 
+
 class Register(View):
     template_name = 'home/register.html'
 
@@ -247,6 +246,7 @@ class Register(View):
         """
 
         return render(request, self.template_name)
+
 
 class ClientOrder(View):
     template_name = 'app/client_order.html'
