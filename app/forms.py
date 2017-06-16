@@ -320,13 +320,14 @@ class PVTOrderForm(ModelForm):
     roof_inclination = forms.CharField(max_length=30)
     intended_use = forms.CharField(max_length=30)
     site_visit = forms.CharField(max_length=30)
-    # OPTIONS = (
-    #     ("AUT", "Austria"),
-    #     ("DEU", "Germany"),
-    #     ("NLD", "Neitherlands"),
-    # )
+    OPTIONS = (
+        ("AUT", "Austria"),
+        ("DEU", "Germany"),
+        ("NLD", "Neitherlands"),
+    )
     # name = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
     #                                  choices=OPTIONS)
+    name = forms.ChoiceField(choices=OPTIONS, required=True)
     class Meta:
         model = Appliance
         fields = ['name']
@@ -381,10 +382,19 @@ class PVTOrderForm(ModelForm):
             Which of these appliances you want to power \
             </label>"),
             Div(
-                Field('name', css_class='form-control text-center',
-                      placeholder='Select multiple appliances'),
+                Field('name', css_class='selectpicker', multiple='true',
+                      placeholder='Select multiple appliances',
+                      data_done_button="true", id="done"),
                 css_class='col-md-5'
                 ),
+                # HTML(
+                #     '<select class="selectpicker" multiple>
+                #       <option>Mustard</option>
+                #       <option>Ketchup</option>
+                #       <option>Relish</option>
+                #     </select>
+                #     '
+                # ),
                 css_class='form-group form-horizontal'
              ),
         Div(

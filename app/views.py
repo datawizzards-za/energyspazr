@@ -297,6 +297,7 @@ class OrderPVTSystem(View):
         """
         """
         form = self.form_class(request.POST)
+        print form.data
         if form.is_valid():
             appliances_model = self.appliances_model_class(request.POST)
 
@@ -305,7 +306,7 @@ class OrderPVTSystem(View):
             site_visit = bool(form.cleaned_data['site_visit'])
             property_type = form.cleaned_data['property_type']
             roof_inclination = form.cleaned_data['roof_inclination']
-
+            print (form.cleaned_data['name'])
             possible_appliances = Appliance(name = form.cleaned_data['name'])
             possible_appliances.save()
 

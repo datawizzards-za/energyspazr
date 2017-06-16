@@ -1,7 +1,11 @@
 {% extends "app/auth_layout.html" %}
 {% load i18n %}
 {% load crispy_forms_tags %}
-
+{% load staticfiles %}
+{% block css %}
+{{block.super}}
+<link rel="stylesheet" type="text/css" href="{% static 'app/css/bootstrap-select.css' %}">
+{% endblock %}
 {% block content %}
 <section class="login-content">
     <div class="logo">
@@ -18,6 +22,8 @@
 {% load staticfiles %}
 <script type="text/javascript" src="{% static 'app/js/plugins/select2.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'app/js/plugins/bootstrap-datepicker.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'app/js/bootstrap-select.js' %}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script type="text/javascript">
     $('#property_type').select2();
 </script>
