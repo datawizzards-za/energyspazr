@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponseRedirect, HttpResponse, \
     reverse, redirect
 from django.views import View
 from app.forms import FinancierUpdateAccountForm, UserRoleForm,  \
-    SupplierInstallerUpdateAccountForm 
+    SupplierInstallerUpdateAccountForm
 from app.models import Financier, PhysicalAddress, UserRole, Province
 from django.contrib.auth.mixins import LoginRequiredMixin
 from app.forms import FinancierUpdateAccountForm, PVTOrderForm
@@ -334,3 +334,7 @@ class OrderPVTSystem(View):
     def appliances_choices(self):
         appliance = Appliance.objects.all()
         return tuple([[p.pk, p.name] for p in appliance])
+
+    def get_applience(self):
+        appliance = Appliance.objects.all()
+        return ((p.pk, p.name) for p in appliance)

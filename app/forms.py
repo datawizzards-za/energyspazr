@@ -1,13 +1,14 @@
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
+from django import forms
+from django.forms import ModelForm
 
 from crispy_forms.helper import FormHelper, Layout
 from crispy_forms.layout import Submit, HTML, Div, Field
 from crispy_forms.bootstrap import FormActions
-from django import forms
-from django.forms import ModelForm
-from app.models import Financier, Appliance, SupplierInstaller
 
+from app.models import Financier, Appliance, SupplierInstaller
+from app.views import OrderPVTSystem
 
 class SigninForm(AuthenticationForm):
     class Meta(AuthenticationForm):
@@ -320,13 +321,7 @@ class PVTOrderForm(ModelForm):
     roof_inclination = forms.CharField(max_length=30)
     intended_use = forms.CharField(max_length=30)
     site_visit = forms.CharField(max_length=30)
-    OPTIONS = (
-        ("AUT", "Austria"),
-        ("DEU", "Germany"),
-        ("NLD", "Neitherlands"),
-    )
-    # name = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
-    #                                  choices=OPTIONS)
+    OPTIONS = OrderPVTSystem.get_applience()
     name = forms.ChoiceField(choices=OPTIONS, required=True)
     class Meta:
         model = Appliance
@@ -387,14 +382,6 @@ class PVTOrderForm(ModelForm):
                       data_done_button="true", id="done"),
                 css_class='col-md-5'
                 ),
-                # HTML(
-                #     '<select class="selectpicker" multiple>
-                #       <option>Mustard</option>
-                #       <option>Ketchup</option>
-                #       <option>Relish</option>
-                #     </select>
-                #     '
-                # ),
                 css_class='form-group form-horizontal'
              ),
         Div(
