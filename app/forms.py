@@ -10,7 +10,6 @@ from app.models import Financier, Appliance, SupplierInstaller
 
 
 class SigninForm(AuthenticationForm):
-    
     class Meta(AuthenticationForm):
         model = User
         fields = ['username', 'password']
@@ -20,33 +19,34 @@ class SigninForm(AuthenticationForm):
     helper.form_class = 'login-form'
     helper.form_show_labels = False
     helper.layout = Layout(
-        HTML('<h3 class="login-head"><i class="fa fa-lg fa-fw fa-user">'\
-            '</i>SIGN IN</h3>'),
+        HTML('<h3 class="login-head"><i class="fa fa-lg fa-fw fa-user">' \
+             '</i>SIGN IN</h3>'),
         Div(
             Field('username', css_class='form-control text-center',
                   placeholder='Email Address', autofocus=True),
             css_class='form-group'
         ),
         Div(
-             Field('password', placeholder='Password', css_class='form-control text-center'),
+            Field('password', placeholder='Password',
+                  css_class='form-control text-center'),
             css_class='form-group'
         ),
         Div(
             Div(
                 Div(
-                    HTML('<label class="semibold-text">'\
-                        '<input type="checkbox"></label>'),
+                    HTML('<label class="semibold-text">' \
+                         '<input type="checkbox"></label>'),
                     css_class='animated-checkbox'
                 ),
-                HTML('<p class="semibold-text mb-0">'\
-                    '<a data-toggle="flip">Forgot Password ?</a></p>'),
+                HTML('<p class="semibold-text mb-0">' \
+                     '<a data-toggle="flip">Forgot Password ?</a></p>'),
                 css_class='utility'
             ),
             css_class='form-group'
         ),
         Div(
             FormActions(Submit('login', 'SIGN IN',
-                                   css_class='btn btn-primary btn-block')),
+                               css_class='btn btn-primary btn-block')),
             css_class='form-group btn-container'
         ),
         Div(
@@ -60,7 +60,6 @@ class SigninForm(AuthenticationForm):
 
 
 class SignupForm(UserCreationForm):
-    
     class Meta:
         model = User
         fields = ['username', 'email']
@@ -78,31 +77,34 @@ class SignupForm(UserCreationForm):
     helper.layout = Layout(
         HTML('<h3 class="login-head"><i class="fa fa-lg fa-fw fa-user">' \
              '</i>SIGN UP</h3>'),
-             Div(
-                 Div(
-                     Field('username', css_class='form-control text-center',
-                        placeholder='Username'),
-                        css_class='col-md-12'
-                 ),
-                 css_class='row mb-20'
-             ),
-             Div(
+        Div(
             Div(
-                Field('email', css_class='form-control text-center', placeholder='Email Address'),
+                Field('username', css_class='form-control text-center',
+                      placeholder='Username'),
                 css_class='col-md-12'
             ),
             css_class='row mb-20'
         ),
         Div(
             Div(
-                Field('password1', css_class='form-control text-center ', placeholder='Password'),
+                Field('email', css_class='form-control text-center',
+                      placeholder='Email Address'),
                 css_class='col-md-12'
             ),
             css_class='row mb-20'
         ),
         Div(
             Div(
-                Field('password2', css_class='form-control text-center ', placeholder='Confirm Password'),
+                Field('password1', css_class='form-control text-center ',
+                      placeholder='Password'),
+                css_class='col-md-12'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                Field('password2', css_class='form-control text-center ',
+                      placeholder='Confirm Password'),
                 css_class='col-md-12'
             ),
             css_class='row mb-20'
@@ -115,16 +117,16 @@ class SignupForm(UserCreationForm):
         Div(
             Div(
                 HTML('<br /><p class="semibold-text mb-0 text-center">' \
-                    "<a href='{% url 'signin' %}'>Already Registered?</a></p>")
+                     "<a href='{% url 'signin' %}'>Already Registered?</a></p>")
             ),
             css_class='form-group')
     )
 
-class FinancierUpdateAccountForm(ModelForm):
 
+class FinancierUpdateAccountForm(ModelForm):
     def __init__(self, provinces_choices, *args, **kwargs):
         super(FinancierUpdateAccountForm, self).__init__(*args, **kwargs)
-        self.fields['province'].choices =  provinces_choices
+        self.fields['province'].choices = provinces_choices
 
     building_name = forms.CharField(max_length=30)
     street_name = forms.CharField(max_length=30)
@@ -132,12 +134,11 @@ class FinancierUpdateAccountForm(ModelForm):
     city = forms.CharField(max_length=30)
     suburb = forms.CharField(max_length=30)
     zip_code = forms.IntegerField()
-    
-    
+
     class Meta:
         model = Financier
-        fields =  ['company_name', 'company_reg', 'contact_number', 
-                   'web_address']
+        fields = ['company_name', 'company_reg', 'contact_number',
+                  'web_address']
 
     helper = FormHelper()
     helper.form_method = 'POST'
@@ -311,19 +312,26 @@ class SupplierInstallerUpdateAccountForm(ModelForm):
 
 
 class PVTOrderForm(ModelForm):
-    
     """def __init__(self, property_type, *args, **kwargs):
         super(PVTOrderForm, self).__init__(*args, **kwargs)
         self.fields['property_type'].choices =  property_type """
-    
+
     property_type = forms.CharField(max_length=30)
     roof_inclination = forms.CharField(max_length=30)
     intended_use = forms.CharField(max_length=30)
-        
+    site_visit = forms.CharField(max_length=30)
+    OPTIONS = (
+        ("AUT", "Austria"),
+        ("DEU", "Germany"),
+        ("NLD", "Neitherlands"),
+    )
+    # name = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
+    #                                  choices=OPTIONS)
+    name = forms.ChoiceField(choices=OPTIONS, required=True)
     class Meta:
         model = Appliance
-        fields =  ['name']
-    
+        fields = ['name']
+
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.form_show_labels = False
@@ -374,10 +382,19 @@ class PVTOrderForm(ModelForm):
             Which of these appliances you want to power \
             </label>"),
             Div(
-                Field('name', css_class='form-control text-center',
-                      placeholder='Select multiple appliances'),
+                Field('name', css_class='selectpicker', multiple='true',
+                      placeholder='Select multiple appliances',
+                      data_done_button="true", id="done"),
                 css_class='col-md-5'
                 ),
+                # HTML(
+                #     '<select class="selectpicker" multiple>
+                #       <option>Mustard</option>
+                #       <option>Ketchup</option>
+                #       <option>Relish</option>
+                #     </select>
+                #     '
+                # ),
                 css_class='form-group form-horizontal'
              ),
         Div(
@@ -399,10 +416,8 @@ class PVTOrderForm(ModelForm):
     )
 
 
-
 class UserRoleForm(forms.Form):
-
-    def __init__(self, role_choices,  *args, **kwargs):
+    def __init__(self, role_choices, *args, **kwargs):
         super(UserRoleForm, self).__init__(*args, **kwargs)
         self.fields['role'].choices = role_choices
 
