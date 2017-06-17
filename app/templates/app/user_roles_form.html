@@ -5,15 +5,26 @@
 {% block content %}
 <section class="login-content">
     <div class="logo">
-        <h1>energyspazr.com</h1>
+        <h1>
+          <a href="{% url 'home' %}"> energyspazr.com</a>
+        </h1>
     </div>
     <div class="col-md-4 animated zoomIn">
         <div class="card login-box">
+            <br /><br />
             {% crispy form %}
         </div>
     </div>
 </section>
 {% endblock %}
+{% block extrajs %}
+{% load staticfiles %}
+<script type="text/javascript" src="{% static 'app/js/plugins/select2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'app/js/plugins/bootstrap-datepicker.min.js' %}"></script>
+<script type="text/javascript">
+    $('#id_role').select2();
+</script>
+{% endblock%}
 
 {% comment %}
 **registration/registration_form.html**
