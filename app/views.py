@@ -102,9 +102,7 @@ class FinancierUpdateAccount(LoginRequiredMixin, View):
 class SupplierInstallerUpdateAccount(LoginRequiredMixin, View):
 
     template_name = 'registration/financier_update_account.html'
-
     form_class = FinancierUpdateAccountForm
-
     address_model_class = PhysicalAddress
 
     def post(self, request, *args, **kwargs):
@@ -160,10 +158,6 @@ class SupplierInstallerUpdateAccount(LoginRequiredMixin, View):
     def provinces_choices(self):
         provinces = Province.objects.all()
         return ([[p.pk, p.name] for p in provinces])
-
-    def systems_choices(self):
-        systems = System.objects.all()
-        return tuple([[s.pk, s.name] for s in systems])
 
 
 class UserRoleView(LoginRequiredMixin, View):
