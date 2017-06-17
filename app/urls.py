@@ -16,7 +16,8 @@ Including another URLconf
 from django.conf.urls import url, include
 
 from app.views import Dashboard, Home, FinancierUpdateAccount, OurProducts, PVT, \
-    SolarComponent, SolarGeyser, Register, ClientOrder, UserRoleView
+    SolarComponent, SolarGeyser, Register, ClientOrder, UserRoleView, OrderGeyser, \
+    OrderPVTSystem
 
 
 #from registration.backends.default.views import RegistrationView
@@ -33,6 +34,9 @@ urlpatterns = [
     url(r'^financier/$', FinancierUpdateAccount.as_view(), name='financier'),
     url(r'^products/', OurProducts.as_view(), name='our_products'),
     url(r'^products/pvt/', PVT.as_view(), name='pvt'),
+    url(r'^app/financier/', FinancierUpdateAccount.as_view(), name='financier'),
+    url(r'^app/pvt-order/', OrderPVTSystem.as_view(), name='pvt-order'),
+    url(r'^app/geyser-order/', OrderGeyser.as_view(), name='geyser-order'),
     url(r'^products/geyser/', SolarGeyser.as_view(), name='geyser'),
     url(r'^products/component/', SolarComponent.as_view(), name='component'),
     url(r'^register/', Register.as_view(), name='register'),

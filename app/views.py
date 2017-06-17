@@ -93,7 +93,7 @@ class FinancierUpdateAccount(LoginRequiredMixin, View):
 
     def provinces_choices(self):
         provinces = Province.objects.all()
-        return tuple([[p.pk, p.name] for p in provinces])
+        return ([[p.pk, p.name] for p in provinces])
 
 
 
@@ -228,41 +228,76 @@ class ClientOrder(View):
 class OrderPVTSystem(View):
     template_name = 'registration/pvt_order.html'
     form_class = PVTOrderForm
-    appliances_model_class = Appliance
 
     def post(self, request, *args, **kwargs):
         """
         """
-        form = self.form_class()
+        form = self.form_class(self.appliance_choices(), request.POST)
         if form.is_valid():
-            appliances_model = self.appliances_model_class(request)
-
             user = request.user
             intended_use = form.cleaned_data['intended_use']
             site_visit = form.cleaned_data['site_visit']
             property_type = form.cleaned_data['property_type']
             roof_inclination = form.cleaned_data['roof_inclination']
-
-            possible_appliances = appliances_model.objects.create(
-                form.cleaned_data['name'])
             
-            PVTSystem.objects.create(
-                user=user,
+            pvt_system = PVTSystem.objects.create(
                 roof_inclination=roof_inclination,
                 property_type=property_type,
                 site_visit=site_visit,
-                possible_appliances=possible_appliances,
                 intended_use=intended_use)
             
+            """possible_appliances = form.cleaned_data['possible_appliances']
+            for appliance in possible_appliances:
+                this_appliance = appliance.objects.filter(pk=appliance)[0]
+                pvt_system.possible_appliances.add(this_appliance)
+                pvt_system.save() """
+
         return render(request , self.template_name)
         
     def get(self, request, *args, **kwargs):
     
         """
         """
-        
-        form = self.form_class()
 
+        return render(request, self.template_name)
+
+
+class OrderGeyser(View):
+    template_name = 'app/geyser_order.html'
+
+    """ 
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(self.appliance_choices(), request.POST)
+        if form.is_valid():
+            user = request.user
+            intended_use = form.cleaned_data['intended_use']
+            site_visit = form.cleaned_data['site_visit']
+            property_type = form.cleaned_data['property_type']
+            roof_inclination = form.cleaned_data['roof_inclination']
+            
+            pvt_system = PVTSystem.objects.create(
+                roof_inclination=roof_inclination,
+                property_type=property_type,
+                site_visit=site_visit,
+                intended_use=intended_use)
+            
+            possible_appliances = form.cleaned_data['possible_appliances']
+            for appliance in possible_appliances:
+                this_appliance = appliance.objects.filter(pk=appliance)[0]
+                pvt_system.possible_appliances.add(this_appliance)
+                pvt_system.save()
+
+        return render(request , self.template_name)
+    
+
+    def appliance_choices(self):
+        appliances = Appliance.objects.all()
+        return ([[p.pk, p.name] for p in appliances])
+    """
+
+    def get(self, request, *args, **kwargs):
+        """
+        form = self.form_class(self.appliance_choices() )
         context = {'form':form}
-        
-        return render(request, self.template_name, context)
+        """
+        return render(request, self.template_name)
