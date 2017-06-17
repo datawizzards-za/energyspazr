@@ -190,7 +190,7 @@ class FinancierUpdateAccountForm(ModelForm):
              ),
              Div(
                  Field('city', css_class='form-control text-center ',
-                       placeholder='City'), css_class='col-md-6'
+                       placeholder='City'), css_class='col-md-6 '
              ),
              css_class='row mb-20'
          ),
@@ -205,18 +205,23 @@ class FinancierUpdateAccountForm(ModelForm):
              ),
              css_class='row mb-20'
          ),
-         Div(
-             FormActions(Submit('login', 'PROCEED',
-                                css_class='btn btn-primary btn-block')),
-             css_class='form-group btn-container'
-         ),
-         Div(
-             Div(
-                 HTML('<br /><p class="semibold-text mb-0 text-center">' \
-                 "<a href='{% url 'home' %}'>Cancel Registration Process</a></p>")
-             ),
-             css_class='form-group'
-         )
+        Div(
+            Div(
+                HTML(""),
+                css_class='col-md-4'
+                ),
+            Div(
+                HTML("<a class='btn btn-default btn-block icon-btn' \
+                 href='{% url 'home' %}'> Cancel</a>"),
+                css_class='col-md-4'
+                ),
+            Div(
+                FormActions(Submit('login', 'PROCEED',
+                                   css_class='btn btn-primary btn-block')),
+                css_class='col-md-4'
+                ),
+            css_class='card-footer'
+        ),
     )
 
 
