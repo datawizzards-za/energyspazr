@@ -10,7 +10,7 @@ class PhysicalAddress(models.Model):
     building_name = models.CharField(max_length=30)
     street_name = models.CharField(max_length=30)
     suburb = models.CharField(max_length=30)
-    province = models.OneToOneField(Province, on_delete=models.CASCADE)
+    province = models.ForeignKey(Province, on_delete=models.CASCADE)
     city = models.CharField(max_length=30)
     zip_code = models.IntegerField()
 
