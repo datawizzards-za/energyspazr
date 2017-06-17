@@ -10,6 +10,7 @@ from crispy_forms.bootstrap import FormActions
 from app.models import Financier, Appliance, SupplierInstaller, GeyserSystemOrder
 
 class SigninForm(AuthenticationForm):
+
     class Meta(AuthenticationForm):
         model = User
         fields = ['username', 'password']
@@ -60,6 +61,7 @@ class SigninForm(AuthenticationForm):
 
 
 class SignupForm(UserCreationForm):
+
     class Meta:
         model = User
         fields = ['username', 'email']
@@ -124,6 +126,7 @@ class SignupForm(UserCreationForm):
 
 
 class FinancierUpdateAccountForm(ModelForm):
+
     def __init__(self, provinces_choices, *args, **kwargs):
         super(FinancierUpdateAccountForm, self).__init__(*args, **kwargs)
         self.fields['province'].choices = provinces_choices
@@ -146,97 +149,88 @@ class FinancierUpdateAccountForm(ModelForm):
 
     helper.layout = Layout(
         HTML('<h3 class="login-head">ACCOUNT DETAILS</h3>'),
-        Div(
-            Div(
-                Field('company_name', css_class='form-control text-center',
-                      placeholder='Compay Name'),
-                css_class='col-md-6'
-            ),
-            Div(
-                Field('company_reg', css_class='form-control text-center ',
-                      placeholder='Company Reg. Number'),
-                css_class='col-md-6'
-            ),
-            css_class='row mb-20'
-        ),
-        Div(
-            Div(
-                Field('contact_number', css_class='form-control text-center ',
-                      placeholder='Contact Number'),
-                css_class='col-md-6'
-            ),
-            Div(
-                Field('web_address', css_class='form-control text-center ',
-                      placeholder='Web Address'),
-                css_class='col-md-6'
-            ),
-            css_class='row mb-20'
-        ),
-        HTML('<h5 class="text-center">Physical Address</h5><hr>'),
-        Div(
-            Div(
-                Field('building_name', css_class='form-control text-center ',
-                      placeholder='Building Name'),
-                css_class='col-md-6'
-            ),
-            Div(
-                Field('street_name', css_class='form-control text-center ',
-                      placeholder='Street Name'),
-                css_class='col-md-6'
-            ),
-            css_class='row mb-20'
-        ),
-        Div(
-            Div(
-                Field('province', css_class='form-control text-center ',
-                      placeholder='Provice'),
-                css_class='col-md-6'
-            ),
-            Div(
-                Field('city', css_class='form-control text-center ',
-                      placeholder='City'),
-                css_class='col-md-6'
-            ),
-            css_class='row mb-20'
-        ),
-        Div(
-            Div(
-                Field('suburb', css_class='form-control text-center ',
-                      placeholder='Suburb'),
-                css_class='col-md-6'
-            ),
-            Div(
-                Field('zip_code', css_class='form-control text-center ',
-                      placeholder='ZIP Code'),
-                css_class='col-md-6'
-            ),
-            css_class='row mb-20'
-        ),
-        Div(
-            FormActions(Submit('login', 'PROCEED',
-                               css_class='btn btn-primary btn-block')),
-            css_class='form-group btn-container'
-        ),
-        Div(
-            Div(
-                HTML('<br /><p class="semibold-text mb-0 text-center">' \
-                     "<a href='{% url 'home' %}'>Cancel Registration Process</a></p>")
-            ),
-            css_class='form-group'
-        )
+         Div(
+             Div(
+                 Field('company_name', css_class='form-control text-center',
+                       placeholder='Compay Name'), css_class='col-md-6'
+                 ),
+             Div(
+                 Field('company_reg', css_class='form-control text-center ',
+                       placeholder='Company Reg. Number'), css_class='col-md-6'
+             ),
+                 css_class='row mb-20'
+         ),
+         Div(
+             Div(
+                 Field('contact_number', css_class='form-control text-center ',
+                       placeholder='Contact Number'), css_class='col-md-6'
+             ),
+             Div(
+                 Field('web_address', css_class='form-control text-center ',
+                       placeholder='Web Address'), css_class='col-md-6'
+             ),
+             css_class='row mb-20'
+         ),
+         HTML('<h5 class="text-center">Physical Address</h5><hr>'),
+         Div(
+             Div(
+                 Field('building_name', css_class='form-control text-center ',
+                       placeholder='Building Name'), css_class='col-md-6'
+             ),
+             Div(
+                 Field('street_name', css_class='form-control text-center ',
+                       placeholder='Street Name'), css_class='col-md-6'
+             ),
+             css_class='row mb-20'
+         ),
+         Div(
+             Div(
+                 Field('province', css_class='form-control text-center ',
+                       placeholder='Provice'), css_class='col-md-6'
+             ),
+             Div(
+                 Field('city', css_class='form-control text-center ',
+                       placeholder='City'), css_class='col-md-6'
+             ),
+             css_class='row mb-20'
+         ),
+         Div(
+             Div(
+                 Field('suburb', css_class='form-control text-center ',
+                       placeholder='Suburb'), css_class='col-md-6'
+             ),
+             Div(
+                 Field('zip_code', css_class='form-control text-center ',
+                       placeholder='ZIP Code'), css_class='col-md-6'
+             ),
+             css_class='row mb-20'
+         ),
+         Div(
+             FormActions(Submit('login', 'PROCEED',
+                                css_class='btn btn-primary btn-block')),
+             css_class='form-group btn-container'
+         ),
+         Div(
+             Div(
+                 HTML('<br /><p class="semibold-text mb-0 text-center">' \
+                 "<a href='{% url 'home' %}'>Cancel Registration Process</a></p>")
+             ),
+             css_class='form-group'
+         )
     )
 
 
 
 class PVTOrderForm(ModelForm):
-    TYPES = (
-        ('H', 'Home'),
-        ('R', 'Rental')
-    )
-    property_type = forms.ChoiceField(choices=TYPES, required=True)
-    roof_inclination = forms.CharField(max_length=30)
-    intended_use = forms.CharField(max_length=30)
-    site_visit = forms.CharField(max_length=30)
+
+    property_type = forms.ChoiceField(choices=(['flat', 'FLAT'], ['house', 'HOUSE']))
+    roof_inclination = forms.ChoiceField(choices=(['tilted', 'TILTED'], ['flat', 'FLAT']))
+    need_finance = forms.ChoiceField(choices=(['yes', 'YES'], ['no', 'NO']))
+    include_installation = forms.ChoiceField(choices=(['yes', 'YES'], ['no', 'NO']))
+    
+    intended_use = forms.ChoiceField(choices=(['main_power', 'MAIN POWER'],
+                                                     ['backup_power', 'BACK UP']))
+    site_visit = forms.ChoiceField(choices=(['yes', 'YES'], ['no', 'NO']))
     OPTIONS = ((p.pk, p.name) for p in Appliance.objects.all())
     name = forms.ChoiceField(choices=OPTIONS, required=True)
 
@@ -292,12 +286,12 @@ class PVTOrderForm(ModelForm):
             css_class='form-group form-horizontal'),
         Div(
             HTML("<label class='control-label col-md-7'> \
-            Which of these appliances you want to power \
+            Which of these appliances you want to power? \
             </label>"),
             Div(
-                Field('possible_appliances', css_class='form-control text-center',
-                      placeholder='Select multiple appliances'),
-                css_class='col-md-5'
+                Field('name', css_class='form-control selectpicker text-center', multiple='true', \
+                      placeholder='Select multiple appliances', data_done_button='true', id='done'),
+                css_class='col-md-5 text-center'
                 ),
             css_class='form-group form-horizontal'),
         Div(
@@ -317,7 +311,8 @@ class PVTOrderForm(ModelForm):
                 Field('need_finance', css_class='form-control'),
                 css_class='col-md-5 text-center'
                 ),
-            css_class='form-group form-horizontal'),
+                css_class='form-group form-horizontal'
+             ),
         Div(
             Div(
                 HTML(""),
@@ -329,28 +324,25 @@ class PVTOrderForm(ModelForm):
                 css_class='col-md-4'
                 ),
             Div(
-                FormActions(Submit('login', 'PROCEED', css_class='btn btn-primary btn-block')),
+                FormActions(Submit('login', 'PROCEED',
+                                   css_class='btn btn-primary btn-block')),
                 css_class='col-md-4'
                 ),
             css_class='card-footer'
         ),
     )
     
-    
 class GeyserOrderForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        pass
     
     property_type = forms.ChoiceField(choices=(['flat', 'FLAT'], ['house', 'HOUSE']))
     roof_inclination = forms.ChoiceField(choices=(['tilted', 'TILTED'], ['flat', 'FLAT']))
     #new_system = forms.ChoiceField(choices=(['yes', 'YES'], ['no', 'NO']))
-    existing_geyser = forms.ChoiceField(choices=(['yes', 'YES'], ['no', 'NO']))
-    water_collector = forms.ChoiceField(choices=())
-    current_geyser_size = forms.ChoiceField(choices=(['main_power', 'MAIN POWER'],
-                                                     ['backup_power', 'BACK UP']))
+    existing_geyser = forms.ChoiceField(choices=(['no', 'NO'], ['yes', 'YES']))
+    water_collector = forms.ChoiceField(choices=(['flat_plate', 'FLAT PLATE'],
+                                                 ['evacuated_tubes', 'EVACUATED TUBES']))
+    current_geyser_size = forms.CharField(max_length=1000)
     users_number = forms.CharField(max_length=1000)
     required_geyser_size = forms.ChoiceField(choices=(['same_size', 'SAME AS CURRENT'],
-                                                      ['recommended', 'X (RECOMMENDED)'],
                                                       ['recommended', 'X (RECOMMENDED)'],
                                                       ['100_liters', '100L'],
                                                       ['150_liters', '150L'],
@@ -359,7 +351,7 @@ class GeyserOrderForm(forms.Form):
     need_finance = forms.ChoiceField(choices=(['yes', 'YES'], ['no', 'NO']))
     include_installation = forms.ChoiceField(choices=(['yes', 'YES'], ['no', 'NO']))
 
-    class Meta(GeyserSystemOrder):
+    class Meta:
         model = GeyserSystemOrder
         fields = ['property_type', 'roof_inclination', 'existing_geyser',
                   'current_geyser_size', 'users_number', 'required_geyser_size']
@@ -393,6 +385,26 @@ class GeyserOrderForm(forms.Form):
         ),
         Div(
             HTML("<label class='control-label col-md-7'> \
+             Preferred water collector\
+            </label>"),
+            Div(
+                Field('water_collector', css_class='form-control text-center'),
+                css_class='col-md-5 text-center'
+                ),
+            css_class='form-group form-horizontal'
+            ),        
+        Div(
+            HTML("<label class='control-label col-md-7'> \
+            Number of people using geyser \
+            </label>"),
+            Div(
+                Field('users_number', css_class='form-control'),
+                css_class='col-md-5 text-center'
+                ),
+            css_class='form-group form-horizontal'
+            ), 
+        Div(
+            HTML("<label class='control-label col-md-7'> \
             Do you currently have a geyser? \
             </label>"),
             Div(
@@ -400,28 +412,28 @@ class GeyserOrderForm(forms.Form):
                 css_class='col-md-5 text-center'
                 ),
             css_class='form-group form-horizontal'
-            ),
+            ),       
         Div(
             HTML("<label class='control-label col-md-7'> \
-            ? \
+            Size of current geyser \
             </label>"),
             Div(
-                Field('existing_geyser', css_class='form-control'),
+                Field('current_geyser_size', css_class='form-control'),
+                css_class='col-md-5 text-center'
+                ),
+            css_class='form-group form-horizontal'
+            ),  
+        Div(
+            HTML("<label class='control-label col-md-7'> \
+            Required geyser size \
+            </label>"),
+            Div(
+                Field('required_geyser_size', css_class='form-control'),
                 css_class='col-md-5 text-center'
                 ),
             css_class='form-group form-horizontal'
             ),
-        Div(
-            HTML("<label class='control-label col-md-7'> \
-            Which of these appliances you want to power \
-            </label>"),
-            Div(
-                Field('possible_appliances', css_class='form-control text-center',
-                      placeholder='Select multiple appliances'),
-                css_class='col-md-5'
-                ),
-            css_class='form-group form-horizontal'
-            ),
+
         Div(
             HTML("<label class='control-label col-md-7'> \
             Include installation costs? \
@@ -437,7 +449,7 @@ class GeyserOrderForm(forms.Form):
             Apply for finance? \
             </label>"),
             Div(
-                Field('apply_finance', css_class='form-control'),
+                Field('need_finance', css_class='form-control'),
                 css_class='col-md-5 text-center'
                 ),
             css_class='form-group form-horizontal'
@@ -462,6 +474,7 @@ class GeyserOrderForm(forms.Form):
 
 
 class UserRoleForm(forms.Form):
+
     def __init__(self, role_choices, *args, **kwargs):
         super(UserRoleForm, self).__init__(*args, **kwargs)
         self.fields['role'].choices = role_choices
