@@ -38,4 +38,5 @@ urlpatterns = [
     url(r'^products/geyser/$', views.SolarGeyser.as_view(), name='geyser'),
     url(r'^products/component/$', views.SolarComponent.as_view(), name='component'),
     url(r'^register/$', views.Register.as_view(), name='register'),
+    url(r'^view-slip/$', views.DisplayPDF.as_view(), name='slips'),
 ]

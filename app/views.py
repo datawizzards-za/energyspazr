@@ -357,6 +357,7 @@ class OrderGeyser(View):
         return render(request, self.template_name, context)
 
 class DisplayPDF(View):
-    def get(self):
-        image_data = open("MabuManailengSat Jun 17 22:15:20 2017.pdf", "rb").read()
-        return HttpResponse(image_data, mimetype="application/pdf")
+    def get(self, request):
+        image_data = open("app/static/app/slips/MabuManailengSat Jun 17 "
+                          "22:15:20 2017.pdf", "rb").read()
+        return HttpResponse(image_data, content_type="application/pdf")
