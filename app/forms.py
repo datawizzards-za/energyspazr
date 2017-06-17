@@ -8,7 +8,7 @@ from crispy_forms.layout import Submit, HTML, Div, Field
 from crispy_forms.bootstrap import FormActions
 
 from app.models import Financier, Appliance, SupplierInstaller
-from app.views import OrderPVTSystem
+
 
 class SigninForm(AuthenticationForm):
     class Meta(AuthenticationForm):
@@ -147,81 +147,92 @@ class FinancierUpdateAccountForm(ModelForm):
 
     helper.layout = Layout(
         HTML('<h3 class="login-head">ACCOUNT DETAILS</h3>'),
-         Div(
-             Div(
-                 Field('company_name', css_class='form-control text-center', placeholder='Compay Name'),
-                 css_class='col-md-6'
-                 ),
-             Div(
-                 Field('company_reg', css_class='form-control text-center ', placeholder='Company Reg. Number'),
-                 css_class='col-md-6'
-             ),
-                 css_class='row mb-20'
-         ),
-         Div(
-             Div(
-                 Field('contact_number', css_class='form-control text-center ', placeholder='Contact Number'),
-                 css_class='col-md-6'
-             ),
-             Div(
-                 Field('web_address', css_class='form-control text-center ', placeholder='Web Address'),
-                 css_class='col-md-6'
-             ),
-             css_class='row mb-20'
-         ),
-         HTML('<h5 class="text-center">Physical Address</h5><hr>'),
-         Div(
-             Div(
-                 Field('building_name', css_class='form-control text-center ', placeholder='Building Name'),
-                 css_class='col-md-6'
-             ),
-             Div(
-                 Field('street_name', css_class='form-control text-center ', placeholder='Street Name'),
-                 css_class='col-md-6'
-             ),
-             css_class='row mb-20'
-         ),
-         Div(
-             Div(
-                 Field('province', css_class='form-control text-center ', placeholder='Provice'),
-                 css_class='col-md-6'
-             ),
-             Div(
-                 Field('city', css_class='form-control text-center ', placeholder='City'),
-                 css_class='col-md-6'
-             ),
-             css_class='row mb-20'
-         ),
-         Div(
-             Div(
-                 Field('suburb', css_class='form-control text-center ', placeholder='Suburb'),
-                 css_class='col-md-6'
-             ),
-             Div(
-                 Field('zip_code', css_class='form-control text-center ', placeholder='ZIP Code'),
-                 css_class='col-md-6'
-             ),
-             css_class='row mb-20'
-         ),
-         Div(
-             FormActions(Submit('login', 'PROCEED', css_class='btn btn-primary btn-block')),
-             css_class='form-group btn-container'
-         ),
-         Div(
-             Div(
-                 HTML('<br /><p class="semibold-text mb-0 text-center">' \
-                 "<a href='{% url 'home' %}'>Cancel Registration Process</a></p>")
-             ),
-             css_class='form-group'
-         )
+        Div(
+            Div(
+                Field('company_name', css_class='form-control text-center',
+                      placeholder='Compay Name'),
+                css_class='col-md-6'
+            ),
+            Div(
+                Field('company_reg', css_class='form-control text-center ',
+                      placeholder='Company Reg. Number'),
+                css_class='col-md-6'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                Field('contact_number', css_class='form-control text-center ',
+                      placeholder='Contact Number'),
+                css_class='col-md-6'
+            ),
+            Div(
+                Field('web_address', css_class='form-control text-center ',
+                      placeholder='Web Address'),
+                css_class='col-md-6'
+            ),
+            css_class='row mb-20'
+        ),
+        HTML('<h5 class="text-center">Physical Address</h5><hr>'),
+        Div(
+            Div(
+                Field('building_name', css_class='form-control text-center ',
+                      placeholder='Building Name'),
+                css_class='col-md-6'
+            ),
+            Div(
+                Field('street_name', css_class='form-control text-center ',
+                      placeholder='Street Name'),
+                css_class='col-md-6'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                Field('province', css_class='form-control text-center ',
+                      placeholder='Provice'),
+                css_class='col-md-6'
+            ),
+            Div(
+                Field('city', css_class='form-control text-center ',
+                      placeholder='City'),
+                css_class='col-md-6'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                Field('suburb', css_class='form-control text-center ',
+                      placeholder='Suburb'),
+                css_class='col-md-6'
+            ),
+            Div(
+                Field('zip_code', css_class='form-control text-center ',
+                      placeholder='ZIP Code'),
+                css_class='col-md-6'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            FormActions(Submit('login', 'PROCEED',
+                               css_class='btn btn-primary btn-block')),
+            css_class='form-group btn-container'
+        ),
+        Div(
+            Div(
+                HTML('<br /><p class="semibold-text mb-0 text-center">' \
+                     "<a href='{% url 'home' %}'>Cancel Registration Process</a></p>")
+            ),
+            css_class='form-group'
+        )
     )
 
 
 class SupplierInstallerUpdateAccountForm(ModelForm):
-
     def __init__(self, provinces_choices, *args, **kwargs):
-        super(SupplierInstallerUpdateAccountForm, self).__init__(*args, **kwargs)
-        self.fields['province'].choices =  provinces_choices
+        super(SupplierInstallerUpdateAccountForm, self).__init__(*args,
+                                                                 **kwargs)
+        self.fields['province'].choices = provinces_choices
 
     building_name = forms.CharField(max_length=30)
     street_name = forms.CharField(max_length=30)
@@ -229,12 +240,11 @@ class SupplierInstallerUpdateAccountForm(ModelForm):
     city = forms.CharField(max_length=30)
     suburb = forms.CharField(max_length=30)
     zip_code = forms.IntegerField()
-    
-    
+
     class Meta:
         model = SupplierInstaller
-        fields =  ['company_name', 'company_reg', 'contact_number', 
-                   'web_address']
+        fields = ['company_name', 'company_reg', 'contact_number',
+                  'web_address']
 
     helper = FormHelper()
     helper.form_method = 'POST'
@@ -242,73 +252,84 @@ class SupplierInstallerUpdateAccountForm(ModelForm):
 
     helper.layout = Layout(
         HTML('<h3 class="login-head">ACCOUNT DETAILS</h3>'),
-         Div(
-             Div(
-                 Field('company_name', css_class='form-control text-center', placeholder='Compay Name'),
-                 css_class='col-md-6'
-                 ),
-             Div(
-                 Field('company_reg', css_class='form-control text-center ', placeholder='Company Reg. Number'),
-                 css_class='col-md-6'
-             ),
-                 css_class='row mb-20'
-         ),
-         Div(
-             Div(
-                 Field('contact_number', css_class='form-control text-center ', placeholder='Contact Number'),
-                 css_class='col-md-6'
-             ),
-             Div(
-                 Field('web_address', css_class='form-control text-center ', placeholder='Web Address'),
-                 css_class='col-md-6'
-             ),
-             css_class='row mb-20'
-         ),
-         HTML('<h5 class="text-center">Physical Address</h5><hr>'),
-         Div(
-             Div(
-                 Field('building_name', css_class='form-control text-center ', placeholder='Building Name'),
-                 css_class='col-md-6'
-             ),
-             Div(
-                 Field('street_name', css_class='form-control text-center ', placeholder='Street Name'),
-                 css_class='col-md-6'
-             ),
-             css_class='row mb-20'
-         ),
-         Div(
-             Div(
-                 Field('province', css_class='form-control text-center ', placeholder='Provice'),
-                 css_class='col-md-6'
-             ),
-             Div(
-                 Field('city', css_class='form-control text-center ', placeholder='City'),
-                 css_class='col-md-6'
-             ),
-             css_class='row mb-20'
-         ),
-         Div(
-             Div(
-                 Field('suburb', css_class='form-control text-center ', placeholder='Suburb'),
-                 css_class='col-md-6'
-             ),
-             Div(
-                 Field('zip_code', css_class='form-control text-center ', placeholder='ZIP Code'),
-                 css_class='col-md-6'
-             ),
-             css_class='row mb-20'
-         ),
-         Div(
-             FormActions(Submit('login', 'PROCEED', css_class='btn btn-primary btn-block')),
-             css_class='form-group btn-container'
-         ),
-         Div(
-             Div(
-                 HTML('<br /><p class="semibold-text mb-0 text-center">' \
-                 "<a href='{% url 'home' %}'>Cancel Registration Process</a></p>")
-             ),
-             css_class='form-group'
-         )
+        Div(
+            Div(
+                Field('company_name', css_class='form-control text-center',
+                      placeholder='Compay Name'),
+                css_class='col-md-6'
+            ),
+            Div(
+                Field('company_reg', css_class='form-control text-center ',
+                      placeholder='Company Reg. Number'),
+                css_class='col-md-6'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                Field('contact_number', css_class='form-control text-center ',
+                      placeholder='Contact Number'),
+                css_class='col-md-6'
+            ),
+            Div(
+                Field('web_address', css_class='form-control text-center ',
+                      placeholder='Web Address'),
+                css_class='col-md-6'
+            ),
+            css_class='row mb-20'
+        ),
+        HTML('<h5 class="text-center">Physical Address</h5><hr>'),
+        Div(
+            Div(
+                Field('building_name', css_class='form-control text-center ',
+                      placeholder='Building Name'),
+                css_class='col-md-6'
+            ),
+            Div(
+                Field('street_name', css_class='form-control text-center ',
+                      placeholder='Street Name'),
+                css_class='col-md-6'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                Field('province', css_class='form-control text-center ',
+                      placeholder='Provice'),
+                css_class='col-md-6'
+            ),
+            Div(
+                Field('city', css_class='form-control text-center ',
+                      placeholder='City'),
+                css_class='col-md-6'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                Field('suburb', css_class='form-control text-center ',
+                      placeholder='Suburb'),
+                css_class='col-md-6'
+            ),
+            Div(
+                Field('zip_code', css_class='form-control text-center ',
+                      placeholder='ZIP Code'),
+                css_class='col-md-6'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            FormActions(Submit('login', 'PROCEED',
+                               css_class='btn btn-primary btn-block')),
+            css_class='form-group btn-container'
+        ),
+        Div(
+            Div(
+                HTML('<br /><p class="semibold-text mb-0 text-center">' \
+                     "<a href='{% url 'home' %}'>Cancel Registration Process</a></p>")
+            ),
+            css_class='form-group'
+        )
     )
 
 
@@ -316,13 +337,17 @@ class PVTOrderForm(ModelForm):
     """def __init__(self, property_type, *args, **kwargs):
         super(PVTOrderForm, self).__init__(*args, **kwargs)
         self.fields['property_type'].choices =  property_type """
-
-    property_type = forms.CharField(max_length=30)
+    TYPES = (
+        ('H', 'Home'),
+        ('R', 'Rental')
+    )
+    property_type = forms.ChoiceField(choices=TYPES, required=True)
     roof_inclination = forms.CharField(max_length=30)
     intended_use = forms.CharField(max_length=30)
     site_visit = forms.CharField(max_length=30)
-    OPTIONS = OrderPVTSystem.get_applience()
+    OPTIONS = ((p.pk, p.name) for p in Appliance.objects.all())
     name = forms.ChoiceField(choices=OPTIONS, required=True)
+
     class Meta:
         model = Appliance
         fields = ['name']
@@ -340,15 +365,15 @@ class PVTOrderForm(ModelForm):
                 Field('property_type', css_class='form-control text-center',
                       placeholder='Type of Property'),
                 css_class='col-md-5'
-                ),
+            ),
             css_class='form-group form-horizontal'
-                """
-                HTML("<select class'form-control col-md-5' id='property_type' /> \
-                <optgroup> \
-                <option>House</option> <option>Flat</option> \
-                </optgroup>"),
-                css_class='col-md-5 card-body'
-                ), """
+                      """
+                      HTML("<select class'form-control col-md-5' id='property_type' /> \
+                      <optgroup> \
+                      <option>House</option> <option>Flat</option> \
+                      </optgroup>"),
+                      css_class='col-md-5 card-body'
+                      ), """
         ),
         Div(
             HTML("<label class='control-label col-md-7'> \
@@ -358,7 +383,7 @@ class PVTOrderForm(ModelForm):
                 Field('roof_inclination', css_class='form-control text-center',
                       placeholder='Select Roof'),
                 css_class='col-md-5'
-                ),
+            ),
             css_class='form-group form-horizontal'
         ),
         Div(
@@ -369,9 +394,9 @@ class PVTOrderForm(ModelForm):
                 Field('intended_use', css_class='form-control text-center',
                       placeholder='Type of Property'),
                 css_class='col-md-5'
-                ),
-                css_class='form-group form-horizontal'
-             ),
+            ),
+            css_class='form-group form-horizontal'
+        ),
         Div(
             HTML("<label class='control-label col-md-7'> \
             Which of these appliances you want to power \
@@ -381,23 +406,24 @@ class PVTOrderForm(ModelForm):
                       placeholder='Select multiple appliances',
                       data_done_button="true", id="done"),
                 css_class='col-md-5'
-                ),
-                css_class='form-group form-horizontal'
-             ),
+            ),
+            css_class='form-group form-horizontal'
+        ),
         Div(
             Div(
                 HTML(""),
                 css_class='col-md-4'
-                ),
+            ),
             Div(
                 HTML("<a class='btn btn-default btn-block icon-btn' \
                  href='{% url 'our_products' %}'> Cancel</a>"),
                 css_class='col-md-4'
-                ),
+            ),
             Div(
-                FormActions(Submit('login', 'PROCEED', css_class='btn btn-primary btn-block')),
+                FormActions(Submit('login', 'PROCEED',
+                                   css_class='btn btn-primary btn-block')),
                 css_class='col-md-4'
-                ),
+            ),
             css_class='card-footer'
         ),
     )
@@ -415,9 +441,9 @@ class UserRoleForm(forms.Form):
     helper.form_id = 'role_form'
     helper.layout = Layout(
         'role',
-         Div(
-             FormActions(Submit('proceed', 'PROCEED',
-                         css_class='btn btn-primary btn-block')),
-                         css_class='form-group btn-container'
-         ),
+        Div(
+            FormActions(Submit('proceed', 'PROCEED',
+                               css_class='btn btn-primary btn-block')),
+            css_class='form-group btn-container'
+        ),
     )

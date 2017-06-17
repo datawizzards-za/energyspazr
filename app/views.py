@@ -334,7 +334,3 @@ class OrderPVTSystem(View):
     def appliances_choices(self):
         appliance = Appliance.objects.all()
         return tuple([[p.pk, p.name] for p in appliance])
-
-    def get_applience(self):
-        appliance = Appliance.objects.all()
-        return ((p.pk, p.name) for p in appliance)
