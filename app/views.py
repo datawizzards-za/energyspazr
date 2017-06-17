@@ -4,7 +4,7 @@ from django.views import View
 from app.forms import FinancierUpdateAccountForm, UserRoleForm
 from app.models import Financier, PhysicalAddress, UserRole, Province
 from django.contrib.auth.mixins import LoginRequiredMixin
-from app.forms import FinancierUpdateAccountForm, PVTOrderForm
+from app.forms import FinancierUpdateAccountForm, PVTOrderForm, GeyserOrderForm
 from app.models import Financier, PhysicalAddress, Appliance
 #from django.contrib.auth.models import User
 from registration.backends.hmac.views import ActivationView
@@ -264,6 +264,7 @@ class OrderPVTSystem(View):
 
 class OrderGeyser(View):
     template_name = 'app/geyser_order.html'
+    form_class = GeyserOrderForm
 
     """ 
     def post(self, request, *args, **kwargs):
@@ -296,8 +297,7 @@ class OrderGeyser(View):
     """
 
     def get(self, request, *args, **kwargs):
-        """
-        form = self.form_class(self.appliance_choices() )
+        form = self.form_class()
         context = {'form':form}
-        """
-        return render(request, self.template_name)
+        
+        return render(request, self.template_name, context)
