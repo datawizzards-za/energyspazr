@@ -49,5 +49,4 @@ urlpatterns = [
     #url(r'^register/$', Registration.as_view()),
 
     #url(r'^accounts/', include('registration.backends.default.urls')),
-
 ]

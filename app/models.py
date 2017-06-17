@@ -33,6 +33,10 @@ class Financier(Client):
     web_address = models.URLField(null=True) 
 
 
+class Service(models.Model):
+    name = models.CharField(max_length=100)
+
+
 class System(models.Model):
     name = models.CharField(max_length=100)
     service = models.PositiveSmallIntegerField()
@@ -47,8 +51,8 @@ class Appliance(models.Model):
 
 
 class SystemOrder(models.Model):
-    need_finance = models.BooleanField()
-    include_installation = models.BooleanField()
+    need_finance = models.BooleanField(default=False)
+    include_installation = models.BooleanField(default=False)
 
 
 class GeyserSystemOrder(SystemOrder):

@@ -2,10 +2,13 @@ from django.shortcuts import render, HttpResponseRedirect, HttpResponse, \
     reverse, redirect
 from django.views import View
 from app.forms import FinancierUpdateAccountForm, UserRoleForm
+
 from app.models import Financier, PhysicalAddress, UserRole, Province
 from django.contrib.auth.mixins import LoginRequiredMixin
+
 from app.forms import FinancierUpdateAccountForm, PVTOrderForm, GeyserOrderForm
 from app.models import Financier, PhysicalAddress, Appliance
+
 #from django.contrib.auth.models import User
 from registration.backends.hmac.views import ActivationView
 
@@ -79,8 +82,70 @@ class FinancierUpdateAccount(LoginRequiredMixin, View):
 
             return redirect(reverse('dashboard'))
 
+        form = self.form_class(self.provinces_choices())
+        context = {'form':form}
             
-        return render(request , self.template_name)
+        return render(request , self.template_name, context)
+        
+    def get(self, request, *args, **kwargs):
+    
+        """
+        """
+        form = self.form_class(self.provinces_choices())
+        context = {'form':form}
+        
+        return render(request, self.template_name, context)
+
+    def provinces_choices(self):
+        provinces = Province.objects.all()
+        return tuple([[p.pk, p.name] for p in provinces])
+
+
+
+
+class SupplierInstallerUpdateAccount(LoginRequiredMixin, View):
+    template_name = 'registration/financier_update_account.html'
+    form_class = Financier
+    address_model_class = PhysicalAddress
+
+    def post(self, request, *args, **kwargs):
+        """
+
+        """
+        form = self.form_class(self.provinces_choices(), request.POST)
+        if form.is_valid():
+            address_model = self.address_model_class(request)
+
+            user = request.user
+            company_name = form.cleaned_data['company_name']
+            company_reg = form.cleaned_data['company_reg']
+            contact_number = form.cleaned_data['contact_number']
+            web_address = form.cleaned_data['web_address']
+            province_id = form.cleaned_data['province']
+            province = Province.objects.filter(pk=province_id)[0]
+            physical_address = self.address_model_class.objects.create(
+                building_name=form.cleaned_data['contact_number'],
+                street_name=form.cleaned_data['street_name'],
+                suburb=form.cleaned_data['suburb'],
+                province=province,
+                city=form.cleaned_data['city'],
+                zip_code=form.cleaned_data['zip_code']
+            )
+
+            Financier.objects.create(
+                user=user,
+                company_name=company_name,
+                company_reg=company_reg,
+                contact_number=contact_number,
+                web_address=web_address,
+                physical_address=physical_address)
+
+            return redirect(reverse('dashboard'))
+
+        form = self.form_class(self.provinces_choices())
+        context = {'form':form}
+            
+        return render(request , self.template_name, context)
         
     def get(self, request, *args, **kwargs):
     
@@ -122,6 +187,8 @@ class UserRoleView(LoginRequiredMixin, View):
 
             if role.name == 'Financier':
                 return redirect(reverse('financier'))
+            elif role.name == 'Installer' or role.name == 'Supplier':
+                return redirect(reverse('supplier_installer'))
             else:
                 return redirect(reverse('dashboard'))
 
@@ -232,27 +299,30 @@ class OrderPVTSystem(View):
     def post(self, request, *args, **kwargs):
         """
         """
-        form = self.form_class(self.appliance_choices(), request.POST)
+        form = self.form_class(request.POST)
+        print form.data
         if form.is_valid():
-            user = request.user
+            appliances_model = self.appliances_model_class(request.POST)
+
+            #user = request.user
             intended_use = form.cleaned_data['intended_use']
-            site_visit = form.cleaned_data['site_visit']
+            site_visit = bool(form.cleaned_data['site_visit'])
             property_type = form.cleaned_data['property_type']
             roof_inclination = form.cleaned_data['roof_inclination']
-            
-            pvt_system = PVTSystem.objects.create(
+            print (form.cleaned_data['name'])
+            possible_appliances = Appliance(name = form.cleaned_data['name'])
+            possible_appliances.save()
+
+            pvt_system = PVTSystem(
                 roof_inclination=roof_inclination,
                 property_type=property_type,
                 site_visit=site_visit,
                 intended_use=intended_use)
             
-            """possible_appliances = form.cleaned_data['possible_appliances']
-            for appliance in possible_appliances:
-                this_appliance = appliance.objects.filter(pk=appliance)[0]
-                pvt_system.possible_appliances.add(this_appliance)
-                pvt_system.save() """
+            pvt_system.save()
+            pvt_system.possible_appliances.add(possible_appliances)
 
-        return render(request , self.template_name)
+        return redirect('/app/dashboard/')
         
     def get(self, request, *args, **kwargs):
         """
@@ -262,6 +332,10 @@ class OrderPVTSystem(View):
         context = {'form': form}
 
         return render(request, self.template_name, context)
+    
+    def appliances_choices(self):
+        appliance = Appliance.objects.all()
+        return tuple([[p.pk, p.name] for p in appliance])
 
 
 class OrderGeyser(View):
@@ -301,5 +375,4 @@ class OrderGeyser(View):
     def get(self, request, *args, **kwargs):
         form = self.form_class()
         context = {'form':form}
-        
         return render(request, self.template_name, context)
