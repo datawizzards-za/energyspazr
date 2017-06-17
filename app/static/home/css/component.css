@@ -136,7 +136,7 @@ html, body, .perspective {
 .outer-nav a {
         border: none;
 	padding: 19px;
-	background: #5e35a8;
+	background: #e86a32;
 	color: #fff;
 	font-family: 'Lato', Calibri, Arial, sans-serif;
 	letter-spacing: 1px;
@@ -148,7 +148,7 @@ html, body, .perspective {
 	font-weight: 300;
 	outline: none;
         font-size: 10px;
-	background: #5e35a8;
+	background: #e86a32;
         align-items: flex-start;
         text-align: center;
 }

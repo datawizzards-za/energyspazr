@@ -2,14 +2,16 @@
 {% block content %}
 <section class="login-content">
     <div class="logo">
-        <h1>energyspazr.com</h1>
+        <h1>
+          <a href="{% url 'home' %}"> energyspazr.com</a>
+        </h1>
     </div>
     <div class="col-md-6 animated zoomIn">
         <div class="card login-box">
             <form  method="post" > 
                 <input type='hidden' name='csrfmiddlewaretoken' value='l5wFnj3kNadfiQyXVbFF4L9DGnfQUrT9X2tP2tV7zV5nMNwELRCbTtJjJ8yrTmIP' />
                 <h3 class="login-head">
-                    LET'S COMPLETE YOUR ORDER
+                    Let's complete your order.
                 </h3>
                 <div class="row mb-20" > 
                     <div class="col-md-6" > 

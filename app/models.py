@@ -22,15 +22,15 @@ class UserRole(models.Model):
 class Client(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     contact_number = models.CharField(max_length=40)
-    physical_address = models.OneToOneField(PhysicalAddress, 
-                                            on_delete=models.CASCADE)
-    role = models.OneToOneField(UserRole, on_delete=models.CASCADE, null=True)
+    physical_address = models.OneToOneField(PhysicalAddress, \
+    on_delete=models.CASCADE)
 
 
 class Financier(Client):
     company_name = models.CharField(max_length=30)
     company_reg = models.CharField(max_length=40)
-    web_address = models.URLField(null=True) 
+    web_address = models.URLField(null=True)
+    role = models.OneToOneField(UserRole, on_delete=models.CASCADE, null=True)
 
 
 class Service(models.Model):
