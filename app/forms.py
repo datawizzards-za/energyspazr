@@ -4,7 +4,7 @@ from django import forms
 from django.forms import ModelForm
 
 from crispy_forms.helper import FormHelper, Layout
-from crispy_forms.layout import Submit, HTML, Div, Field
+from crispy_forms.layout import Submit, HTML, Div, Field, Button
 from crispy_forms.bootstrap import FormActions
 
 from app.models import Financier, Appliance, SupplierInstaller, GeyserSystemOrder
@@ -357,7 +357,7 @@ class GeyserOrderForm(forms.Form):
                   'current_geyser_size', 'users_number', 'required_geyser_size']
 
     helper = FormHelper()
-    helper.form_method = 'POST'
+    helper.form_method = 'GET'
     helper.form_show_labels = False
 
     helper.layout = Layout(
@@ -465,7 +465,8 @@ class GeyserOrderForm(forms.Form):
                 css_class='col-md-4'
                 ),
             Div(
-                FormActions(Submit('login', 'PROCEED', css_class='btn btn-primary btn-block')),
+                FormActions(Button('login', 'PROCEED', css_class='btn '
+                                                             'btn-primary btn-block')),
                 css_class='col-md-4'
                 ),
             css_class='card-footer'
