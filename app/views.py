@@ -255,12 +255,13 @@ class OrderPVTSystem(View):
         return render(request , self.template_name)
         
     def get(self, request, *args, **kwargs):
-    
         """
         """
+        form = self.form_class()
 
+        context = {'form': form}
 
-        return render(request, self.template_name)
+        return render(request, self.template_name, context)
 
 
 class OrderGeyser(View):
