@@ -1,0 +1,14 @@
+- model: app.System
+  pk: 1
+  fields:
+    name: Geyser System
+
+- model: app.System
+  pk: 2
+  fields:
+    name: PVT System
+
+- model: app.System
+  pk: 3
+  fields:
+    name: Solar Component(s)

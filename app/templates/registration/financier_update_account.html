@@ -1,7 +1,12 @@
 {% extends "app/auth_layout.html" %}
 {% load i18n %}
 {% load crispy_forms_tags %}
+{% load staticfiles %}
 
+{% block css %}
+{{block.super}}
+<link rel="stylesheet" type="text/css" href="{% static 'app/css/bootstrap-select.css' %}">
+{% endblock %}
 {% block content %}
 <section class="login-content">
     <div class="logo">
@@ -15,6 +20,11 @@
 </section>
 {% endblock %}
 
+{% block extrajs %}
+{% load staticfiles %}
+<script type="text/javascript" src="{% static 'app/js/plugins/select2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'app/js/bootstrap-select.js' %}"></script>
+{% endblock%}
 {% comment %}
 **registration/registration_form.html**
 Used to show the form users will fill out to register. By default, has
