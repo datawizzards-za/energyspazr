@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 
-
 class Province(models.Model):
     name = models.CharField(max_length=30)
 
@@ -40,11 +39,15 @@ class Service(models.Model):
 
 class System(models.Model):
     name = models.CharField(max_length=100)
+
+
+class SupplierInstallerSystem(models.Model):
+    system = models.ForeignKey(System, on_delete=models.CASCADE)
     service = models.PositiveSmallIntegerField()
 
 
 class SupplierInstaller(Financier):
-    systems = models.ManyToManyField(System)
+    systems = models.ManyToManyField(SupplierInstallerSystem)
 
 
 class Appliance(models.Model):

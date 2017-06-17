@@ -5,7 +5,9 @@
 {% block content %}
 <section class="login-content">
     <div class="logo">
-        <h1>energyspazr.com</h1>
+        <h1>
+          <a class='hvr-grow' href="{% url 'home' %}"> energyspazr.com </a>
+        </h1>
     </div>
     <div class="login-box text-center animated zoomIn">
       {% crispy form %}

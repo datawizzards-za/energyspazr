@@ -22,10 +22,7 @@
       </div>
     </section>
   </body>
-  <script src="{% static 'app/js/jquery-2.1.4.min.js' %}"></script>
-  <script src="{% static 'app/js/bootstrap.min.js' %}"></script>
-  <script src="{% static 'app/js/plugins/pace.min.js' %}"></script>
-  <script src="{% static 'app/js/main.js' %}"></script>
+    {% include 'app/js.html' %}
   {% block extrajs %}
   {% endblock %}
 </html>

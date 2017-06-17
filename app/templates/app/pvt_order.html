@@ -2,29 +2,39 @@
 {% load i18n %}
 {% load crispy_forms_tags %}
 {% load staticfiles %}
-
-{% block css %}
+{% block css%}
 {{block.super}}
 <link rel="stylesheet" type="text/css" href="{% static 'app/css/bootstrap-select.css' %}">
 {% endblock %}
 {% block content %}
 <section class="login-content">
     <div class="logo">
-        <h1>energyspazr.com</h1>
+        <h1>
+          <a href="{% url 'home' %}"> energyspazr.com</a>
+        </h1>
     </div>
-    <div class="col-md-4 animated zoomIn">
-        <div class="card login-box">
+    <div class="col-md-6 animated zoomIn">
+        <div class="card login-box long">
             {% crispy form %}
         </div>
     </div>
 </section>
 {% endblock %}
-
 {% block extrajs %}
-{% load staticfiles %}
-<script type="text/javascript" src="{% static 'app/js/plugins/select2.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'app/js/bootstrap-select.js' %}"></script>
+<script type="text/javascript" src="{% static 'app/js/plugins/select2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'app/js/plugins/bootstrap-datepicker.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'app/js/bootstrap-select.js' %}"></script>
+<script type="text/javascript">
+    $('#id_property_type').select2();
+    $('#id_roof_inclination').select2();
+    $('#id_intended_use').select2();
+    $('#id_site_visit').select2();
+    $('#id_include_installation').select2();
+    $('#id_need_finance').select2();
+</script>
 {% endblock%}
+
 {% comment %}
 **registration/registration_form.html**
 Used to show the form users will fill out to register. By default, has
