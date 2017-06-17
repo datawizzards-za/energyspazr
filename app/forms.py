@@ -186,7 +186,7 @@ class FinancierUpdateAccountForm(ModelForm):
          Div(
              Div(
                  Field('province', css_class='form-control text-center ',
-                       placeholder='Provice'), css_class='col-md-6'
+                       placeholder='Provice'), css_class='col-md-6 text-center'
              ),
              Div(
                  Field('city', css_class='form-control text-center ',
@@ -465,7 +465,8 @@ class GeyserOrderForm(forms.Form):
                 css_class='col-md-4'
                 ),
             Div(
-                FormActions(Submit('login', 'PROCEED', css_class='btn btn-primary btn-block')),
+                HTML("<a class='btn btn-success btn-block icon-btn' \
+                 href='{% url 'client-info' %}'> Proceed </a>"),
                 css_class='col-md-4'
                 ),
             css_class='card-footer'
@@ -483,9 +484,18 @@ class UserRoleForm(forms.Form):
 
     helper = FormHelper()
     helper.form_method = 'POST'
+    helper.form_show_labels = False
     helper.form_id = 'role_form'
     helper.layout = Layout(
-        'role',
+        HTML("<label class='control-label col-md-12 text-center'> \
+            Please choose the type of your account. \
+            </label>"),
+        Div(
+            HTML("<br /> <br />"), css_class='col-md-12'),
+        Div(
+            Field('role'), css_class='col-md-12 text-center'),
+        Div(
+            HTML("<br /> <br />"), css_class='col-md-12'),
         Div(
             FormActions(Submit('proceed', 'PROCEED',
                                css_class='btn btn-primary btn-block')),
