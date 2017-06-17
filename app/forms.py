@@ -6,7 +6,7 @@ from crispy_forms.layout import Submit, HTML, Div, Field
 from crispy_forms.bootstrap import FormActions
 from django import forms
 from django.forms import ModelForm
-from app.models import Financier, Appliance
+from app.models import Financier, Appliance, GeyserSystemOrder
 
 class SigninForm(AuthenticationForm):
     
@@ -344,7 +344,12 @@ class GeyserOrderForm(forms.Form):
     #same_as_existing = forms.ChoiceField(choices=(['yes', 'YES'], ['no', 'NO']))
     need_finance = forms.ChoiceField(choices=(['yes', 'YES'], ['no', 'NO']))
     include_installation = forms.ChoiceField(choices=(['yes', 'YES'], ['no', 'NO']))
-    
+
+    class Meta(GeyserSystemOrder):
+        model = GeyserSystemOrder
+        fields = ['property_type', 'roof_inclination', 'existing_geyser',
+                  'current_geyser_size', 'users_number', 'required_geyser_size']
+
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.form_show_labels = False
