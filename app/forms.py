@@ -233,6 +233,11 @@ class PVTOrderForm(ModelForm):
     site_visit = forms.ChoiceField(choices=(['yes', 'YES'], ['no', 'NO']))
     OPTIONS = ((p.pk, p.name) for p in Appliance.objects.all())
     name = forms.ChoiceField(choices=OPTIONS, required=True)
+    username = forms.CharField(max_length=1000)
+    physical_address = forms.CharField(max_length=1000)
+    contact_number = forms.CharField(max_length=1000)
+    last_name = forms.CharField(max_length=1000)
+    first_name = forms.CharField(max_length=1000)
 
     class Meta:
         model = Appliance
@@ -242,7 +247,9 @@ class PVTOrderForm(ModelForm):
     helper.form_method = 'POST'
     helper.form_show_labels = False
     helper.layout = Layout(
+      Div(
         HTML('<h3 class="login-head">PVT SYSTEM</h3>'),
+
         Div(
             HTML("<label class='control-label col-md-7'> \
             What type of property do you have?</label>"),
@@ -324,12 +331,117 @@ class PVTOrderForm(ModelForm):
                 css_class='col-md-4'
                 ),
             Div(
-                FormActions(Submit('login', 'PROCEED',
-                                   css_class='btn btn-primary btn-block')),
+                FormActions(Button('login', 'PROCEED',
+                                   css_class='btn btn-primary btn-block',
+                                   data_target="#targetElement",
+                                   data_toggle="collapse",
+                                   css_id='proceed'
+                                   )),
                 css_class='col-md-4'
                 ),
             css_class='card-footer'
         ),
+          css_id='targetElement',
+          css_class='card login-box long'
+    ),
+    Div(
+        HTML(
+            "<h3 class ='login-head'>Let's complete your order.</h3>"),
+        Div(
+            Div(
+                Div(
+                    Div(
+                        Field('first_name',
+                              css_class='form-control text-center form-control'
+                              , placeholder='First Name',
+                              type='text',
+                              maxlength='30'
+                              ),
+                        css_class='controls'),
+                    css_class='form-group'
+                ),
+                css_class='col-md-6'
+            ),
+            Div(
+                Div(
+                    Div(
+                        Field('last_name',
+                              css_class='form-control text-center form-control'
+                              , placeholder='Last Name',
+                              type='text',
+                              maxlength='30'
+                              ),
+                        css_class='controls'),
+                    css_class='form-group'
+                ),
+                css_class='col-md-6'
+            ),
+            css_class='row mb-20',
+        ),
+        Div(
+            Div(
+                Div(
+                    Div(
+                        Field('username',
+                              css_class='form-control emailinput text-center form-control'
+                              , placeholder='Email Address',
+                              type='text',
+                              maxlength='30'
+                              ),
+                        css_class='controls'),
+                    css_class='form-group'
+                ),
+                css_class='col-md-6'
+            ),
+            Div(
+                Div(
+                    Div(
+                        Field('contact_number',
+                              css_class='form-control text-center form-control'
+                              , placeholder='Contact Number',
+                              type='text',
+                              maxlength='30'
+                              ),
+                        css_class='controls'),
+                    css_class='form-group'
+                ),
+                css_class='col-md-6'
+            ),
+            css_class='row mb-20',
+        ),
+        Div(
+            Div(
+                Div(
+                    Field('physical_address',
+                          css_class='form-control text-center textinput textInput '
+                                    'form-control',
+                          placeholder='Delivery address',
+                          required='true'),
+                    css_class='controls'
+                ),
+                css_class='form-group'
+            ),
+            css_class='col-md-12'
+        ),
+        Div(
+            Div(
+                css_class='form-group col-md-3'
+            ),
+            Div(
+                Div(
+                    Submit('place_order', 'FINISH',
+                           css_class='btn btn-primary btn btn-primary btn-block'
+                           ),
+                    css_class='controls'
+                ),
+                css_class='form-group col-md-6'
+            ),
+            css_class='form-group btn-container'
+        ),
+
+           css_class='card login-box finish_order'
+        )
+
     )
     
 class GeyserOrderForm(forms.Form):
@@ -472,7 +584,7 @@ class GeyserOrderForm(forms.Form):
                 css_class='col-md-4'
                 ),
             css_class='card-footer'
-        ),
+        )
     )
 
 

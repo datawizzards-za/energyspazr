@@ -14,9 +14,7 @@
         </h1>
     </div>
     <div class="col-md-6 animated zoomIn">
-        <div class="card login-box long">
             {% crispy form %}
-        </div>
     </div>
 </section>
 {% endblock %}
@@ -32,6 +30,13 @@
     $('#id_site_visit').select2();
     $('#id_include_installation').select2();
     $('#id_need_finance').select2();
+</script>
+<script type="text/javascript">
+    $('.finish_order').hide();
+    $('#proceed').click(function(){
+        $('.finish_order').show();
+        $('#targetElement').hide();
+    });
 </script>
 {% endblock%}
 

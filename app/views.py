@@ -1,4 +1,4 @@
-from django.shortcuts import render, reverse, redirect
+from django.shortcuts import render, reverse, redirect, HttpResponse
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -6,6 +6,7 @@ from app.forms import UserRoleForm
 from app.models import UserRole, Province, System, SupplierInstaller
 from app.forms import FinancierUpdateAccountForm, PVTOrderForm, GeyserOrderForm
 from app.models import Financier, PhysicalAddress, Appliance, PVTSystem
+from app.utils import quatation_pdf
 
 from registration.backends.hmac.views import ActivationView
 
@@ -300,20 +301,20 @@ class OrderPVTSystem(View):
             site_visit = bool(form.cleaned_data['site_visit'])
             property_type = form.cleaned_data['property_type']
             roof_inclination = form.cleaned_data['roof_inclination']
-            print (form.cleaned_data['name'])
-            possible_appliances = Appliance(name=form.cleaned_data['name'])
-            possible_appliances.save()
-
-            pvt_system = PVTSystem(
-                roof_inclination=roof_inclination,
-                property_type=property_type,
-                site_visit=site_visit,
-                intended_use=intended_use)
-
-            pvt_system.save()
-            pvt_system.possible_appliances.add(possible_appliances)
-
-        return redirect('/app/dashboard/')
+            # print (form.cleaned_data['name'])
+            # possible_appliances = Appliance(name=form.cleaned_data['name'])
+            # possible_appliances.save()
+            #
+            # pvt_system = PVTSystem(
+            #     roof_inclination=roof_inclination,
+            #     property_type=property_type,
+            #     site_visit=site_visit,
+            #     intended_use=intended_use)
+            #
+            # pvt_system.save()
+            # pvt_system.possible_appliances.add(possible_appliances)
+            quatation_pdf.generate_pdf(form.data)
+        return redirect('/app/client-info/')
 
     def get(self, request, *args, **kwargs):
         """
@@ -360,3 +361,8 @@ class OrderGeyser(View):
         form = self.form_class()
         context = {'form': form}
         return render(request, self.template_name, context)
+
+class DisplayPDF(View):
+    def get(self):
+        image_data = open("MabuManailengSat Jun 17 22:15:20 2017.pdf", "rb").read()
+        return HttpResponse(image_data, mimetype="application/pdf")
