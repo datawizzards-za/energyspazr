@@ -223,7 +223,6 @@ class OrderPVTSystem(View):
         """
         """
         form = self.form_class(request.POST)
-        print form.data
         if form.is_valid():
             appliances_model = self.appliances_model_class(request.POST)
             # user = request.user
