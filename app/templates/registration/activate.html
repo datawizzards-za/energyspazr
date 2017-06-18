@@ -9,19 +9,19 @@
             
             <div class="card-body">
                 <h4> We could not activate your account.</h4>
-                <h4> Something is wrong with your activation id.</h4>
-                <h4> Click the reset button below to fix this.</h4>
+                <h4> Something went wrong with your activation id.</h4>
+                <h4> Please try registering again.</h4>
             </div>
             <br />
             <div class="card-footer">
                 <div class="col-md-6">
-                    <a class="btn btn-default btn-block" href="{% url 'home' %}">
+                    <a class="btn btn-warning btn-block" href="{% url 'home' %}">
                         Cancel
                     </a>
                 </div>
                 <div class="col-md-6">
-                    <a class="btn btn-primary btn-block" href="{% url 'resend' %}">
-                        Reset
+                    <a class="btn btn-primary btn-block" href="{% url 'signup' %}">
+                        Register
                     </a>
                 </div>
             </div>

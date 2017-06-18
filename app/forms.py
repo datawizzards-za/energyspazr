@@ -213,11 +213,6 @@ class FinancierUpdateAccountForm(ModelForm):
                 css_class='col-md-4'
                 ),
             Div(
-                HTML("<a class='btn btn-default btn-block icon-btn' \
-                 href='{% url 'home' %}'> Cancel</a>"),
-                css_class='col-md-4'
-                ),
-            Div(
                 FormActions(Submit('login', 'PROCEED',
                                    css_class='btn btn-primary btn-block')),
                 css_class='col-md-4'
@@ -587,8 +582,6 @@ class GeyserOrderForm(forms.Form):
                 css_class='col-md-4'
                 ),
             Div(
-                FormActions(Button('login', 'PROCEED',
-                                   css_class='btn btn-primary btn-block')),
                 HTML("<a class='btn btn-success btn-block icon-btn' \
                  href='{% url 'client-info' %}'> Proceed </a>"),
                 css_class='col-md-4'
@@ -621,31 +614,7 @@ class UserRoleForm(forms.Form):
         )
 
 
-class ResendForm(forms.Form):
-    email = forms.CharField(max_length=1000)
 
-    helper = FormHelper()
-    helper.form_method = 'POST'
-    helper.form_show_labels = False
-
-    helper.layout = Layout(
-        Div(
-            Div(
-                Field('email', css_class='form-control text-center',
-                      placeholder='Email Address'),
-                css_class='col-md-12'
-            ),
-            css_class='row mb-20'
-        ),
-        Div(
-            Div(
-                FormActions(Submit('resend', 'SEND',
-                            css_class='btn btn-primary btn-lg')),
-            css_class='form-group'
-        ),
-            css_class='card-footer'
-        ),
-    )
 
 class AddComponentForm(forms.Form):
     COMPOS = (['solar_panel', 'SOLAR PANEL'],
