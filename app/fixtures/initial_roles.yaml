@@ -1,14 +1,14 @@
-- model: app.UserRole
+- model: auth.group
   pk: 1
   fields:
     name: Financier
 
-- model: app.UserRole
+- model: auth.group
   pk: 2
   fields:
     name: Installer
 
-- model: app.UserRole
+- model: auth.group
   pk: 3
   fields:
     name: Supplier

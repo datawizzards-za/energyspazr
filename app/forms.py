@@ -128,20 +128,22 @@ class SignupForm(auth_forms.UserCreationForm):
             css_class='form-group')
     )
 
-class FinancierUpdateAccountForm(ModelForm):
+class UserAccountUpdateForm(ModelForm):
     building_name = forms.CharField(max_length=30)
     street_name = forms.CharField(max_length=30)
     province = forms.ChoiceField(choices=(), required=True)
+    roles = forms.ChoiceField(choices=(), required=True)
     city = forms.CharField(max_length=30)
     suburb = forms.CharField(max_length=30)
     zip_code = forms.IntegerField()
 
-    def __init__(self, provinces_choices, *args, **kwargs):
-        super(FinancierUpdateAccountForm, self).__init__(*args, **kwargs)
-        self.fields['province'].choices = provinces_choices
+    def __init__(self, p_choices, r_choices, *args, **kwargs):
+        super(UserAccountUpdateForm, self).__init__(*args, **kwargs)
+        self.fields['province'].choices = p_choices
+        self.fields['roles'].choices = r_choices
 
     class Meta:
-        model = models.Financier
+        model = models.SpazrUser
         fields = ['company_name', 'company_reg', 'contact_number',
                   'web_address']
 
@@ -170,6 +172,13 @@ class FinancierUpdateAccountForm(ModelForm):
              Div(
                  Field('web_address', css_class='form-control text-center ',
                        placeholder='Web Address'), css_class='col-md-6'
+             ),
+             css_class='row mb-20'
+         ),
+         Div(
+             Div(
+                 Field('roles', css_class='form-control text-center ',
+                       placeholder='Role(s)'), css_class='col-md-6'
              ),
              css_class='row mb-20'
          ),
@@ -596,29 +605,6 @@ class GeyserOrderForm(forms.Form):
             css_class='card-footer'
         )
     )
-
-
-class UserRoleForm(forms.Form):
-    role = forms.ChoiceField(choices=(), required=True)
-
-    def __init__(self, role_choices, *args, **kwargs):
-        super(UserRoleForm, self).__init__(*args, **kwargs)
-        self.fields['role'].choices = role_choices
-
-    helper = FormHelper()
-    helper.form_method = 'POST'
-    helper.form_show_labels = False
-    helper.form_id = 'role_form'
-    helper.layout = Layout(
-        Div(
-            Field('role'), css_class='col-md-12 text-center'),
-        Div(
-            HTML("<br />"), css_class='col-md-12'),
-        Div(
-            FormActions(Submit('proceed', 'PROCEED',
-                               css_class='btn btn-primary btn-block')),
-            css_class='form-group btn-container'),
-        )
 
 
 class ResendForm(forms.Form):
