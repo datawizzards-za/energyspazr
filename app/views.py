@@ -318,8 +318,8 @@ class OrderPVTSystem(View):
             #
             # pvt_system.save()
             # pvt_system.possible_appliances.add(possible_appliances)
-            quatation_pdf.generate_pdf(form.data)
-        return redirect('/app/client-info/')
+            pdf_name = quatation_pdf.generate_pdf(form.data)
+        return redirect('/app/view-slip/' + pdf_name)
 
     def appliances_choices(self):
         appliance = Appliance.objects.all()
@@ -361,20 +361,20 @@ class OrderGeyser(View):
 
 
 class DisplayPDF(View):
-
-    def get(self, request):
-        image_data = open("app/static/app/slips/OfentsweLebogoSun Jun 18 "
-                          "06:41:22 2017.pdf", "rb").read()
+    def get(self, request, *args, **kwargs):
+        pdf_dir = 'app/static/app/slips/'
+        image_data = open(pdf_dir + str(kwargs['generate']) + '.pdf',
+                          "rb").read()
         return HttpResponse(image_data, content_type="application/pdf")
 
 
-class AddComponent(View):    
+class AddComponent(View):
     template_name = 'app/add_component.html'
     form_class = forms.AddComponentForm
 
     def get(self, request, *args, **kwargs):
         form = self.form_class()
-        context = {'form':form}
+        context = {'form': form}
         return render(request, self.template_name, context)
 
     """ 
@@ -403,7 +403,6 @@ class AddComponent(View):
 
 
 class MyProducts(LoginRequiredMixin, View):
-
     template_name = 'app/supplier/products.html'
 
     def get(self, request, *args, **kwargs):

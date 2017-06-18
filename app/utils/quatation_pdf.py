@@ -1,5 +1,5 @@
 import time
-from reportlab.lib.enums import TA_JUSTIFY, TA_CENTER
+from reportlab.lib.enums import TA_JUSTIFY, TA_CENTER, TA_RIGHT
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -11,7 +11,9 @@ from reportlab.lib import colors
 def generate_pdf(user_details):
     formatted_time = time.ctime()
     pdf_file_generate = user_details['first_name'] + \
-                        user_details['last_name'] + str(formatted_time)
+                        user_details['last_name'] + \
+                        str(formatted_time).replace(' ','').replace(':','')
+
     slips_dir = 'app/static/app/slips/'
     document = SimpleDocTemplate(slips_dir + pdf_file_generate+".pdf",
                                  pagesize=letter,
@@ -20,27 +22,19 @@ def generate_pdf(user_details):
     elements = []
     logo = "app/static/common/icon.png"
 
-    address_parts = ["411 State St.", "Marshalltown, IA 50158"]
-
     image = Image(logo, 2 * inch, 2 * inch)
     elements.append(image)
 
     styles = getSampleStyleSheet()
     styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
     styles.add(ParagraphStyle(name='Center', alignment=TA_CENTER))
+    styles.add(ParagraphStyle(name='Right', alignment=TA_RIGHT))
+
     ptext = '<font size=12>%s</font>' % formatted_time
 
-    elements.append(Paragraph(ptext, styles["Normal"]))
+    elements.append(Paragraph(ptext, styles["Right"]))
     elements.append(Spacer(1, 12))
 
-    # Create return address
-    ptext = '<font size=12>%s</font>' % user_details['first_name']
-    elements.append(Paragraph(ptext, styles["Normal"]))
-    for part in address_parts:
-        ptext = '<font size=12>%s</font>' % part.strip()
-        elements.append(Paragraph(ptext, styles["Normal"]))
-
-    elements.append(Spacer(1, 12))
     ptext = '<font size=12>Dear %s</font>' % user_details['first_name']
     elements.append(Paragraph(ptext, styles["Normal"]))
     elements.append(Spacer(1, 12))
@@ -51,7 +45,9 @@ def generate_pdf(user_details):
     elements.append(Paragraph(ptext, styles["Justify"]))
     elements.append(Spacer(1, 12))
 
-    ptext = '<font size=12>Thank you very much and we look forward to serving you.</font>'
+    ptext = '<font size=12>Thank you very much and we look forward to ' \
+            'serving you.</font>'
+
     elements.append(Paragraph(ptext, styles["Justify"]))
     elements.append(Spacer(1, 12))
 
@@ -105,6 +101,8 @@ def generate_pdf(user_details):
     elements.append(Paragraph(ptext, styles["Center"]))
 
     document.build(elements)
+
+    return pdf_file_generate
 
 
 

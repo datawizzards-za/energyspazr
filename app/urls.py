@@ -42,5 +42,6 @@ urlpatterns = [
     url(r'^products/component/$', views.SolarComponent.as_view(),
         name='component'),
     url(r'^register/$', views.Register.as_view(), name='register'),
-    url(r'^view-slip/$', views.DisplayPDF.as_view(), name='slips'),
+    url(r'^view-slip/(?P<generate>\w+)/$', views.DisplayPDF.as_view(),
+        name='slips'),
 ]
