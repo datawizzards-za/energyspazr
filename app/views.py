@@ -24,7 +24,7 @@ class Dashboard(LoginRequiredMixin, View):
         req_user = request.user
         user = self.user_model_class.objects.filter(user=req_user)[0]
         context = {'user': user}
-        
+
         return render(request, self.template_name, context)
 
 
@@ -77,13 +77,14 @@ class UserAccountUpdate(LoginRequiredMixin, View):
             group_id = int(form.cleaned_data['roles'])
             group = Group.objects.filter(pk=group_id)[0]
             user.groups.add(group)
-            
+
             company_name = form.cleaned_data['company_name']
             company_reg = form.cleaned_data['company_reg']
             contact_number = form.cleaned_data['contact_number']
             web_address = form.cleaned_data['web_address']
             province_id = form.cleaned_data['province']
-            province = self.province_model_class.objects.filter(pk=province_id)[0]
+            province = \
+            self.province_model_class.objects.filter(pk=province_id)[0]
 
             physical_address = self.address_model_class.objects.create(
                 building_name=form.cleaned_data['contact_number'],
@@ -125,8 +126,6 @@ class OurProducts(View):
         """
         """
         return render(request, self.template_name)
-
-
 
 
 class SolarGeyser(View):
@@ -253,29 +252,47 @@ class OrderGeyser(View):
         context = {'form': form}
         return render(request, self.template_name, context)
 
-    """ 
     def post(self, request, *args, **kwargs):
-        form = self.form_class(self.appliance_choices(), request.POST)
+        form = self.form_class(request.POST)
         if form.is_valid():
-            user = request.user
-            intended_use = form.cleaned_data['intended_use']
-            site_visit = form.cleaned_data['site_visit']
+            water_collector = form.cleaned_data['water_collector']
             property_type = form.cleaned_data['property_type']
             roof_inclination = form.cleaned_data['roof_inclination']
-            
-            pvt_system = PVTSystem.objects.create(
-                roof_inclination=roof_inclination,
-                property_type=property_type,
-                site_visit=site_visit,
-                intended_use=intended_use)
-            
-            possible_appliances = form.cleaned_data['possible_appliances']
-            for appliance in possible_appliances:
-                this_appliance = appliance.objects.filter(pk=appliance)[0]
-                pvt_system.possible_appliances.add(this_appliance)
-                pvt_system.save()
+            required_geyser_size = form.cleaned_data['required_geyser_size']
+            current_geyser_size = form.cleaned_data['current_geyser_size']
+            include_installation = True #form.cleaned_data[
+            # 'include_installation']
+            users_number = form.cleaned_data['users_number']
+            need_finance = True #form.cleaned_data['need_finance']
+            existing_geyser = True #bool(form.cleaned_data['existing_geyser'])
 
-        return render(request , self.template_name) """
+            contact_number = form.cleaned_data['contact_number']
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            physical_address = form.cleaned_data['physical_address']
+            username = form.cleaned_data['username']
+
+            pvt_system = models.GeyserSystemOrder.objects.create(
+                need_finance=need_finance,
+                include_installation=include_installation,
+                property_type=property_type,
+                roof_inclination=roof_inclination,
+                existing_geyser=existing_geyser,
+                new_system=existing_geyser,
+                water_collector=water_collector,
+                current_geyser_size=int(current_geyser_size),
+                users_number=int(users_number),
+                required_geyser_size=3, #required_geyser_size,
+                same_as_existing=existing_geyser,
+            )
+
+            # possible_appliances = form.cleaned_data['possible_appliances']
+            # for appliance in possible_appliances:
+            #     this_appliance = appliance.objects.filter(pk=appliance)[0]
+            #     pvt_system.possible_appliances.add(this_appliance)
+            #     pvt_system.save()
+
+        return render(request, self.template_name, {'form': form})
 
 
 class DisplayPDF(View):
@@ -330,5 +347,5 @@ class MyProducts(LoginRequiredMixin, View):
         req_user = request.user
         user = self.user_model_class.objects.filter(user=req_user)[0]
         context = {'user': user}
-        
+
         return render(request, self.template_name, context)
