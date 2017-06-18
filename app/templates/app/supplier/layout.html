@@ -23,11 +23,25 @@
     <!-- Javascripts-->
     {% include 'app/js.html' %}
 {% block extrajs %}
+{% load staticfiles %}
 <script type="text/javascript" src="{% static 'app/js/plugins/select2.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'app/js/plugins/jquery.dataTables.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'app/js/plugins/dataTables.bootstrap.min.js' %}"></script>
     <script type="text/javascript">
-        $('#sampleTable').DataTable();
+        $('#table_my_products').DataTable();
+        $('#table_add_products').DataTable();
+        
+        $('#add_products').hide();
+        $('#btn_add_product').click(
+                function(){
+                    $('#my_products').hide();
+                    $('#add_products').show();
+                });
+        $('#btn_return').click(
+                function(){
+                    $('#add_products').hide();
+                    $('#my_products').show();
+                });
     </script>
   {% endblock %}
   </body>
