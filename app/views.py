@@ -15,7 +15,7 @@ from registration.backends.hmac.views import ActivationView
 
 class Dashboard(LoginRequiredMixin, View):
 
-    template_name = 'app/index.html'
+    template_name = 'app/supplier/dashboard.html'
 
     def get(self, request, *args, **kwargs):
         """
@@ -393,3 +393,13 @@ class AddComponent(View):
         form = self.form_class()
         context = {'form':form}
         return render(request, self.template_name, context)
+
+
+class MyProducts(LoginRequiredMixin, View):
+
+    template_name = 'app/supplier/products.html'
+
+    def get(self, request, *args, **kwargs):
+        """
+        """
+        return render(request, self.template_name)

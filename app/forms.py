@@ -7,7 +7,7 @@ from crispy_forms.helper import FormHelper, Layout
 from crispy_forms.layout import Submit, HTML, Div, Field
 from crispy_forms.bootstrap import FormActions
 
-from app.models import Financier, Appliance, SupplierInstaller, GeyserSystemOrder
+from app.models import Financier, Appliance, GeyserSystemOrder
 
 class SigninForm(AuthenticationForm):
 

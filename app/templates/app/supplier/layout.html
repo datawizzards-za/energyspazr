@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      {% load staticfiles %}
+      <link rel="shortcut icon" type="image/png" href="{% static 'common/icon.png' %}"/>
+      <title>
+          {% block title %}
+          {% endblock%}
+      </title>
+      <!-- CSS-->
+      <link rel="stylesheet" type="text/css" href="{% static 'app/css/main.cs' %}s">
+  </head>
+  <body class="sidebar-mini fixed">
+    <div class="wrapper">
+        {% include "app/header_navbar.html" %} 
+        {% include "app/supplier/side_navbar.html" %}
+        {% block content %}
+        {% endblock content %}
+    </div>
+    <!-- Javascripts-->
+    {% include 'app/js.html' %}
+  </body>
+</html>
