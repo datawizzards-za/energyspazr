@@ -11,7 +11,7 @@ from registration.backends.hmac.views import ActivationView
 # Local Django
 from app import forms
 from app import models
-from app.utils import quatation_pdf
+from app.utils import quotation_pdf
 
 
 class Dashboard(LoginRequiredMixin, View):
@@ -237,7 +237,7 @@ class OrderPVTSystem(View):
             #
             # pvt_system.save()
             # pvt_system.possible_appliances.add(possible_appliances)
-        pdf_name = quatation_pdf.generate_pdf(form.data)
+        pdf_name = quotation_pdf.generate_pdf(form.data)
         return redirect('/app/view-slip/' + pdf_name)
 
     def appliances_choices(self):
