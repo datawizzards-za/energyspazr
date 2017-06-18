@@ -59,12 +59,12 @@ def generate_pdf(user_details):
     elements.append(Paragraph(ptext, styles["Center"]))
     elements.append(Spacer(1, 12))
 
-    data = [['Email', user_details['username']],
-            ['First Name', user_details['first_name']],
-            ['Last Name', user_details['last_name']],
-            ['Contact Number', user_details['contact_number']],
+    data = [['Email', user_details['username'].upper()],
+            ['First Name', user_details['first_name'].upper()],
+            ['Last Name', user_details['last_name'].upper()],
+            ['Contact Number', user_details['contact_number'].upper()],
             ['Physical Address',
-             user_details['physical_address'].replace(',', '\n')]]
+             user_details['physical_address'].replace(',', '\n').upper()]]
 
     table = Table(data, colWidths=190)
     table.setStyle(TableStyle([
@@ -78,12 +78,14 @@ def generate_pdf(user_details):
             'Details</font></center>'
     elements.append(Paragraph(ptext, styles["Center"]))
     elements.append(Spacer(1, 12))
-    data = [['Intended Use', user_details['intended_use']],
-            ['Need Finance', user_details['need_finance']],
-            ['Site Visit', user_details['site_visit']],
-            ['Include Instalation', user_details['include_installation']],
-            ['Property Type', user_details['property_type']],
-            ['Roof Inclination', user_details['roof_inclination']]
+    data = [['Intended Use',
+             user_details['intended_use'].upper().replace('_',' ')],
+            ['Need Finance', user_details['need_finance'].upper()],
+            ['Site Visit', user_details['site_visit'].upper()],
+            ['Include Instalation',
+             user_details['include_installation'].upper()],
+            ['Property Type', user_details['property_type'].upper()],
+            ['Roof Inclination', user_details['roof_inclination'].upper()]
             ]
 
     table = Table(data, colWidths=190)
