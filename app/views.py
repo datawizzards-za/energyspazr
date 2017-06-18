@@ -226,7 +226,6 @@ class OrderPVTSystem(View):
         print form.data
         if form.is_valid():
             appliances_model = self.appliances_model_class(request.POST)
-            print appliances_model['name']
             # user = request.user
             intended_use = form.cleaned_data['intended_use']
             site_visit = bool(form.cleaned_data['site_visit'])
