@@ -15,7 +15,7 @@ from app import models
 
 class SigninForm(auth_forms.AuthenticationForm):
 
-    class Meta(auth_fomrs.AuthenticationForm):
+    class Meta(auth_forms.AuthenticationForm):
         model = User
         fields = ['username', 'password']
 
