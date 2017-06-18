@@ -85,7 +85,8 @@ def generate_pdf(user_details):
             ['Include Instalation',
              user_details['include_installation'].upper()],
             ['Property Type', user_details['property_type'].upper()],
-            ['Roof Inclination', user_details['roof_inclination'].upper()]
+            ['Roof Inclination', user_details['roof_inclination'].upper()],
+            ['Appliances', user_details['name']]
             ]
 
     table = Table(data, colWidths=190)

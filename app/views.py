@@ -300,7 +300,7 @@ class OrderPVTSystem(View):
         print form.data
         if form.is_valid():
             appliances_model = self.appliances_model_class(request.POST)
-
+            print appliances_model['name']
             # user = request.user
             intended_use = form.cleaned_data['intended_use']
             site_visit = bool(form.cleaned_data['site_visit'])
@@ -310,6 +310,7 @@ class OrderPVTSystem(View):
             # possible_appliances = Appliance(name=form.cleaned_data['name'])
             # possible_appliances.save()
             #
+            print form.cleaned_data['name']
             # pvt_system = PVTSystem(
             #     roof_inclination=roof_inclination,
             #     property_type=property_type,
@@ -318,7 +319,7 @@ class OrderPVTSystem(View):
             #
             # pvt_system.save()
             # pvt_system.possible_appliances.add(possible_appliances)
-            pdf_name = quatation_pdf.generate_pdf(form.data)
+        pdf_name = quatation_pdf.generate_pdf(form.data)
         return redirect('/app/view-slip/' + pdf_name)
 
     def appliances_choices(self):
