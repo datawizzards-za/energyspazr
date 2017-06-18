@@ -333,3 +333,16 @@ class MyProducts(LoginRequiredMixin, View):
         context = {'user': user}
         
         return render(request, self.template_name, context)
+
+class OrderQuotes(View):
+    template_name = 'app/order_quotes.html'
+    #user_model_class = models.SpazrUser
+
+    def get(self, request, *args, **kwargs):
+        """
+        """
+        #req_user = request.user
+        #user = self.user_model_class.objects.filter(user=req_user)[0]
+        #context = {'user': user}
+        
+        return render(request, self.template_name) # , context)
