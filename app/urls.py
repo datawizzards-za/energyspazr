@@ -35,10 +35,9 @@ urlpatterns = [
     url(r'^order/$', views.ClientOrder.as_view(), name='order'),
     url(r'^client-info/$', views.ClientOrder.as_view(), name='client-info'),
     url(r'^products/$', views.OurProducts.as_view(), name='our_products'),
-    url(r'^products/pvt/$', views.PVT.as_view(), name='pvt'),
-    url(r'^products/geyser/$', views.SolarGeyser.as_view(), name='geyser'),
     url(r'^products/component/$', views.SolarComponent.as_view(),
         name='component'),
     url(r'^register/$', views.Register.as_view(), name='register'),
-    url(r'^view-slip/$', views.DisplayPDF.as_view(), name='slips'),
+    url(r'^view-slip/(?P<generate>\w+)/$', views.DisplayPDF.as_view(),
+        name='slips'),
 ]
