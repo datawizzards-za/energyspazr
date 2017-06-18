@@ -29,8 +29,9 @@ class SpazrUser(Client):
     web_address = models.URLField(null=True)
 
 
-class Service(models.Model):
+class Product(models.Model):
     name = models.CharField(max_length=100)
+    price = models.PositiveIntegerField()
 
 
 class System(models.Model):

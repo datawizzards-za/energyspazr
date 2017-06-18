@@ -1,0 +1,115 @@
+{% extends "app/auth_layout.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="col-md-8 animated card zoomIn">
+        <div class="card-title-w-btn">
+          <h1 class="title">Your top three Quotes</h1>
+          <p>
+              <a class="btn btn-primary icon-btn" href="">
+                  <i class="fa fa-mail-forward"></i>Email
+              </a>
+              <a class="btn btn-primary icon-btn" href="">
+                  <i class="fa fa-download"></i>PDF
+              </a>
+          </p>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr >
+                        <th class="text-center">PRODUCT</th>
+                    <th class="text-center">QUOTE 1</th>
+                    <th class="text-center">QUOTE 2</th>
+                    <th class="text-center">QUOTE 3</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class='text-center'>P#1</td>
+                    <td class='text-center'>Mark</td>
+                    <td class='text-center'>Otto</td>
+                    <td class='text-center'>@mdo</td>
+                  </tr>
+                  <tr>
+                    <td class='text-center'>P#2</td>
+                    <td class='text-center'>Jacob</td>
+                    <td class='text-center'>Thornton</td>
+                    <td class='text-center'>@fat</td>
+                  </tr>
+                  <tr>
+                      <td class="text-center">Actions</td>
+                    <td class='text-center'>
+                        <div class="btn-group">
+                            <a class="btn btn-sm btn-primary" href="#">
+                                <i class="fa fa-lg fa-mail-forward"></i>
+                            </a>
+                            <a class="btn btn-sm btn-primary" href="#">
+                                <i class="fa fa-lg fa-download"></i>
+                            </a>
+                        </div>
+                    </td>
+                    <td class='text-center'>
+                        <div class="btn-group">
+                            <a class="btn btn-sm btn-primary" href="#">
+                                <i class="fa fa-lg fa-mail-forward"></i>
+                            </a>
+                            <a class="btn btn-sm btn-primary" href="#">
+                                <i class="fa fa-lg fa-download"></i>
+                            </a>
+                        </div>
+                    </td>
+                    <td class='text-center'>
+                        <div class="btn-group">
+                            <a class="btn btn-sm btn-primary" href="#">
+                                <i class="fa fa-lg fa-mail-forward"></i>
+                            </a>
+                            <a class="btn btn-sm btn-primary" href="#">
+                                <i class="fa fa-lg fa-download"></i>
+                            </a>
+                        </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+        
+        <div class="card-footer">
+            <div class="col-md-1"></div>
+            <div class="col-md-4">
+            <a class="btn btn-warning btn-block" href="{% url 'our-products' %}">
+                Cancel
+            </a>
+            </div>
+            <div class="col-md-2"><br /></div>
+            <div class="col-md-4">
+                
+            <a class="btn btn-primary btn-block" href="{% url 'client-info' %}">
+                FINISH
+            </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block extrajs %}
+{% load staticfiles %}
+<script type="text/javascript" src="{% static 'app/js/plugins/select2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'app/js/plugins/bootstrap-datepicker.min.js' %}"></script>
+<script type="text/javascript">
+    $('#id_property_type').select2();
+    $('#id_roof_inclination').select2();
+</script>
+{% endblock%}
+
+{% comment %}
+**registration/registration_form.html**
+Used to show the form users will fill out to register. By default, has
+the following context:
+
+``form``
+    The registration form. This will be an instance of some subclass
+    of ``django.forms.Form``; consult `Django's forms documentation
+    <http://docs.djangoproject.com/en/dev/topics/forms/>`_ for
+    information on how to display this in a template.
+{% endcomment %}
