@@ -127,13 +127,6 @@ class OurProducts(View):
         return render(request, self.template_name)
 
 
-class PVT(View):
-    template_name = 'home/pvt.html'
-
-    def get(self, request, *args, **kwargs):
-        """
-        """
-        return render(request, self.template_name)
 
 
 class SolarGeyser(View):
@@ -329,8 +322,13 @@ class AddComponent(View):
 
 class MyProducts(LoginRequiredMixin, View):
     template_name = 'app/supplier/products.html'
+    user_model_class = models.SpazrUser
 
     def get(self, request, *args, **kwargs):
         """
         """
-        return render(request, self.template_name)
+        req_user = request.user
+        user = self.user_model_class.objects.filter(user=req_user)[0]
+        context = {'user': user}
+        
+        return render(request, self.template_name, context)
