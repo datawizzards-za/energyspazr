@@ -3,19 +3,14 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<section class="login-content">
-    <div class="logo">
-        <h1>
-          <a href="{% url 'home' %}"> energyspazr.com</a>
-        </h1>
-    </div>
-    <div class="col-md-4 animated zoomIn">
-        <div class="card login-box">
-            <br /><br />
+    <div class="col-md-4 animated zoomIn" >
+        <div class="card login-box text-center" style="min-height: 200px">
+            <br />
+            <h4>Please choose the type of your account.</h4>
+            <br />
             {% crispy form %}
         </div>
     </div>
-</section>
 {% endblock %}
 {% block extrajs %}
 {% load staticfiles %}

@@ -8,6 +8,7 @@
 select.bs-select-hidden,
 select.selectpicker {
   display: none !important;
+  text-align: center;
 }
 .bootstrap-select {
   width: 220px \0;

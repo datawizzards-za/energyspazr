@@ -1,14 +1,15 @@
+# Django
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, reverse, redirect, HttpResponse
 from django.views import View
-from django.contrib.auth.mixins import LoginRequiredMixin
 
-from app.forms import UserRoleForm
-from app.models import UserRole, Province, System, SupplierInstaller
-from app.forms import FinancierUpdateAccountForm, PVTOrderForm, GeyserOrderForm
-from app.models import Financier, PhysicalAddress, Appliance, PVTSystem
-from app.utils import quatation_pdf
-
+# Other Libraries
 from registration.backends.hmac.views import ActivationView
+
+# Local Django
+from app import forms
+from app import models
+from app.utils import quatation_pdf
 
 
 class Dashboard(LoginRequiredMixin, View):
@@ -39,8 +40,17 @@ class ActivateUser(ActivationView):
 
 class FinancierUpdateAccount(LoginRequiredMixin, View):
     template_name = 'registration/financier_update_account.html'
-    form_class = FinancierUpdateAccountForm
-    address_model_class = PhysicalAddress
+    form_class = forms.FinancierUpdateAccountForm
+    address_model_class = models.PhysicalAddress
+    financier_model_class = models.Financier
+
+    def get(self, request, *args, **kwargs):
+        """
+        """
+        form = self.form_class(self.provinces_choices())
+        context = {'form': form}
+
+        return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         """
@@ -65,7 +75,7 @@ class FinancierUpdateAccount(LoginRequiredMixin, View):
                 zip_code=form.cleaned_data['zip_code']
             )
 
-            Financier.objects.create(
+            self.financier_model_class.objects.create(
                 user=user,
                 company_name=company_name,
                 company_reg=company_reg,
@@ -80,14 +90,6 @@ class FinancierUpdateAccount(LoginRequiredMixin, View):
 
         return render(request, self.template_name, context)
 
-    def get(self, request, *args, **kwargs):
-        """
-        """
-        form = self.form_class(self.provinces_choices())
-        context = {'form': form}
-
-        return render(request, self.template_name, context)
-
     def provinces_choices(self):
         provinces = Province.objects.all()
         return tuple([[p.pk, p.name] for p in provinces])
@@ -95,8 +97,18 @@ class FinancierUpdateAccount(LoginRequiredMixin, View):
 
 class SupplierInstallerUpdateAccount(LoginRequiredMixin, View):
     template_name = 'registration/financier_update_account.html'
-    form_class = FinancierUpdateAccountForm
-    address_model_class = PhysicalAddress
+    form_class = forms.FinancierUpdateAccountForm
+    address_model_class = models.PhysicalAddress
+    supplier_install_model_class = models.SupplierInstaller
+
+    def get(self, request, *args, **kwargs):
+        """
+        """
+        p_choices = self.provinces_choices()
+        form = self.form_class(p_choices)
+        context = {'form': form}
+
+        return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         """
@@ -123,7 +135,7 @@ class SupplierInstallerUpdateAccount(LoginRequiredMixin, View):
                 zip_code=form.cleaned_data['zip_code']
             )
 
-            SupplierInstaller.objects.create(
+            self.supplier_install_model_class.objects.create(
                 user=user,
                 company_name=company_name,
                 company_reg=company_reg,
@@ -138,15 +150,6 @@ class SupplierInstallerUpdateAccount(LoginRequiredMixin, View):
 
         return render(request, self.template_name, context)
 
-    def get(self, request, *args, **kwargs):
-        """
-        """
-        p_choices = self.provinces_choices()
-        form = self.form_class(p_choices)
-        context = {'form': form}
-
-        return render(request, self.template_name, context)
-
     def provinces_choices(self):
         provinces = Province.objects.all()
         return ([[p.pk, p.name] for p in provinces])
@@ -154,8 +157,8 @@ class SupplierInstallerUpdateAccount(LoginRequiredMixin, View):
 
 class UserRoleView(LoginRequiredMixin, View):
     template_name = 'app/user_roles_form.html'
-    form_class = UserRoleForm
-    model_class = UserRole
+    form_class = forms.UserRoleForm
+    model_class = models.UserRole
 
     def get(self, request, *args, **kwargs):
         """
@@ -219,7 +222,7 @@ class SolarGeyser(View):
 
 
 class SolarComponent(View):
-    template_name = 'home/component.html'
+    template_name = 'app/component_order.html'
 
     def get(self, request, *args, **kwargs):
         """
@@ -279,8 +282,16 @@ class ClientOrder(View):
 
 class OrderPVTSystem(View):
     template_name = 'app/pvt_order.html'
-    form_class = PVTOrderForm
-    appliances_model_class = Appliance
+    appliances_model_class = models.Appliance
+    form_class = forms.PVTOrderForm
+
+    def get(self, request, *args, **kwargs):
+        """
+        """
+        form = self.form_class()
+        print form.data
+        context = {'form': form}
+        return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         """
@@ -310,14 +321,6 @@ class OrderPVTSystem(View):
             quatation_pdf.generate_pdf(form.data)
         return redirect('/app/client-info/')
 
-    def get(self, request, *args, **kwargs):
-        """
-        """
-        form = self.form_class()
-        print form.data
-        context = {'form': form}
-        return render(request, self.template_name, context)
-
     def appliances_choices(self):
         appliance = Appliance.objects.all()
         return tuple([[p.pk, p.name] for p in appliance])
@@ -325,7 +328,12 @@ class OrderPVTSystem(View):
 
 class OrderGeyser(View):
     template_name = 'app/geyser_order.html'
-    form_class = GeyserOrderForm
+    form_class = forms.GeyserOrderForm
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        context = {'form': form}
+        return render(request, self.template_name, context)
 
     """ 
     def post(self, request, *args, **kwargs):
@@ -351,13 +359,44 @@ class OrderGeyser(View):
 
         return render(request , self.template_name) """
 
-    def get(self, request, *args, **kwargs):
-        form = self.form_class()
-        context = {'form': form}
-        return render(request, self.template_name, context)
 
 class DisplayPDF(View):
+
     def get(self, request):
         image_data = open("app/static/app/slips/MabuManailengSat Jun 17 "
                           "22:15:20 2017.pdf", "rb").read()
         return HttpResponse(image_data, content_type="application/pdf")
+
+
+class AddComponent(View):    
+    template_name = 'app/add_component.html'
+    form_class = forms.AddComponentForm
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        context = {'form':form}
+        return render(request, self.template_name, context)
+
+    """ 
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(self.appliance_choices(), request.POST)
+        if form.is_valid():
+            user = request.user
+            intended_use = form.cleaned_data['intended_use']
+            site_visit = form.cleaned_data['site_visit']
+            property_type = form.cleaned_data['property_type']
+            roof_inclination = form.cleaned_data['roof_inclination']
+            
+            pvt_system = PVTSystem.objects.create(
+                roof_inclination=roof_inclination,
+                property_type=property_type,
+                site_visit=site_visit,
+                intended_use=intended_use)
+            
+            possible_appliances = form.cleaned_data['possible_appliances']
+            for appliance in possible_appliances:
+                this_appliance = appliance.objects.filter(pk=appliance)[0]
+                pvt_system.possible_appliances.add(this_appliance)
+                pvt_system.save()
+
+        return render(request , self.template_name) """

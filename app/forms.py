@@ -1,17 +1,21 @@
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+# Django
+from django.contrib.auth import forms as auth_forms
 from django.contrib.auth.models import User
 from django import forms
 from django.forms import ModelForm
 
+# Crispy forms
+from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper, Layout
 from crispy_forms.layout import Submit, HTML, Div, Field, Button
-from crispy_forms.bootstrap import FormActions
 
-from app.models import Financier, Appliance, SupplierInstaller, GeyserSystemOrder
+# Local Django
+from app import models
 
-class SigninForm(AuthenticationForm):
 
-    class Meta(AuthenticationForm):
+class SigninForm(auth_forms.AuthenticationForm):
+
+    class Meta(auth_fomrs.AuthenticationForm):
         model = User
         fields = ['username', 'password']
 
@@ -60,17 +64,18 @@ class SigninForm(AuthenticationForm):
     )
 
 
-class SignupForm(UserCreationForm):
 
-    class Meta:
-        model = User
-        fields = ['username', 'email']
+class SignupForm(auth_forms.UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super(SignupForm, self).__init__(*args, **kwargs)
 
         for fieldname in ['username', 'password1', 'password2']:
             self.fields[fieldname].help_text = None
+
+    class Meta:
+        model = User
+        fields = ['username', 'email']
 
     helper = FormHelper()
     helper.form_method = 'POST'
@@ -124,13 +129,7 @@ class SignupForm(UserCreationForm):
             css_class='form-group')
     )
 
-
 class FinancierUpdateAccountForm(ModelForm):
-
-    def __init__(self, provinces_choices, *args, **kwargs):
-        super(FinancierUpdateAccountForm, self).__init__(*args, **kwargs)
-        self.fields['province'].choices = provinces_choices
-
     building_name = forms.CharField(max_length=30)
     street_name = forms.CharField(max_length=30)
     province = forms.ChoiceField(choices=(), required=True)
@@ -138,8 +137,12 @@ class FinancierUpdateAccountForm(ModelForm):
     suburb = forms.CharField(max_length=30)
     zip_code = forms.IntegerField()
 
+    def __init__(self, provinces_choices, *args, **kwargs):
+        super(FinancierUpdateAccountForm, self).__init__(*args, **kwargs)
+        self.fields['province'].choices = provinces_choices
+
     class Meta:
-        model = Financier
+        model = models.Financier
         fields = ['company_name', 'company_reg', 'contact_number',
                   'web_address']
 
@@ -225,18 +228,19 @@ class FinancierUpdateAccountForm(ModelForm):
     )
 
 
-
 class PVTOrderForm(ModelForm):
-
-    property_type = forms.ChoiceField(choices=(['flat', 'FLAT'], ['house', 'HOUSE']))
-    roof_inclination = forms.ChoiceField(choices=(['tilted', 'TILTED'], ['flat', 'FLAT']))
+    property_type = forms.ChoiceField(choices=(['flat', 'FLAT'],
+                                               ['house', 'HOUSE']))
+    roof_inclination = forms.ChoiceField(choices=(['tilted', 'TILTED'],
+                                                  ['flat', 'FLAT']))
     need_finance = forms.ChoiceField(choices=(['yes', 'YES'], ['no', 'NO']))
-    include_installation = forms.ChoiceField(choices=(['yes', 'YES'], ['no', 'NO']))
+    include_installation = forms.ChoiceField(choices=(['yes', 'YES'],
+                                                      ['no', 'NO']))
     
     intended_use = forms.ChoiceField(choices=(['main_power', 'MAIN POWER'],
-                                                     ['backup_power', 'BACK UP']))
+                                              ['backup_power', 'BACK UP']))
     site_visit = forms.ChoiceField(choices=(['yes', 'YES'], ['no', 'NO']))
-    OPTIONS = ((p.pk, p.name) for p in Appliance.objects.all())
+    OPTIONS = ((p.pk, p.name) for p in models.Appliance.objects.all())
     name = forms.ChoiceField(choices=OPTIONS, required=True)
     username = forms.CharField(max_length=1000)
     physical_address = forms.CharField(max_length=1000)
@@ -245,7 +249,7 @@ class PVTOrderForm(ModelForm):
     first_name = forms.CharField(max_length=1000)
 
     class Meta:
-        model = Appliance
+        model = models.Appliance
         fields = ['name']
 
     helper = FormHelper()
@@ -301,8 +305,11 @@ class PVTOrderForm(ModelForm):
             Which of these appliances you want to power? \
             </label>"),
             Div(
-                Field('name', css_class='form-control selectpicker text-center', multiple='true', \
-                      placeholder='Select multiple appliances', data_done_button='true', id='done'),
+                Field('name',
+                       css_class='form-control selectpicker text-center',
+                       multiple='true',
+                       placeholder='Select multiple appliances',
+                       data_done_button='true', id='done'),
                 css_class='col-md-5 text-center'
                 ),
             css_class='form-group form-horizontal'),
@@ -328,10 +335,10 @@ class PVTOrderForm(ModelForm):
         Div(
             Div(
                 HTML(""),
-                css_class='col-md-4'
+                css_class='col-md-2'
                 ),
             Div(
-                HTML("<a class='btn btn-default btn-block icon-btn' \
+                HTML("<a class='btn btn-warning btn-block icon-btn' \
                  href='{% url 'our_products' %}'> Cancel</a>"),
                 css_class='col-md-4'
                 ),
@@ -450,7 +457,6 @@ class PVTOrderForm(ModelForm):
     )
     
 class GeyserOrderForm(forms.Form):
-    
     property_type = forms.ChoiceField(choices=(['flat', 'FLAT'], ['house', 'HOUSE']))
     roof_inclination = forms.ChoiceField(choices=(['tilted', 'TILTED'], ['flat', 'FLAT']))
     #new_system = forms.ChoiceField(choices=(['yes', 'YES'], ['no', 'NO']))
@@ -469,7 +475,7 @@ class GeyserOrderForm(forms.Form):
     include_installation = forms.ChoiceField(choices=(['yes', 'YES'], ['no', 'NO']))
 
     class Meta:
-        model = GeyserSystemOrder
+        model = models.GeyserSystemOrder
         fields = ['property_type', 'roof_inclination', 'existing_geyser',
                   'current_geyser_size', 'users_number', 'required_geyser_size']
 
@@ -594,29 +600,84 @@ class GeyserOrderForm(forms.Form):
 
 
 class UserRoleForm(forms.Form):
+    role = forms.ChoiceField(choices=(), required=True)
 
     def __init__(self, role_choices, *args, **kwargs):
         super(UserRoleForm, self).__init__(*args, **kwargs)
         self.fields['role'].choices = role_choices
-
-    role = forms.ChoiceField(choices=(), required=True)
 
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.form_show_labels = False
     helper.form_id = 'role_form'
     helper.layout = Layout(
-        HTML("<label class='control-label col-md-12 text-center'> \
-            Please choose the type of your account. \
-            </label>"),
-        Div(
-            HTML("<br /> <br />"), css_class='col-md-12'),
         Div(
             Field('role'), css_class='col-md-12 text-center'),
         Div(
-            HTML("<br /> <br />"), css_class='col-md-12'),
+            HTML("<br />"), css_class='col-md-12'),
         Div(
             FormActions(Submit('proceed', 'PROCEED',
                                css_class='btn btn-primary btn-block')),
             css_class='form-group btn-container'),
         )
+
+
+class ResendForm(forms.Form):
+    email = forms.CharField(max_length=1000)
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.form_show_labels = False
+
+    helper.layout = Layout(
+        Div(
+            Div(
+                Field('email', css_class='form-control text-center',
+                      placeholder='Email Address'),
+                css_class='col-md-12'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                FormActions(Submit('resend', 'SEND',
+                            css_class='btn btn-primary btn-lg')),
+            css_class='form-group'
+        ),
+            css_class='card-footer'
+        ),
+    )
+
+class AddComponentForm(forms.Form):
+    COMPOS = (['solar_panel', 'SOLAR PANEL'],
+              ['solar_battery', 'SOLAR BATTERY'])
+    components = forms.ChoiceField(choices=COMPOS, required=True)
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.form_show_labels = False
+
+    helper.layout = Layout(
+        Div(
+            Div(
+                Field('components',
+                      css_class='form-control selectpicker text-center',
+                      multiple='true', data_done_button='true', id='done'),
+                css_class='col-md-12'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                HTML("<a class='btn btn-warning btn-block icon-btn' \
+                 href='{% url 'component-order' %}'> Cancel</a>"),
+                css_class='col-md-6'
+                ),
+            Div(
+                FormActions(Submit('okay', 'Okay',
+                            css_class='btn btn-primary btn-block')),
+            css_class='form-group col-md-6'
+        ),
+            css_class='card-footer col-md-12'
+        ),
+    )

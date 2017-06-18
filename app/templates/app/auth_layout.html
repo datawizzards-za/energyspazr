@@ -17,8 +17,17 @@
   <body>
     <section class="material-half-bg">
       <div class="cover">
-        {% block content %}
-        {% endblock %}
+        <section class="login-content">
+            <div class="logo">
+                <h1>
+                  <a class='hvr-grow' href="{% url 'home' %}"> energyspazr.com </a>
+                </h1>
+            </div>
+            
+            {% block content %}
+            {% endblock %}
+            
+         </section>
       </div>
     </section>
   </body>

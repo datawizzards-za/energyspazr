@@ -1,10 +1,26 @@
 {% extends "registration/registration_base.html" %}
 {% load i18n %}
 
-{% block title %}{% trans "Activation email sent" %}{% endblock %}
-
 {% block content %}
-<p>{% trans "Please check your email to complete the registration process." %}</p>
+    <div class="login-box wide card text-center animated zoomIn" style="min-height: 200px;">
+        <div class="col-md-12">
+            <h3 class="card-title">Registration Email Send</h3>
+            
+            <div class="card-body">
+                {% blocktrans %}
+                <h4> We've send an account activation link to email.</h4>
+                <h4> Please check your inbox to complete the registration process. </h4>
+                {% endblocktrans %}
+                <br />
+            </div>
+            
+            <div class="card-footer">
+                <a class="btn btn-primary" href="{% url 'home' %}">
+                    Okay
+                </a>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 
