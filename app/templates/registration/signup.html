@@ -4,18 +4,11 @@
 
 
 {% block content %}
-<section class="login-content">
-    <div class="logo">
-        <h1>
-            <a class='hvr-grow' href="{% url 'home' %}"> energyspazr.com </a>
-        </h1>
-    </div>
     <div class="col-md-4 animated zoomIn">
         <div class="card login-box">
             {% crispy form %}
         </div>
     </div>
-</section>
 {% endblock %}
 
 {% comment %}

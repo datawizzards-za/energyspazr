@@ -1,15 +1,18 @@
 {% extends "app/auth_layout.html" %}
 {% load i18n %}
 {% load crispy_forms_tags %}
-
-{% block title %}{% trans "Resend Activation Email" %}{% endblock %}
+{% load staticfiles %}
+{% block css%}
+{{block.super}}
+<link rel="stylesheet" type="text/css" href="{% static 'app/css/bootstrap-select.css' %}">
+{% endblock %}
 
 {% block content %}
 
-    <div class="login-box wide card text-center animated zoomIn" style="min-height: 200px;">
+    <div class="login-box card text-center animated bounceIn" style="min-height: 200px;">
         <div class="col-md-12">
             <h3 class="card-title">
-                    We'll send you another account activation link.
+                    Select all the components you want.
             </h3>
             
             <div class="card-body">
@@ -26,6 +29,13 @@
 -->
 {% endblock %}
 
+{% block extrajs %}
+<script type="text/javascript" src="{% static 'app/js/bootstrap-select.js' %}"></script>
+<script type="text/javascript" src="{% static 'app/js/bootstrap-select.js' %}"></script>
+<script type="text/javascript">
+    $('#id_property_type').select2();
+</script>
+{% endblock%}
 
 {% comment %}
 **registration/resend_activation_form.html**

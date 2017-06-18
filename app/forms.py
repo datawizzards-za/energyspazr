@@ -60,6 +60,7 @@ class SigninForm(AuthenticationForm):
     )
 
 
+
 class SignupForm(UserCreationForm):
 
     class Meta:
@@ -123,7 +124,6 @@ class SignupForm(UserCreationForm):
             ),
             css_class='form-group')
     )
-
 
 class FinancierUpdateAccountForm(ModelForm):
 
@@ -321,10 +321,10 @@ class PVTOrderForm(ModelForm):
         Div(
             Div(
                 HTML(""),
-                css_class='col-md-4'
+                css_class='col-md-2'
                 ),
             Div(
-                HTML("<a class='btn btn-default btn-block icon-btn' \
+                HTML("<a class='btn btn-warning btn-block icon-btn' \
                  href='{% url 'our_products' %}'> Cancel</a>"),
                 css_class='col-md-4'
                 ),
@@ -480,7 +480,6 @@ class GeyserOrderForm(forms.Form):
 
 
 class UserRoleForm(forms.Form):
-
     def __init__(self, role_choices, *args, **kwargs):
         super(UserRoleForm, self).__init__(*args, **kwargs)
         self.fields['role'].choices = role_choices
@@ -492,17 +491,72 @@ class UserRoleForm(forms.Form):
     helper.form_show_labels = False
     helper.form_id = 'role_form'
     helper.layout = Layout(
-        HTML("<label class='control-label col-md-12 text-center'> \
-            Please choose the type of your account. \
-            </label>"),
-        Div(
-            HTML("<br /> <br />"), css_class='col-md-12'),
         Div(
             Field('role'), css_class='col-md-12 text-center'),
         Div(
-            HTML("<br /> <br />"), css_class='col-md-12'),
+            HTML("<br />"), css_class='col-md-12'),
         Div(
             FormActions(Submit('proceed', 'PROCEED',
                                css_class='btn btn-primary btn-block')),
             css_class='form-group btn-container'),
         )
+
+
+class ResendForm(forms.Form):
+    email = forms.CharField(max_length=1000)
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.form_show_labels = False
+
+    helper.layout = Layout(
+        Div(
+            Div(
+                Field('email', css_class='form-control text-center',
+                      placeholder='Email Address'),
+                css_class='col-md-12'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                FormActions(Submit('resend', 'SEND',
+                            css_class='btn btn-primary btn-lg')),
+            css_class='form-group'
+        ),
+            css_class='card-footer'
+        ),
+    )
+
+class AddComponentForm(forms.Form):
+    COMPOS = (['solar_panel', 'SOLAR PANEL'], ['solar_battery', 'SOLAR BATTERY'])
+    #((c.pk, c.name) for c in Component.objects.all())
+    components = forms.ChoiceField(choices=COMPOS, required=True)
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.form_show_labels = False
+
+    helper.layout = Layout(
+        Div(
+            Div(
+                Field('components', css_class='form-control selectpicker text-center', multiple='true', \
+                        data_done_button='true', id='done'),
+                css_class='col-md-12'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                HTML("<a class='btn btn-warning btn-block icon-btn' \
+                 href='{% url 'component-order' %}'> Cancel</a>"),
+                css_class='col-md-6'
+                ),
+            Div(
+                FormActions(Submit('okay', 'Okay',
+                            css_class='btn btn-primary btn-block')),
+            css_class='form-group col-md-6'
+        ),
+            css_class='card-footer col-md-12'
+        ),
+    )

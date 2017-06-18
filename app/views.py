@@ -1,12 +1,13 @@
 from django.shortcuts import render, HttpResponseRedirect, HttpResponse, \
     reverse, redirect
 from django.views import View
-from app.forms import FinancierUpdateAccountForm, UserRoleForm
 
 from app.models import Financier, PhysicalAddress, UserRole, Province
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from app.forms import FinancierUpdateAccountForm, PVTOrderForm, GeyserOrderForm
+from app import forms
+
+from app.forms import FinancierUpdateAccountForm, PVTOrderForm
 from app.models import Financier, PhysicalAddress, Appliance
 
 from registration.backends.hmac.views import ActivationView
@@ -102,7 +103,7 @@ class FinancierUpdateAccount(LoginRequiredMixin, View):
 class SupplierInstallerUpdateAccount(LoginRequiredMixin, View):
 
     template_name = 'registration/financier_update_account.html'
-    form_class = FinancierUpdateAccountForm
+    form_class = forms.FinancierUpdateAccountForm
     address_model_class = PhysicalAddress
 
     def post(self, request, *args, **kwargs):
@@ -163,7 +164,7 @@ class SupplierInstallerUpdateAccount(LoginRequiredMixin, View):
 class UserRoleView(LoginRequiredMixin, View):
 
     template_name = 'app/user_roles_form.html'
-    form_class = UserRoleForm
+    form_class = forms.UserRoleForm
     model_class = UserRole
 
     def get(self, request, *args, **kwargs):
@@ -199,24 +200,13 @@ class UserRoleView(LoginRequiredMixin, View):
 
 
 class OurProducts(View):
-
+    
     template_name = 'home/products.html'
 
     def get(self, request, *args, **kwargs):
         """
         """
         return render(request, self.template_name)
-
-
-class PVT(View):
-
-    template_name = 'home/pvt.html'
-
-    def get(self, request, *args, **kwargs):
-        """
-        """
-        return render(request, self.template_name)
-
 
 class SolarGeyser(View):
 
@@ -232,7 +222,7 @@ class SolarGeyser(View):
 
 class SolarComponent(View):
 
-    template_name = 'home/component.html'
+    template_name = 'app/component_order.html'
 
     def get(self, request, *args, **kwargs):
         """
@@ -294,7 +284,7 @@ class ClientOrder(View):
 
 class OrderPVTSystem(View):
     template_name = 'app/pvt_order.html'
-    form_class = PVTOrderForm
+    form_class = forms.PVTOrderForm
 
     def post(self, request, *args, **kwargs):
         """
@@ -338,7 +328,7 @@ class OrderPVTSystem(View):
 
 class OrderGeyser(View):
     template_name = 'app/geyser_order.html'
-    form_class = GeyserOrderForm
+    form_class = forms.GeyserOrderForm
 
     """ 
     def post(self, request, *args, **kwargs):
@@ -369,3 +359,37 @@ class OrderGeyser(View):
         context = {'form':form}
         return render(request, self.template_name, context)
 
+
+
+class AddComponent(View):    
+    template_name = 'app/add_component.html'
+    form_class = forms.AddComponentForm
+
+    """ 
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(self.appliance_choices(), request.POST)
+        if form.is_valid():
+            user = request.user
+            intended_use = form.cleaned_data['intended_use']
+            site_visit = form.cleaned_data['site_visit']
+            property_type = form.cleaned_data['property_type']
+            roof_inclination = form.cleaned_data['roof_inclination']
+            
+            pvt_system = PVTSystem.objects.create(
+                roof_inclination=roof_inclination,
+                property_type=property_type,
+                site_visit=site_visit,
+                intended_use=intended_use)
+            
+            possible_appliances = form.cleaned_data['possible_appliances']
+            for appliance in possible_appliances:
+                this_appliance = appliance.objects.filter(pk=appliance)[0]
+                pvt_system.possible_appliances.add(this_appliance)
+                pvt_system.save()
+
+        return render(request , self.template_name) """
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        context = {'form':form}
+        return render(request, self.template_name, context)

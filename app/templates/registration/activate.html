@@ -1,10 +1,32 @@
 {% extends "registration/registration_base.html" %}
 {% load i18n %}
 
-{% block title %}{% trans "Activation Failure" %}{% endblock %}
-
 {% block content %}
-<p>{% trans "Account activation failed." %}</p>
+    <div class="login-box wide card text-center animated zoomIn" style="min-height: 300px;">
+        <div class="col-md-12">
+            <h3 class="card-title">Oops.</h3>
+            <h3 class="card-title"></h3>
+            
+            <div class="card-body">
+                <h4> We could not activate your account.</h4>
+                <h4> Something is wrong with your activation id.</h4>
+                <h4> Click the reset button below to fix this.</h4>
+            </div>
+            <br />
+            <div class="card-footer">
+                <div class="col-md-6">
+                    <a class="btn btn-default btn-block" href="{% url 'home' %}">
+                        Cancel
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a class="btn btn-primary btn-block" href="{% url 'resend' %}">
+                        Reset
+                    </a>
+                </div>
+            </div>
+          </div>
+    </div>
 {% endblock %}
 
 

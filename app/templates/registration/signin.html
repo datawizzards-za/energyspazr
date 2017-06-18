@@ -3,12 +3,6 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<section class="login-content">
-    <div class="logo">
-        <h1>
-          <a class='hvr-grow' href="{% url 'home' %}"> energyspazr.com </a>
-        </h1>
-    </div>
     <div class="login-box text-center animated zoomIn">
       {% crispy form %}
       
@@ -26,10 +20,10 @@
         </div>
       </form>
     </div>
-  </section>
-
+<!--
 <p>{% trans "Forgot your password?" %} <a href="{% url 'auth_password_reset' %}">{% trans "Reset it" %}</a>.</p>
 <p>{% trans "Not a member?" %} <a href="{% url 'registration_register' %}">{% trans "Register" %}</a>.</p>
+-->
 {% endblock %}
 
 
