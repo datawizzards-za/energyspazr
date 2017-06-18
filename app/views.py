@@ -363,8 +363,8 @@ class OrderGeyser(View):
 class DisplayPDF(View):
 
     def get(self, request):
-        image_data = open("app/static/app/slips/MabuManailengSat Jun 17 "
-                          "22:15:20 2017.pdf", "rb").read()
+        image_data = open("app/static/app/slips/OfentsweLebogoSun Jun 18 "
+                          "06:41:22 2017.pdf", "rb").read()
         return HttpResponse(image_data, content_type="application/pdf")
 
 

@@ -18,7 +18,7 @@ def generate_pdf(user_details):
                                  rightMargin=72, leftMargin=72,
                                  topMargin=72, bottomMargin=18)
     elements = []
-    logo = "app/static/app/images/index.png"
+    logo = "app/static/common/icon.png"
 
     address_parts = ["411 State St.", "Marshalltown, IA 50158"]
 
