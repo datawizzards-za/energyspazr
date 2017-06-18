@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Province(models.Model):
     name = models.CharField(max_length=30)
 
@@ -15,10 +16,6 @@ class PhysicalAddress(models.Model):
     zip_code = models.IntegerField()
 
 
-class UserRole(models.Model):
-    name = models.CharField(max_length=15)
-
-
 class Client(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     contact_number = models.CharField(max_length=40)
@@ -26,11 +23,10 @@ class Client(models.Model):
     on_delete=models.CASCADE)
 
 
-class Financier(Client):
+class SpazrUser(Client):
     company_name = models.CharField(max_length=30)
     company_reg = models.CharField(max_length=40)
     web_address = models.URLField(null=True)
-    role = models.OneToOneField(UserRole, on_delete=models.CASCADE, null=True)
 
 
 class Service(models.Model):
@@ -46,7 +42,7 @@ class SupplierInstallerSystem(models.Model):
     service = models.PositiveSmallIntegerField()
 
 
-class SupplierInstaller(Financier):
+class SupplierInstaller(SpazrUser):
     systems = models.ManyToManyField(SupplierInstallerSystem)
 
 
