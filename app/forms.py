@@ -12,7 +12,6 @@ from crispy_forms.layout import Submit, HTML, Div, Field, Button
 # Local Django
 from app import models
 
-
 class SigninForm(auth_forms.AuthenticationForm):
 
     class Meta(auth_forms.AuthenticationForm):

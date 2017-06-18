@@ -13,7 +13,7 @@ from app.utils import quatation_pdf
 
 
 class Dashboard(LoginRequiredMixin, View):
-    template_name = 'app/index.html'
+    template_name = 'app/supplier/dashboard.html'
 
     def get(self, request, *args, **kwargs):
         """
@@ -400,3 +400,13 @@ class AddComponent(View):
                 pvt_system.save()
 
         return render(request , self.template_name) """
+
+
+class MyProducts(LoginRequiredMixin, View):
+
+    template_name = 'app/supplier/products.html'
+
+    def get(self, request, *args, **kwargs):
+        """
+        """
+        return render(request, self.template_name)

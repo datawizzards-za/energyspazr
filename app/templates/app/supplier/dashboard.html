@@ -1,0 +1,38 @@
+{% extends "app/supplier/layout.html" %}
+{% block title %} Dashboard {% endblock%}
+
+{% block content %}
+      
+      <div class="content-wrapper">
+        <div class="page-title">
+          <div>
+            <h1><i class="fa fa-dashboard"></i> Dashboard</h1>
+          </div>
+          <div>
+            <ul class="breadcrumb">
+              <li><i class="fa fa-home fa-lg"></i></li>
+              <li><a href="">Dashboard</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="row zoomIn animated">
+          <div class="col-md-6">
+            <div class="panel panel-primary">
+              <div class="panel-heading text-center">
+                <h3 class="panel-title">New Orders</h3>
+              </div>
+              <div class="panel-body">Panel content</div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="panel panel-primary">
+              <div class="panel-heading text-center">
+                <h3 class="panel-title">Recent Quotes Requests</h3>
+              </div>
+              <div class="panel-body">Panel content</div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+  {% endblock content %}

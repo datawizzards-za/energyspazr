@@ -1,0 +1,63 @@
+{% extends "app/supplier/layout.html" %}
+{% block title %} Products {% endblock%}
+
+{% block content %}
+      <div class="content-wrapper">
+        <div class="page-title">
+          <div>
+            <h1><i class="fa fa-dashboard"></i> Products</h1>
+          </div>
+          <div>
+            <ul class="breadcrumb">
+              <li><i class="fa fa-home fa-lg"></i></li>
+              <li><a href="">Products</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="row zoomIn animated">
+          <div class="col-md-12 card">
+        <div class="card-title-w-btn">
+          <h3 class="title">These are your products.</h3>
+          <p>
+              <a class="btn btn-primary icon-btn" href="{% url 'add-component' %}">
+                  <i class="fa fa-plus"></i>Add Item
+              </a>
+              <a class="btn btn-info btn-flat" href="#"><i class="fa fa-lg fa-refresh"></i></a>
+          </p>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover table-bordered" id="sampleTable">
+                <thead>
+                  <tr>
+                    <th class='col-md-10'>Name</th>
+                    <th class='col-md-2'>Actions</th>
+                  </tr>
+                </thead>
+                  <tbody>
+                    <tr>
+                      <td>Tiger Nixon</td>
+                      <td>
+                        <div class="btn-group">
+                            <a class="btn btn-info" href="#"><i class="fa fa-lg fa-edit"></i></a>
+                            
+                            <a class="btn btn-warning" href="#"><i class="fa fa-lg fa-trash"></i></a>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+            </table>
+        </div>
+          </div>
+        </div>
+      </div>
+  
+  {% endblock content %}
+{% block extrajs %}
+{% load staticfiles %}
+<script type="text/javascript" src="{% static 'app/js/plugins/select2.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'app/js/plugins/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'app/js/plugins/dataTables.bootstrap.min.js' %}"></script>
+    <script type="text/javascript">
+        $('#sampleTable').DataTable();
+    </script>
+  {% endblock %}
