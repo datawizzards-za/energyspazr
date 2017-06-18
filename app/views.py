@@ -201,13 +201,6 @@ class OurProducts(View):
         return render(request, self.template_name)
 
 
-class PVT(View):
-    template_name = 'home/pvt.html'
-
-    def get(self, request, *args, **kwargs):
-        """
-        """
-        return render(request, self.template_name)
 
 
 class SolarGeyser(View):

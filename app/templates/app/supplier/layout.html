@@ -22,5 +22,13 @@
     </div>
     <!-- Javascripts-->
     {% include 'app/js.html' %}
+{% block extrajs %}
+<script type="text/javascript" src="{% static 'app/js/plugins/select2.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'app/js/plugins/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'app/js/plugins/dataTables.bootstrap.min.js' %}"></script>
+    <script type="text/javascript">
+        $('#sampleTable').DataTable();
+    </script>
+  {% endblock %}
   </body>
 </html>
