@@ -65,7 +65,7 @@ class FinancierUpdateAccount(LoginRequiredMixin, View):
             contact_number = form.cleaned_data['contact_number']
             web_address = form.cleaned_data['web_address']
             province_id = form.cleaned_data['province']
-            province = Province.objects.filter(pk=province_id)[0]
+            province = models.Province.objects.filter(pk=province_id)[0]
             physical_address = self.address_model_class.objects.create(
                 building_name=form.cleaned_data['contact_number'],
                 street_name=form.cleaned_data['street_name'],
@@ -91,7 +91,7 @@ class FinancierUpdateAccount(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
     def provinces_choices(self):
-        provinces = Province.objects.all()
+        provinces = models.Province.objects.all()
         return tuple([[p.pk, p.name] for p in provinces])
 
 
@@ -125,7 +125,7 @@ class SupplierInstallerUpdateAccount(LoginRequiredMixin, View):
             contact_number = form.cleaned_data['contact_number']
             web_address = form.cleaned_data['web_address']
             province_id = form.cleaned_data['province']
-            province = Province.objects.filter(pk=province_id)[0]
+            province = models.Province.objects.filter(pk=province_id)[0]
             physical_address = self.address_model_class.objects.create(
                 building_name=form.cleaned_data['contact_number'],
                 street_name=form.cleaned_data['street_name'],
@@ -151,7 +151,7 @@ class SupplierInstallerUpdateAccount(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
     def provinces_choices(self):
-        provinces = Province.objects.all()
+        provinces = models.Province.objects.all()
         return ([[p.pk, p.name] for p in provinces])
 
 

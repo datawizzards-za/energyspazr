@@ -8,18 +8,11 @@
 <link rel="stylesheet" type="text/css" href="{% static 'app/css/bootstrap-select.css' %}">
 {% endblock %}
 {% block content %}
-<section class="login-content">
-    <div class="logo">
-        <h1>
-          <a href="{% url 'home' %}"> energyspazr.com</a>
-        </h1>
-    </div>
     <div class="col-md-6 animated zoomIn">
         <div class="card login-box vlong">
             {% crispy form %}
         </div>
     </div>
-</section>
 {% endblock %}
 
 {% block extrajs %}
