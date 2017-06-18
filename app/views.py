@@ -1,5 +1,7 @@
 # Django
+from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import Group
 from django.shortcuts import render, reverse, redirect, HttpResponse
 from django.views import View
 
@@ -14,11 +16,16 @@ from app.utils import quatation_pdf
 
 class Dashboard(LoginRequiredMixin, View):
     template_name = 'app/supplier/dashboard.html'
+    user_model_class = models.SpazrUser
 
     def get(self, request, *args, **kwargs):
         """
         """
-        return render(request, self.template_name)
+        req_user = request.user
+        user = self.user_model_class.objects.filter(user=req_user)[0]
+        context = {'user': user}
+        
+        return render(request, self.template_name, context)
 
 
 class Home(View):
@@ -35,19 +42,23 @@ class ActivateUser(ActivationView):
     """
 
     def get_success_url(self, user):
-        return ('user_roles', (), {})
+        login(self.request, user)
+        return ('user_account_update', (), {})
 
 
-class FinancierUpdateAccount(LoginRequiredMixin, View):
+class UserAccountUpdate(LoginRequiredMixin, View):
     template_name = 'registration/financier_update_account.html'
-    form_class = forms.FinancierUpdateAccountForm
+    form_class = forms.UserAccountUpdateForm
     address_model_class = models.PhysicalAddress
-    financier_model_class = models.Financier
+    user_model_class = models.SpazrUser
+    province_model_class = models.Province
 
     def get(self, request, *args, **kwargs):
         """
         """
-        form = self.form_class(self.provinces_choices())
+        p_choices = self.provinces_choices
+        r_choices = self.roles_choices
+        form = self.form_class(p_choices, r_choices)
         context = {'form': form}
 
         return render(request, self.template_name, context)
@@ -55,17 +66,25 @@ class FinancierUpdateAccount(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         """
         """
-        form = self.form_class(self.provinces_choices(), request.POST)
+        p_choices = self.provinces_choices
+        r_choices = self.roles_choices
+        form = self.form_class(p_choices, r_choices, request.POST)
+
         if form.is_valid():
             address_model = self.address_model_class(request)
 
             user = request.user
+            group_id = int(form.cleaned_data['roles'])
+            group = Group.objects.filter(pk=group_id)[0]
+            user.groups.add(group)
+            
             company_name = form.cleaned_data['company_name']
             company_reg = form.cleaned_data['company_reg']
             contact_number = form.cleaned_data['contact_number']
             web_address = form.cleaned_data['web_address']
             province_id = form.cleaned_data['province']
-            province = models.Province.objects.filter(pk=province_id)[0]
+            province = self.province_model_class.objects.filter(pk=province_id)[0]
+
             physical_address = self.address_model_class.objects.create(
                 building_name=form.cleaned_data['contact_number'],
                 street_name=form.cleaned_data['street_name'],
@@ -75,7 +94,7 @@ class FinancierUpdateAccount(LoginRequiredMixin, View):
                 zip_code=form.cleaned_data['zip_code']
             )
 
-            self.financier_model_class.objects.create(
+            self.user_model_class.objects.create(
                 user=user,
                 company_name=company_name,
                 company_reg=company_reg,
@@ -91,105 +110,12 @@ class FinancierUpdateAccount(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
     def provinces_choices(self):
-        provinces = models.Province.objects.all()
+        provinces = self.province_model_class.objects.all()
         return tuple([[p.pk, p.name] for p in provinces])
 
-
-class SupplierInstallerUpdateAccount(LoginRequiredMixin, View):
-    template_name = 'registration/financier_update_account.html'
-    form_class = forms.FinancierUpdateAccountForm
-    address_model_class = models.PhysicalAddress
-    supplier_install_model_class = models.SupplierInstaller
-
-    def get(self, request, *args, **kwargs):
-        """
-        """
-        p_choices = self.provinces_choices()
-        form = self.form_class(p_choices)
-        context = {'form': form}
-
-        return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        """
-        """
-        p_choices = self.provinces_choices()
-        form = self.form_class(p_choices, request.POST)
-
-        if form.is_valid():
-            address_model = self.address_model_class(request)
-
-            user = request.user
-            company_name = form.cleaned_data['company_name']
-            company_reg = form.cleaned_data['company_reg']
-            contact_number = form.cleaned_data['contact_number']
-            web_address = form.cleaned_data['web_address']
-            province_id = form.cleaned_data['province']
-            province = models.Province.objects.filter(pk=province_id)[0]
-            physical_address = self.address_model_class.objects.create(
-                building_name=form.cleaned_data['contact_number'],
-                street_name=form.cleaned_data['street_name'],
-                suburb=form.cleaned_data['suburb'],
-                province=province,
-                city=form.cleaned_data['city'],
-                zip_code=form.cleaned_data['zip_code']
-            )
-
-            self.supplier_install_model_class.objects.create(
-                user=user,
-                company_name=company_name,
-                company_reg=company_reg,
-                contact_number=contact_number,
-                web_address=web_address,
-                physical_address=physical_address)
-
-            return redirect(reverse('dashboard'))
-
-        form = self.form_class(self.provinces_choices())
-        context = {'form': form}
-
-        return render(request, self.template_name, context)
-
-    def provinces_choices(self):
-        provinces = models.Province.objects.all()
-        return ([[p.pk, p.name] for p in provinces])
-
-
-class UserRoleView(LoginRequiredMixin, View):
-    template_name = 'app/user_roles_form.html'
-    form_class = forms.UserRoleForm
-    model_class = models.UserRole
-
-    def get(self, request, *args, **kwargs):
-        """
-        """
-        form = self.form_class(self.get_form_choices())
-        context = {'form': form}
-        return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(self.get_form_choices(), request.POST)
-
-        if form.is_valid():
-            user = request.user
-            role_id = int(form.cleaned_data['role'])
-            role = self.model_class.objects.filter(pk=role_id)[0]
-            user.role = role
-            user.save()
-
-            if role.name == 'Financier':
-                return redirect(reverse('financier'))
-            elif role.name == 'Installer' or role.name == 'Supplier':
-                return redirect(reverse('supplier_installer'))
-            else:
-                return redirect(reverse('dashboard'))
-
-        context = {'form': form}
-        return render(request, self.template_name, context)
-
-    def get_form_choices(self):
-        roles = self.model_class.objects.all()
-        return tuple([[role.pk, role.name] for role in roles])
+    def roles_choices(self):
+        roles = Group.objects.all()
+        return tuple([[r.pk, r.name] for r in roles])
 
 
 class OurProducts(View):
@@ -293,7 +219,6 @@ class OrderPVTSystem(View):
         print form.data
         if form.is_valid():
             appliances_model = self.appliances_model_class(request.POST)
-
             # user = request.user
             intended_use = form.cleaned_data['intended_use']
             site_visit = bool(form.cleaned_data['site_visit'])
@@ -303,6 +228,7 @@ class OrderPVTSystem(View):
             # possible_appliances = Appliance(name=form.cleaned_data['name'])
             # possible_appliances.save()
             #
+            print form.cleaned_data['name']
             # pvt_system = PVTSystem(
             #     roof_inclination=roof_inclination,
             #     property_type=property_type,
@@ -311,8 +237,8 @@ class OrderPVTSystem(View):
             #
             # pvt_system.save()
             # pvt_system.possible_appliances.add(possible_appliances)
-            quatation_pdf.generate_pdf(form.data)
-        return redirect('/app/client-info/')
+        pdf_name = quatation_pdf.generate_pdf(form.data)
+        return redirect('/app/view-slip/' + pdf_name)
 
     def appliances_choices(self):
         appliance = Appliance.objects.all()
@@ -354,20 +280,20 @@ class OrderGeyser(View):
 
 
 class DisplayPDF(View):
-
-    def get(self, request):
-        image_data = open("app/static/app/slips/MabuManailengSat Jun 17 "
-                          "22:15:20 2017.pdf", "rb").read()
+    def get(self, request, *args, **kwargs):
+        pdf_dir = 'app/static/app/slips/'
+        image_data = open(pdf_dir + str(kwargs['generate']) + '.pdf',
+                          "rb").read()
         return HttpResponse(image_data, content_type="application/pdf")
 
 
-class AddComponent(View):    
+class AddComponent(View):
     template_name = 'app/add_component.html'
     form_class = forms.AddComponentForm
 
     def get(self, request, *args, **kwargs):
         form = self.form_class()
-        context = {'form':form}
+        context = {'form': form}
         return render(request, self.template_name, context)
 
     """ 
@@ -396,7 +322,6 @@ class AddComponent(View):
 
 
 class MyProducts(LoginRequiredMixin, View):
-
     template_name = 'app/supplier/products.html'
 
     def get(self, request, *args, **kwargs):

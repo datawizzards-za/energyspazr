@@ -19,24 +19,23 @@ from django.contrib.auth import views as auth_views
 
 from registration.backends.hmac.views import RegistrationView
 
-from app.forms import SigninForm, SignupForm
+from app import forms
 from app import views
 
 
 urlpatterns = [
     url(r'^\Z', include('app.urls')),
     url(r'^app/', include('app.urls')),
-    url(r'^app/financier/', views.FinancierUpdateAccount.as_view(), name='financier'),
-
     url(r'^accounts/signin/$', auth_views.login,
         {'template_name':'registration/signin.html',
-                                   'authentication_form': SigninForm},
-                                    name='signin'),
-
+         'authentication_form': forms.SigninForm,
+         'redirect_authenticated_user': True}, name='signin'),
     url(r'^accounts/signup/$', RegistrationView.as_view(
             template_name='registration/signup.html',
-            form_class=SignupForm), name='signup'),
-
+            form_class=forms.SignupForm), name='signup'),
+    url(r'^accounts/resend/$', RegistrationView.as_view(
+            template_name='registration/resend_activation_form.html',
+            form_class=forms.ResendForm), name='resend'),
     url(r'^accounts/activate/(?P<activation_key>[-:\w]+)/$',
         views.ActivateUser.as_view(), name='registration_activate'),
     url(r'^accounts/', include('registration.backends.hmac.urls')),
