@@ -100,7 +100,8 @@ class UserAccountUpdate(LoginRequiredMixin, View):
                 company_reg=company_reg,
                 contact_number=contact_number,
                 web_address=web_address,
-                physical_address=physical_address)
+                physical_address=physical_address
+            )
 
             return redirect(reverse('dashboard'))
 
@@ -279,6 +280,7 @@ class OrderGeyser(View):
 
 
 class DisplayPDF(View):
+
     def get(self, request, *args, **kwargs):
         pdf_dir = 'app/static/app/slips/'
         image_data = open(pdf_dir + str(kwargs['generate']) + '.pdf',
