@@ -352,6 +352,7 @@ class MyProducts(LoginRequiredMixin, View):
 
         return render(request, self.template_name, context)
 
+
 class OrderQuotes(View):
     template_name = 'app/order_quotes.html'
     #user_model_class = models.SpazrUser
