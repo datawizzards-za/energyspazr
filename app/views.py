@@ -340,13 +340,15 @@ class AddComponent(View):
 class MyProducts(LoginRequiredMixin, View):
     template_name = 'app/supplier/products.html'
     user_model_class = models.SpazrUser
+    form_class = forms.EditProductForm
 
     def get(self, request, *args, **kwargs):
         """
         """
         req_user = request.user
+        form = self.form_class
         user = self.user_model_class.objects.filter(user=req_user)[0]
-        context = {'user': user}
+        context = {'user': user, 'form':form}
 
         return render(request, self.template_name, context)
 
@@ -362,3 +364,10 @@ class OrderQuotes(View):
         #context = {'user': user}
         
         return render(request, self.template_name) # , context)
+
+
+    def get(self, request, *args, **kwargs):
+        pdf_dir = 'app/static/app/slips/'
+        image_data = open(pdf_dir + str(kwargs['generate']) + '.pdf',
+                          "rb").read()
+        return HttpResponse(image_data, content_type="application/pdf")
