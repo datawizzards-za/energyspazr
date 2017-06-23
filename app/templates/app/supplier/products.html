@@ -16,43 +16,76 @@
           </div>
         </div>
         <div class="row zoomIn animated">
-            
-          <div class="col-md-12 zoomIn animated card" id='my_products'>
-        <div class="card-title-w-btn">
-          <h3 class="title">My Products.</h3>
-          <p>
-              <a class="btn btn-primary icon-btn" id='btn_add_product'>
-                  <i class="fa fa-plus"></i>Add Item(s)
-              </a>
-          </p>
+        <div class="col-md-12 zoomIn animated card" id='my_products'>
+            <div class="card-title-w-btn">
+              <h3 class="title">My Products.</h3>
+              <p>
+                  <a class="btn btn-primary icon-btn" id='btn_add_products'>
+                      <i class="fa fa-plus"></i>Add Item(s)
+                  </a>
+              </p>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover table-bordered" id="table_my_products">
+                    <thead>
+                      <tr>
+                        <th class='col-md-10'>Product Name</th>
+                        <th class='col-md-2 text-center'>Actions</th>
+                      </tr>
+                    </thead>
+                      <tbody>
+                        <tr>
+                          <td>Tiger Nixon</td>
+                          <td class='text-center'>
+                            <div class="btn-group">
+                                <a class="btn btn-info" id="btn_edit_product" ><i class="fa fa-lg fa-edit"></i></a>
+
+                                <a class="btn btn-warning" href="#"><i class="fa fa-lg fa-trash"></i></a>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                </table>
+            </div>
         </div>
-        <div class="card-body">
-            <table class="table table-hover table-bordered" id="table_my_products">
-                <thead>
-                  <tr>
-                    <th class='col-md-10'>Product Name</th>
-                    <th class='col-md-2 text-center'>Actions</th>
-                  </tr>
-                </thead>
-                  <tbody>
-                    <tr>
-                      <td>Tiger Nixon</td>
-                      <td class='text-center'>
-                        <div class="btn-group">
-                            <a class="btn btn-info" id="btn_edit_product"><i class="fa fa-lg fa-edit"></i></a>
-                            
-                            <a class="btn btn-warning" href="#"><i class="fa fa-lg fa-trash"></i></a>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-            </table>
+         
+        <div class="col-md-12 zoomIn animated card" id='add_products'>
+            <div class="card-title-w-btn">
+                <h4 class="title">Select one or more products to add (double click to select), then click add selected.</h4>
+                <p>
+                    <a class="btn btn-primary icon-btn" id="btn_add_selected">
+                        <i class="fa fa-plus"></i>Selected
+                    </a>
+                    <a class="btn btn-primary icon-btn" id="btn_add_new">
+                        <i class="fa fa-plus"></i>New
+                    </a>
+                    <a class="btn btn-warning icon-btn" href="{% url 'my-products' %}">
+                        <i class="fa fa-backward"></i>Back
+                    </a>
+                </p>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th class='col-md-6 text-center'>Product Name</th>
+                            <th class='col-md-6 text-center'>Average Selling Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center">Tiger Nixon</td>
+                            <td class="text-center">R550.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-          </div>
             
-            <div class="col-md-12">
-                <div class="col-md-3"></div>
-            <div class="col-md-6 zoomIn animated card" id='add_products'>
+        
+        <div class="col-md-12">
+            <div class="col-md-3"></div>
+            <div class="col-md-6 zoomIn animated card" id='edit_product'>
                 <div class="card-title text-center">
                     <h4 class="title">
                         Enter the product price below.
@@ -62,7 +95,21 @@
                     {% crispy form %}
                 </div>
             </div>
+        </div>
+            
+        <div class="col-md-12">
+            <div class="col-md-3"></div>
+            <div class="col-md-6 zoomIn animated card" id='add_new_product'>
+                <div class="card-title text-center">
+                    <h4 class="title">
+                        Add new product.
+                    </h4>
                 </div>
+                <div class="card-body">
+                    {% crispy form %}
+                </div>
+            </div>
+        </div>
             
         </div>
       </div>

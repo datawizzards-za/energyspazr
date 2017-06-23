@@ -762,8 +762,10 @@ class AddComponentForm(forms.Form):
         ),
     )
 
-class EditProductForm(forms.Form):
+class MyProductForm(forms.Form):
     price = forms.IntegerField()
+    prod_price = forms.IntegerField()
+    prod_name = forms.CharField(max_length=100)
 
     helper = FormHelper()
     helper.form_method = 'POST'
@@ -772,8 +774,17 @@ class EditProductForm(forms.Form):
     helper.layout = Layout(
         Div(
             Div(
-                Field('price',
-                      placeholder='R100.50',
+                Field('prod_name',
+                      placeholder='Product name',
+                      css_class='form-control text-center'),
+                css_class='col-md-12 text-center'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                Field('prod_price',
+                      placeholder='Product price, e.g., R100.50',
                       css_class='form-control text-center'),
                 css_class='col-md-12 text-center'
             ),

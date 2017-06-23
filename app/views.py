@@ -340,7 +340,7 @@ class AddComponent(View):
 class MyProducts(LoginRequiredMixin, View):
     template_name = 'app/supplier/products.html'
     user_model_class = models.SpazrUser
-    form_class = forms.EditProductForm
+    form_class = forms.MyProductForm
 
     def get(self, request, *args, **kwargs):
         """
