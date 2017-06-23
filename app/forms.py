@@ -351,7 +351,8 @@ class PVTOrderForm(ModelForm):
                                        data_target="#targetElement",
                                        data_toggle="collapse",
                                        css_id='proceed'
-                                       )),
+                                       )
+                                ),
                     css_class='col-md-4'
                 ),
                 css_class='card-footer'
@@ -466,7 +467,9 @@ class GeyserOrderForm(forms.Form):
     roof_inclination = forms.ChoiceField(
         choices=(['tilted', 'TILTED'], ['flat', 'FLAT']))
     # new_system = forms.ChoiceField(choices=(['yes', 'YES'], ['no', 'NO']))
-    existing_geyser = forms.ChoiceField(choices=(['no', 'NO'], ['yes', 'YES']))
+    existing_geyser = forms.ChoiceField(choices=([False, 'NO'],
+                                                 [True, 'YES']))
+
     water_collector = forms.ChoiceField(choices=(['flat_plate', 'FLAT PLATE'],
                                                  ['evacuated_tubes',
                                                   'EVACUATED TUBES']))
@@ -483,6 +486,12 @@ class GeyserOrderForm(forms.Form):
     include_installation = forms.ChoiceField(
         choices=(['yes', 'YES'], ['no', 'NO']))
 
+    username = forms.CharField(max_length=1000)
+    physical_address = forms.CharField(max_length=1000)
+    contact_number = forms.CharField(max_length=1000)
+    last_name = forms.CharField(max_length=1000)
+    first_name = forms.CharField(max_length=1000)
+
     class Meta:
         model = models.GeyserSystemOrder
         fields = ['property_type', 'roof_inclination', 'existing_geyser',
@@ -490,10 +499,11 @@ class GeyserOrderForm(forms.Form):
                   'required_geyser_size']
 
     helper = FormHelper()
-    helper.form_method = 'GET'
+    helper.form_method = 'POST'
     helper.form_show_labels = False
 
     helper.layout = Layout(
+        Div(
         HTML('<h3 class="login-head">SOLAR GEYSER</h3>'),
         Div(
             HTML("<label class='control-label col-md-7'> \
@@ -598,12 +608,119 @@ class GeyserOrderForm(forms.Form):
                 css_class='col-md-4'
             ),
             Div(
-                HTML("<a class='btn btn-success btn-block icon-btn' \
-                 href='{% url 'client-info' %}'> Proceed </a>"),
+                FormActions(Button('login', 'PROCEED',
+                                   css_class='btn btn-primary btn-block',
+                                   data_target="#targetElement",
+                                   data_toggle="collapse",
+                                   css_id='proceed'
+                                   )
+                            ),
                 css_class='col-md-4'
             ),
             css_class='card-footer'
-        )
+        ),
+
+        css_id = 'targetElement',
+        css_class = 'card login-box vlong'
+
+    ),
+    Div(
+        HTML(
+            "<h3 class ='login-head'>Let's complete your order.</h3>"),
+        Div(
+            Div(
+                Div(
+                    Div(
+                        Field('first_name',
+                              css_class='form-control text-center form-control'
+                              , placeholder='First Name',
+                              type='text',
+                              maxlength='30'
+                              ),
+                        css_class='controls'),
+                    css_class='form-group'
+                ),
+                css_class='col-md-6'
+            ),
+            Div(
+                Div(
+                    Div(
+                        Field('last_name',
+                              css_class='form-control text-center form-control'
+                              , placeholder='Last Name',
+                              type='text',
+                              maxlength='30'
+                              ),
+                        css_class='controls'),
+                    css_class='form-group'
+                ),
+                css_class='col-md-6'
+            ),
+            css_class='row mb-20',
+        ),
+        Div(
+            Div(
+                Div(
+                    Div(
+                        Field('username',
+                              css_class='form-control emailinput text-center form-control'
+                              , placeholder='Email Address',
+                              type='text',
+                              maxlength='30'
+                              ),
+                        css_class='controls'),
+                    css_class='form-group'
+                ),
+                css_class='col-md-6'
+            ),
+            Div(
+                Div(
+                    Div(
+                        Field('contact_number',
+                              css_class='form-control text-center form-control'
+                              , placeholder='Contact Number',
+                              type='text',
+                              maxlength='30'
+                              ),
+                        css_class='controls'),
+                    css_class='form-group'
+                ),
+                css_class='col-md-6'
+            ),
+            css_class='row mb-20',
+        ),
+        Div(
+            Div(
+                Div(
+                    Field('physical_address',
+                          css_class='form-control text-center textinput textInput '
+                                    'form-control',
+                          placeholder='Delivery address',
+                          required='true'),
+                    css_class='controls'
+                ),
+                css_class='form-group'
+            ),
+            css_class='col-md-12'
+        ),
+        Div(
+            Div(
+                css_class='form-group col-md-3'
+            ),
+            Div(
+                Div(
+                    Submit('place_order', 'FINISH',
+                           css_class='btn btn-primary btn btn-primary btn-block'
+                           ),
+                    css_class='controls'
+                ),
+                css_class='form-group col-md-6'
+            ),
+            css_class='form-group btn-container'
+        ),
+
+        css_class='card login-box finish_order'
+    ),
     )
 
 
