@@ -438,13 +438,14 @@ class MyProducts(LoginRequiredMixin, View):
                     price=price
                 )
         elif new_form.is_valid():
-            price = kwargs['price']
-            product_id = kwargs['product']
-            
-            product = self.products_model_class.objects.filter(pk=product_id)
+            name = new_form.cleaned_data['new_name']
+            price = new_form.cleaned_data['new_price']
+            product = self.products_model_class.objects.create(name=name) 
+            user = self.user_model_class.objects.filter(user=request.user)[0]
             user_product = self.userproduct_model_class.objects.create(
-                user=request.user,
-                product=product 
+                user=user,
+                product=product,
+                price = price
             )
 
         return redirect(reverse('my-products'))
