@@ -64,7 +64,7 @@ def generate_pdf(user_details):
             ['Last Name', user_details['last_name'].upper()],
             ['Contact Number', user_details['contact_number'].upper()],
             ['Physical Address',
-             user_details['physical_address'].replace(',', '\n').upper()]]
+             user_details['physical_addres'].replace(',', '\n').upper()]]
 
     table = Table(data, colWidths=190)
     table.setStyle(TableStyle([
