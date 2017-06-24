@@ -241,7 +241,8 @@ class OrderPVTSystem(View):
 
         #pdf_name = quotation_pdf.generate_pdf(form.data)
         #return redirect('/app/view-slip/' + pdf_name)
-        return redirect('/app/dashboard/')
+        return redirect('/app/order-quotes/' +
+                        str(pvt_system.systemorder_ptr_id) )
 
     def appliances_choices(self):
         appliance = models.Appliance.objects.all()
@@ -329,7 +330,8 @@ class OrderGeyser(View):
             )
             print(form.data.values())
 
-        return redirect('/app/dashboard/')
+        return redirect('/app/order-quotes/' +
+                        str(geyser_order.systemorder_ptr_id) )
 
 
 class DisplayPDF(View):
@@ -430,8 +432,12 @@ class OrderQuotes(View):
     def get(self, request, *args, **kwargs):
         """
         """
-        
-        return render(request, self.template_name) # , context)
+        #systemorder_ptr_id
+        user_id = int(kwargs['user_id'])
+        data = models.GeyserSystemOrder.objects.filter(systemorder_ptr_id =
+                                                   user_id)
+        context = {'data': data}
+        return render(request, self.template_name, context) # , context)
 
 
     def get_pdf(self, request, *args, **kwargs):

@@ -27,7 +27,7 @@ urlpatterns = [
     url(r'^my-products/$', views.MyProducts.as_view(), name='my-products'),
     url(r'^pvt-order/$', views.OrderPVTSystem.as_view(), name='pvt-order'),
     url(r'^geyser-order/$', views.OrderGeyser.as_view(), name='geyser-order'),
-    url(r'^order-quotes/$', views.OrderQuotes.as_view(), name='order-quotes'),
+    url(r'^order-quotes/(?P<user_id>\d)/$', views.OrderQuotes.as_view(), name='order-quotes'),
     url(r'^component-order/$', views.SolarComponent.as_view(),
         name='component-order'),
     url(r'^add-component/$', views.AddComponent.as_view(),
