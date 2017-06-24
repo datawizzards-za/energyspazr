@@ -244,8 +244,8 @@ class PVTOrderForm(ModelForm):
     intended_use = forms.ChoiceField(choices=(['main_power', 'MAIN POWER'],
                                               ['backup_power', 'BACK UP']))
     site_visit = forms.ChoiceField(choices=((True, 'YES'), (False, 'NO')))
-    OPTIONS = ((p.name, p.name) for p in models.Appliance.objects.all())
-    name = forms.ChoiceField(choices=OPTIONS, required=True)
+    #OPTIONS = ((p.name, p.name) for p in models.Appliance.objects.all())
+    #name = forms.ChoiceField(choices=OPTIONS, required=True)
     username = forms.CharField(max_length=1000)
     physical_address = forms.CharField(max_length=1000)
     contact_number = forms.CharField(max_length=1000)
@@ -554,11 +554,18 @@ class GeyserOrderForm(forms.Form):
                 css_class='form-group form-horizontal'
             ),
             Div(
+                HTML("<h4 class='text-danger'> \
+                The number of people using geyser is required. \
+                </h4>"),
+                css_class='form-horizontal col-md-12 text-center',
+                css_id = "users_number_error"
+            ),
+            Div(
                 HTML("<label class='control-label col-md-7'> \
                 Number of people using geyser \
                 </label>"),
                 Div(
-                    Field('users_number', css_class='form-control'),
+                    Field('users_number', css_class='form-control text-center'),
                     css_class='col-md-5 text-center'
                 ),
                 css_class='form-group form-horizontal'
@@ -620,7 +627,7 @@ class GeyserOrderForm(forms.Form):
                     css_class='col-md-4'
                 ),
                 Div(
-                    HTML("<a class='btn btn-default btn-block icon-btn' \
+                    HTML("<a class='btn btn-warning btn-block icon-btn' \
                      href='{% url 'our-products' %}'> Cancel</a>"),
                     css_class='col-md-4'
                 ),
