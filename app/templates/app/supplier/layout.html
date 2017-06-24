@@ -29,11 +29,20 @@
     <script type="text/javascript" src="{% static 'app/js/plugins/jquery.dataTables.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'app/js/plugins/dataTables.bootstrap.min.js' %}"></script>
     <script type="text/javascript">
-        $('#table_my_products').DataTable();
+        
+        var table = $('#table_my_products').DataTable();
 
 
        $('#table_all_products tbody').on( 'click', 'tr', function (e) {
-            console.log($(this));
+            var row = $('tr', this);
+            var id = row.context.attributes[0].nodeValue;
+            var name = $('td', this).eq(0).text();
+            var price = $('td', this).eq(1).text();
+            console.log(name + " " + price);
+            //console.log(row.context.cells[0].childNodes[0]);
+            //console.log(row.context.cells[0]);
+            //var  row = table.row(this).nodes().addClass('highlight');
+           // console.log(row);
             $(this).toggleClass('selected');
             $('#btn_add_selected').removeClass('disabled')
             //$('#btn_add_selected').removeClass('disabled')

@@ -73,10 +73,10 @@
           </tr>
         </thead>
         <tbody>
-          {% for product in all_products %}
-          <tr>
+          {% for product, avg in all_products %}
+          <tr value={{ product.pk }}>
             <td class="text-center">{{ product.name }}</td>
-            <td class="text-center">{{ product.price }}</td>
+            <td class="text-center">{{ avg.avg }}</td>
           </tr>
           {% endfor %}
         </tbody>

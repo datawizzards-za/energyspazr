@@ -223,11 +223,11 @@ class OrderPVTSystem(View):
             site_visit = bool(form.cleaned_data['site_visit'])
             property_type = form.cleaned_data['property_type']
             roof_inclination = form.cleaned_data['roof_inclination']
-            name = request.POST.getlist('name')
+            names = request.POST.getlist('name')
             need_finance = form.cleaned_data['need_finance']
             include_installation = form.cleaned_data['include_installation']
 
-            pvt_system = models.PVTSystem(
+            pvt_system = models.PVTSystem.objects.create(
                 need_finance = need_finance,
                 include_installation=include_installation,
                 intended_use = intended_use,
@@ -235,8 +235,9 @@ class OrderPVTSystem(View):
                 property_type=property_type,
                 site_visit=site_visit
             )
-            pvt_system.possible_appliances.add(*name)
-            pvt_system.save()
+            for name in names:
+                id_name = models.Appliance.objects.filter(name=name)[0]
+                pvt_system.possible_appliances.add(id_name)
 
         #pdf_name = quotation_pdf.generate_pdf(form.data)
         #return redirect('/app/view-slip/' + pdf_name)
@@ -394,11 +395,21 @@ class MyProducts(LoginRequiredMixin, View):
         edit_form = self.edit_form_class()
         new_form = self.new_form_class()
         user = self.user_model_class.objects.filter(user=req_user)[0]
-        my_products = self.userproduct_model_class.objects.filter(user=user)
-        all_products = self.products_model_class.objects.all()
-        context = {'user': user, 'all_products': all_products,
-                   'my_products': my_products, 'edit_form': edit_form,
-                   'new_form': new_form}
+        my_prods = self.userproduct_model_class.objects.filter(user=user)
+        averages = []
+        all_prods = self.products_model_class.objects.all()
+        for prod in all_prods:
+            products = self.userproduct_model_class.objects.filter(product=prod)
+            if len(products):
+                avg = sum([p.price for p in products]) / len(products)
+            else:
+                avg = 'N/A'
+            entry = {'avg': avg}
+            averages.append(entry)
+
+        context = {'user': user, 'all_products': zip(all_prods, averages),
+                   'averages': averages, 'my_products': my_prods,
+                   'edit_form': edit_form, 'new_form': new_form}
 
         return render(request, self.template_name, context)
     
