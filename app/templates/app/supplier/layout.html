@@ -37,7 +37,8 @@
             var row = $('tr', this);
             var id = row.context.attributes[0].value;
             var name = $('td', this).eq(0).text();
-            var price = $('td', this).eq(1).text();
+            var price_text = $('td', this).eq(1).text();
+            var price = price_text.substring(1, price_text.length).replace(',','');
 
             $('#edit_prod_name').val(name);
             $('#edit_prod_price').val(price);
@@ -65,7 +66,7 @@
             function(){
                 var name = $(this).closest('tr').find('td:nth-child(1)').text();
                 var price_text = $(this).closest('tr').find('td:nth-child(2)').text();
-                var price = price_text.substring(1, price_text.length);
+                var price = price_text.substring(1, price_text.length).replace(',','');
                 var id = $(this).closest('tr')[0].attributes[0].value;
 
                 $('#edit_prod_name').val(name);

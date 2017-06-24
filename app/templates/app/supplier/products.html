@@ -1,5 +1,6 @@
 {% extends "app/supplier/layout.html" %}
 {% load i18n %}
+{% load humanize %}
 {% load crispy_forms_tags %}
 
 {% block content %}
@@ -38,7 +39,7 @@
               {% for p in my_products %}
               <tr value={{ p.product.pk }} >
                 <td>{{ p.product.name }}</td>
-                <td>R{{ p.price }}</td>
+                <td>R{{ p.price|intcomma }}</td>
                 <td class='text-center'>
                   <div class="btn-group">
                     <a class="btn btn-info btn_edit_product"><i class="fa fa-lg fa-edit"></i></a>
@@ -78,7 +79,7 @@
           {% for product, avg in all_products %}
           <tr value={{ product.pk }}>
             <td class="text-center">{{ product.name }}</td>
-            <td class="text-center">{{ avg.avg }}</td>
+            <td class="text-center">R{{ avg.avg|intcomma }}</td>
           </tr>
           {% endfor %}
         </tbody>

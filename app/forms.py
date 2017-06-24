@@ -875,7 +875,6 @@ class EditProductForm(forms.Form):
 class NewProductForm(forms.Form):
     new_name = forms.CharField(max_length=100)
     new_price = forms.FloatField()
-    new_prod_id = forms.IntegerField(widget=forms.HiddenInput())
 
     helper = FormHelper()
     helper.form_method = 'POST'
@@ -883,7 +882,6 @@ class NewProductForm(forms.Form):
     helper.form_id = "new_product_form"
 
     helper.layout = Layout(
-        'new_prod_id',
         Div(
             Div(
                 Field('new_name',
