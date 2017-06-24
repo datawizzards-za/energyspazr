@@ -1,12 +1,13 @@
 {% extends "app/supplier/layout.html" %}
 {% load i18n %}
+{% load humanize %}
 {% load crispy_forms_tags %}
 
 {% block content %}
 <div class="content-wrapper">
   <div class="page-title">
     <div>
-      <h1><i class="fa fa-dashboard"></i>Products</h1>
+      <h1><i class="fa fa-dashboard"></i> Products</h1>
     </div>
     <div>
       <ul class="breadcrumb">
@@ -16,12 +17,43 @@
     </div>
   </div>
   <div class="row zoomIn animated">
-    <div class="col-md-12 zoomIn animated card" id='my_products'>
+  <div class="col-md-12 zoomIn animated card" id='my_products'>
+    <div class="card-title-w-btn">
+      <h4 class="title">Select one product to view details or click new to add a product not listed below.</h4>
+      <p>
+        <a class="btn btn-primary icon-btn" id="btn_add_new">
+          <i class="fa fa-plus"></i>New
+        </a>
+      </p>
+    </div>
+    <div class="card-body">
+      <table class="table table-hover table-bordered" id="table_my_products">
+        <thead>
+          <tr>
+            <th data-field="product_name" class='col-md-6 text-center'>Product Name</th>
+            <th data-field="product_price" class='col-md-6 text-center'>Product Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for product in all_products %}
+          <tr value={{ product.pk }}>
+            <td class="text-center">{{ product.name }}</td>
+            <td class="text-center">{{ product.count }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+    <div class="col-md-12 zoomIn animated card" id='add_products'>
       <div class="card-title-w-btn">
         <h3 class="title">My Products</h3>
         <p>
           <a class="btn btn-primary icon-btn" id='btn_add_products'>
             <i class="fa fa-plus"></i>Add Item(s)
+          </a>
+          <a class="btn btn-warning icon-btn" href="{% url 'my-products' %}">
+              <i class="fa fa-backward"></i>Back
           </a>
         </p>
       </div>
@@ -29,17 +61,19 @@
         <table class="table table-hover table-bordered" id="table_my_products">
           <thead>
             <tr>
-              <th class='col-md-10'>Product Name</th>
+              <th class='col-md-5'>Product Name</th>
+              <th class='col-md-5'>Product Price</th>
               <th class='col-md-2 text-center'>Actions</th>
             </tr>
           </thead>
             <tbody>
-              {% for product in my_products %}
-              <tr>
-                <td>{{ product.name }}</td>
+              {% for p in my_products %}
+              <tr value={{ p.product.pk }} >
+                <td>{{ p.product.name }}</td>
+                <td>R{{ p.price|intcomma }}</td>
                 <td class='text-center'>
                   <div class="btn-group">
-                    <a class="btn btn-info" id="btn_edit_product" ><i class="fa fa-lg fa-edit"></i></a>
+                    <a class="btn btn-info btn_edit_product"><i class="fa fa-lg fa-edit"></i></a>
                     <a class="btn btn-warning" href="#"><i class="fa fa-lg fa-trash"></i></a>
                   </div>
                 </td>
@@ -49,34 +83,30 @@
         </table>
       </div>
   </div>
-  <div class="col-md-12 zoomIn animated card" id='add_products'>
+  <div class="col-md-12 zoomIn animated card" id='my_panels'>
     <div class="card-title-w-btn">
-      <h4 class="title">Select one or more products to add (double click to select), then click add selected.</h4>
+      <h4 class="title">Select one panel to edit (click to select).</h4>
       <p>
-        <a class="btn btn-primary icon-btn" id="btn_add_selected">
-          <i class="fa fa-plus"></i>Selected
-        </a>
-        <a class="btn btn-primary icon-btn" id="btn_add_new">
-          <i class="fa fa-plus"></i>New
-        </a>
-        <a class="btn btn-warning icon-btn" href="{% url 'my-products' %}">
+        <a class="btn btn-warning icon-btn" id="btn_panels_back">
           <i class="fa fa-backward"></i>Back
         </a>
       </p>
     </div>
     <div class="card-body">
-      <table class="table table-hover table-bordered" id="table_all_products">
+      <table class="table table-hover table-bordered" id="table_all_panels">
         <thead>
           <tr>
-            <th class='col-md-6 text-center'>Product Name</th>
-            <th class='col-md-6 text-center'>Average Selling Price</th>
+            <th data-field="panel_brand_name" class='col-md-4 text-center'>Brand Name</th>
+            <th data-field="panel_size" class='col-md-4 text-center'>Size</th>
+            <th data-field="panel_price" class='col-md-4 text-center'>Prize</th>
           </tr>
         </thead>
         <tbody>
-          {% for product, avg in all_products %}
+          {% for panel in all_panels %}
           <tr value={{ product.pk }}>
-            <td class="text-center">{{ product.name }}</td>
-            <td class="text-center">{{ avg.avg }}</td>
+            <td class="text-center">{{ panel.brand }}</td>
+            <td class="text-center">{{ panel.size }}</td>
+            <td class="text-center">{{ panel.prize|intcomma }}</td>
           </tr>
           {% endfor %}
         </tbody>
@@ -85,10 +115,10 @@
   </div>
   <div class="col-md-12">
     <div class="col-md-3"></div>
-    <div class="col-md-6 zoomIn animated card" id='edit_product'>
+    <div class="col-md-6 zoomIn animated card" id='edit_panel'>
       <div class="card-title text-center">
         <h4 class="title">
-          Enter the product price below.
+          Update panel details below.
         </h4>
       </div>
       <div class="card-body">
