@@ -244,8 +244,8 @@ class PVTOrderForm(ModelForm):
     intended_use = forms.ChoiceField(choices=(['main_power', 'MAIN POWER'],
                                               ['backup_power', 'BACK UP']))
     site_visit = forms.ChoiceField(choices=((True, 'YES'), (False, 'NO')))
-    #OPTIONS = ((p.name, p.name) for p in models.Appliance.objects.all())
-    #name = forms.ChoiceField(choices=OPTIONS, required=True)
+    OPTIONS = ((p.name, p.name) for p in models.Appliance.objects.all())
+    name = forms.ChoiceField(choices=OPTIONS, required=True)
     username = forms.CharField(max_length=1000)
     physical_address = forms.CharField(max_length=1000)
     contact_number = forms.CharField(max_length=1000)
@@ -458,7 +458,7 @@ class PVTOrderForm(ModelForm):
                 css_class='form-group btn-container'
             ),
 
-            css_class='card login-box finish_order'
+            css_class='card login-box animated zoomIn finish_order'
         )
 
     )
