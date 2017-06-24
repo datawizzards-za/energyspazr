@@ -79,8 +79,8 @@ class PVTSystem(SystemOrder):
     roof_inclination = models.CharField(max_length=10)
 
 
-class SolarComponent(SystemOrder):
-    name = models.CharField(max_length=30)
+class SolarComponentOrder(SystemOrder):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
     
 class Order(models.Model):

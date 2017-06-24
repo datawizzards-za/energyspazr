@@ -761,3 +761,46 @@ class AddComponentForm(forms.Form):
             css_class='card-footer col-md-12'
         ),
     )
+
+class MyProductForm(forms.Form):
+    price = forms.IntegerField()
+    prod_price = forms.IntegerField()
+    prod_name = forms.CharField(max_length=100)
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.form_show_labels = False
+
+    helper.layout = Layout(
+        Div(
+            Div(
+                Field('prod_name',
+                      placeholder='Product name',
+                      css_class='form-control text-center'),
+                css_class='col-md-12 text-center'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                Field('prod_price',
+                      placeholder='Product price, e.g., R100.50',
+                      css_class='form-control text-center'),
+                css_class='col-md-12 text-center'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                HTML("<a class='btn btn-warning btn-block icon-btn' \
+                 href='{% url 'my-products' %}'> Cancel</a>"),
+                css_class='col-md-6'
+            ),
+            Div(
+                FormActions(Submit('okay', 'Okay',
+                                   css_class='btn btn-primary btn-block')),
+                css_class='form-group col-md-6'
+            ),
+            css_class='card-footer col-md-12'
+        ),
+    )

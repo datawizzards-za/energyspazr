@@ -344,28 +344,33 @@ class MyProducts(LoginRequiredMixin, View):
     user_model_class = models.SpazrUser
     products_model_class = models.Product
     userproduct_model_class = models.SpazrUserProduct
+    form_class = forms.MyProductForm
 
     def get(self, request, *args, **kwargs):
         """
         """
         req_user = request.user
+        form = self.form_class()
         user = self.user_model_class.objects.filter(user=req_user)[0]
         my_products = self.userproduct_model_class.objects.filter(user=user)
         all_products = self.products_model_class.objects.all()
         context = {'user': user, 'all_products': all_products,
-                   'my_products': my_products}
+                   'my_products': my_products, 'form': form}
 
         return render(request, self.template_name, context)
     
     def post(self, request, *args, **kwargs):
-        price = kwargs['price']
-        product_id = kwargs['product']
-        
-        product = self.products_model_class.objects.filter(pk=product_id)
-        user_product = self.userproduct_model_class.objects.create(
-            user=request.user,
-            product=product 
-        )
+        form = self.form_class()
+
+        if form.is_valid():
+            price = kwargs['price']
+            product_id = kwargs['product']
+            
+            product = self.products_model_class.objects.filter(pk=product_id)
+            user_product = self.userproduct_model_class.objects.create(
+                user=request.user,
+                product=product 
+            )
 
         return render(request, self.template_name, context)
 
@@ -383,3 +388,10 @@ class OrderQuotes(View):
         #context = {'user': user}
         
         return render(request, self.template_name) # , context)
+
+
+    def get(self, request, *args, **kwargs):
+        pdf_dir = 'app/static/app/slips/'
+        image_data = open(pdf_dir + str(kwargs['generate']) + '.pdf',
+                          "rb").read()
+        return HttpResponse(image_data, content_type="application/pdf")
