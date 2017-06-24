@@ -204,11 +204,13 @@ class OrderPVTSystem(View):
     appliances_model_class = models.Appliance
     form_class = forms.PVTOrderForm
     province_model_class = models.Province
+    address_model_class = models.PhysicalAddress
 
     def get(self, request, *args, **kwargs):
         """
         """
-        form = self.form_class()
+        p_choices = self.provinces_choices()
+        form = self.form_class(p_choices)
         print form.data
         context = {'form': form}
         return render(request, self.template_name, context)
@@ -216,16 +218,32 @@ class OrderPVTSystem(View):
     def post(self, request, *args, **kwargs):
         """
         """
-        form = self.form_class(request.POST)
+        p_choices = self.provinces_choices()
+        form = self.form_class(p_choices, request.POST)
+        
         if form.is_valid():
+            p_choices = self.provinces_choices()
+            form = self.form_class(p_choices, request.POST)
+            print "Errors: " ,form.errors
+            
             appliances_model = self.appliances_model_class(request.POST)
+
             intended_use = form.cleaned_data['intended_use']
-            site_visit = bool(form.cleaned_data['site_visit'])
+            site_visit = form.cleaned_data['site_visit']
             property_type = form.cleaned_data['property_type']
             roof_inclination = form.cleaned_data['roof_inclination']
             names = request.POST.getlist('name')
             need_finance = form.cleaned_data['need_finance']
             include_installation = form.cleaned_data['include_installation']
+
+            contact_number = form.cleaned_data['contact_number']
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            username = form.cleaned_data['username']
+            
+            province_id = form.cleaned_data['province']
+            province = \
+                self.province_model_class.objects.filter(pk=province_id)[0]
 
             pvt_system = models.PVTSystem.objects.create(
                 need_finance = need_finance,
@@ -235,13 +253,31 @@ class OrderPVTSystem(View):
                 property_type=property_type,
                 site_visit=site_visit
             )
+            
+            physical_address = self.address_model_class.objects.create(
+                building_name=form.cleaned_data['contact_number'],
+                street_name=form.cleaned_data['street_name'],
+                suburb=form.cleaned_data['suburb'],
+                province=province,
+                city=form.cleaned_data['city'],
+                zip_code=form.cleaned_data['zip_code']
+            )
+
+            client = models.Client.objects.create(
+                username=username,
+                lastname=last_name,
+                firstname=first_name,
+                contact_number=contact_number,
+                physical_address=physical_address
+            )
+            
             for name in names:
                 id_name = models.Appliance.objects.filter(name=name)[0]
                 pvt_system.possible_appliances.add(id_name)
 
         #pdf_name = quotation_pdf.generate_pdf(form.data)
         #return redirect('/app/view-slip/' + pdf_name)
-        return redirect('/app/dashboard/')
+        return redirect('/app/order-quotes/')
 
     def appliances_choices(self):
         appliance = models.Appliance.objects.all()
@@ -268,9 +304,9 @@ class OrderGeyser(View):
         p_choices = OrderPVTSystem().provinces_choices
         form = self.form_class(p_choices, request.POST)
         print form.errors
-        print form.is_valid()
         if form.is_valid():
             address_model = self.address_model_class(request)
+
             water_collector = form.cleaned_data['water_collector']
             property_type = form.cleaned_data['property_type']
             roof_inclination = form.cleaned_data['roof_inclination']
@@ -283,6 +319,7 @@ class OrderGeyser(View):
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
             username = form.cleaned_data['username']
+
             province_id = form.cleaned_data['province']
             province = \
                 self.province_model_class.objects.filter(pk=province_id)[0]
@@ -327,9 +364,8 @@ class OrderGeyser(View):
                 order = order,
                 system = system_order
             )
-            print(form.data.values())
 
-        return redirect('/app/dashboard/')
+        return redirect('/app/order-quotes/')
 
 
 class DisplayPDF(View):
