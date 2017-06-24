@@ -638,7 +638,7 @@ class GeyserOrderForm(forms.Form):
 
             css_id = 'targetElement',
             css_class = 'card login-box vlong'
-    ),
+        ),
         Div(
             HTML(
                 "<h3 class ='login-head'>Let's complete your order.</h3>"),
@@ -706,73 +706,62 @@ class GeyserOrderForm(forms.Form):
             ),
             Div(
                 Div(
-                    Div(
-                        Field('physical_address',
-                              css_class='form-control text-center textinput textInput '
-                                        'form-control',
-                              placeholder='Delivery address',
-                              required='true'),
-                        css_class='controls'
-                    ),
-                    css_class='form-group'
+                    Field('building_name',
+                          css_class='form-control text-center ',
+                          placeholder='Building Name'), css_class='col-md-6'
                 ),
-                css_class='col-md-12'
-            ),
-            css_class='row mb-20',
-        ),
-
-        Div(
-            Div(
-                Field('building_name', css_class='form-control text-center ',
-                      placeholder='Building Name'), css_class='col-md-6'
-            ),
-            Div(
-                Field('street_name', css_class='form-control text-center ',
-                      placeholder='Street Name'), css_class='col-md-6'
-            ),
-            css_class='row mb-20'
-        ),
-        Div(
-            Div(
-                Field('province', css_class='form-control text-center ',
-                      placeholder='Provice'), css_class='col-md-6 text-center'
-            ),
-            Div(
-                Field('city', css_class='form-control text-center ',
-                      placeholder='City'), css_class='col-md-6 '
-            ),
-            css_class='row mb-20'
-        ),
-        Div(
-            Div(
-                Field('suburb', css_class='form-control text-center ',
-                      placeholder='Suburb'), css_class='col-md-6'
-            ),
-            Div(
-                Field('zip_code', css_class='form-control text-center ',
-                      placeholder='ZIP Code'), css_class='col-md-6'
-            ),
-            css_class='row mb-20'
-        )
-        ,
-        Div(
-            Div(
-                css_class='form-group col-md-3'
+                Div(
+                    Field('street_name', css_class='form-control text-center ',
+                          placeholder='Street Name'), css_class='col-md-6'
+                ),
+                css_class='row mb-20'
             ),
             Div(
                 Div(
-                    Div(
-                        Submit('place_order', 'FINISH',
-                               css_class='btn btn-primary btn btn-primary btn-block'
-                               ),
-                        css_class='controls'
-                    ),
-                    css_class='form-group col-md-6'
+                    Field('province', css_class='form-control text-center ',
+                          placeholder='Provice'),
+                    css_class='col-md-6 text-center'
                 ),
-                css_class='form-group btn-container'
+                Div(
+                    Field('city', css_class='form-control text-center ',
+                          placeholder='City'), css_class='col-md-6 '
+                ),
+                css_class='row mb-20'
             ),
-        css_class='card login-box long finish_order animated zoomIn'
-    ),
+            Div(
+                Div(
+                    Field('suburb', css_class='form-control text-center ',
+                          placeholder='Suburb'), css_class='col-md-6'
+                ),
+                Div(
+                    Field('zip_code', css_class='form-control text-center ',
+                          placeholder='ZIP Code'), css_class='col-md-6'
+                ),
+                css_class='row mb-20'
+            )
+            ,
+            Div(
+                Div(
+                    css_class='form-group col-md-3'
+                ),
+                Div(
+                    Div(
+                        Div(
+                            Submit('place_order', 'FINISH',
+                                   css_class='btn btn-primary btn btn-primary btn-block'
+                                   ),
+                            css_class='controls'
+                        ),
+                        css_class='form-group col-md-6'
+                    ),
+                    css_class='form-group btn-container'
+                ),
+                css_class='row mb-20 ',
+            ),
+            css_class='card login-box long finish_order animated zoomIn'
+        ),
+
+
     )
 
 
