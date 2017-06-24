@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 
 class Province(models.Model):
@@ -31,7 +31,12 @@ class SpazrUser(Client):
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
-    price = models.PositiveIntegerField()
+
+
+class SpazrUserProduct(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(SpazrUser, on_delete=models.CASCADE)
+    price = models.FloatField()
 
 
 class System(models.Model):
@@ -60,8 +65,6 @@ class GeyserSystemOrder(SystemOrder):
     property_type = models.CharField(max_length=10)
     roof_inclination = models.CharField(max_length=10)
     existing_geyser = models.BooleanField()
-    new_system = models.BooleanField()
-    water_collector = models.CharField(max_length=30)
     current_geyser_size = models.PositiveSmallIntegerField(null=True)
     users_number = models.PositiveSmallIntegerField(null=True)
     required_geyser_size = models.PositiveSmallIntegerField(null=True)
@@ -76,8 +79,8 @@ class PVTSystem(SystemOrder):
     roof_inclination = models.CharField(max_length=10)
 
 
-class SolarComponent(SystemOrder):
-    name = models.CharField(max_length=30)
+class SolarComponentOrder(SystemOrder):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
     
 class Order(models.Model):
