@@ -30,16 +30,18 @@
           <thead>
             <tr>
               <th class='col-md-10'>Product Name</th>
+              <th class='col-md-10'>Product Price</th>
               <th class='col-md-2 text-center'>Actions</th>
             </tr>
           </thead>
             <tbody>
-              {% for product in my_products %}
-              <tr>
-                <td>{{ product.name }}</td>
+              {% for p in my_products %}
+              <tr value={{ p.product.pk }}>
+                <td>{{ p.product.name }}</td>
+                <td>R{{ p.price }}</td>
                 <td class='text-center'>
                   <div class="btn-group">
-                    <a class="btn btn-info" id="btn_edit_product" ><i class="fa fa-lg fa-edit"></i></a>
+                    <a class="btn btn-info btn_edit_product"><i class="fa fa-lg fa-edit"></i></a>
                     <a class="btn btn-warning" href="#"><i class="fa fa-lg fa-trash"></i></a>
                   </div>
                 </td>
@@ -68,8 +70,8 @@
       <table class="table table-hover table-bordered" id="table_all_products">
         <thead>
           <tr>
-            <th class='col-md-6 text-center'>Product Name</th>
-            <th class='col-md-6 text-center'>Average Selling Price</th>
+            <th data-field="product_name" class='col-md-6 text-center'>Product Name</th>
+            <th data-field="product_price" class='col-md-6 text-center'>Average Selling Price</th>
           </tr>
         </thead>
         <tbody>
