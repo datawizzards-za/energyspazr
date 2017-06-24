@@ -25,6 +25,7 @@ class Client(models.Model):
     physical_address = models.OneToOneField(PhysicalAddress, \
                                             on_delete=models.CASCADE)
 
+
 class SpazrUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     contact_number = models.CharField(max_length=40)
