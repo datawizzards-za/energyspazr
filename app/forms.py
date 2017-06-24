@@ -482,8 +482,6 @@ class GeyserOrderForm(forms.Form):
     roof_inclination = forms.ChoiceField(
         choices=(['tilted', 'TILTED'], ['flat', 'FLAT']))
 
-    existing_geyser = forms.ChoiceField(choices=((True, "Yes"),(False, "No")))
-
     water_collector = forms.ChoiceField(choices=(['flat_plate', 'FLAT PLATE'],
                                                  ['evacuated_tubes',
                                                   'EVACUATED TUBES']))
@@ -566,16 +564,6 @@ class GeyserOrderForm(forms.Form):
                 </label>"),
                 Div(
                     Field('users_number', css_class='form-control text-center'),
-                    css_class='col-md-5 text-center'
-                ),
-                css_class='form-group form-horizontal'
-            ),
-            Div(
-                HTML("<label class='control-label col-md-7'> \
-                Do you currently have a geyser? \
-                </label>"),
-                Div(
-                    Field('existing_geyser', css_class='form-control'),
                     css_class='col-md-5 text-center'
                 ),
                 css_class='form-group form-horizontal'

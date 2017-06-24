@@ -71,7 +71,6 @@ class SystemOrder(models.Model):
 class GeyserSystemOrder(SystemOrder):
     property_type = models.CharField(max_length=10)
     roof_inclination = models.CharField(max_length=10)
-    existing_geyser = models.BooleanField()
     current_geyser_size = models.PositiveSmallIntegerField(null=True)
     users_number = models.PositiveSmallIntegerField(null=True)
     required_geyser_size = models.PositiveSmallIntegerField(null=True)
