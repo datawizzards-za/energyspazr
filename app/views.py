@@ -304,7 +304,6 @@ class OrderGeyser(View):
                 property_type=property_type,
                 roof_inclination=roof_inclination,
                 existing_geyser=existing_geyser,
-                new_system=existing_geyser,
                 water_collector=water_collector,
                 current_geyser_size=current_geyser_size,
                 users_number=users_number,
