@@ -65,6 +65,7 @@ class SigninForm(auth_forms.AuthenticationForm):
 
 
 class SignupForm(auth_forms.UserCreationForm):
+
     def __init__(self, *args, **kwargs):
         super(SignupForm, self).__init__(*args, **kwargs)
 
@@ -805,17 +806,20 @@ class AddComponentForm(forms.Form):
 
 
 class EditProductForm(forms.Form):
-    name = forms.CharField(max_length=100)
-    price = forms.FloatField()
+    edit_name = forms.CharField(max_length=100)
+    edit_price = forms.FloatField()
+    edit_prod_id = forms.IntegerField(widget=forms.HiddenInput())
 
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.form_show_labels = False
+    helper.form_id = "edit_product_form"
 
     helper.layout = Layout(
+        'edit_prod_id',
         Div(
             Div(
-                Field('name', 
+                Field('edit_name', 
                       id='edit_prod_name',
                       placeholder='Product name',
                       css_class='form-control text-center'),
@@ -825,7 +829,7 @@ class EditProductForm(forms.Form):
         ),
         Div(
             Div(
-                Field('price',
+                Field('edit_price',
                       id='edit_prod_price',
                       placeholder='Product price, e.g., R100.50',
                       css_class='form-control text-center'),
@@ -850,17 +854,20 @@ class EditProductForm(forms.Form):
 
 
 class NewProductForm(forms.Form):
-    name = forms.CharField(max_length=100)
-    price = forms.FloatField()
+    new_name = forms.CharField(max_length=100)
+    new_price = forms.FloatField()
+    new_prod_id = forms.IntegerField(widget=forms.HiddenInput())
 
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.form_show_labels = False
+    helper.form_id = "new_product_form"
 
     helper.layout = Layout(
+        'new_prod_id',
         Div(
             Div(
-                Field('name',
+                Field('new_name',
                       id='new_prod_name',
                       placeholder='Product name',
                       css_class='form-control text-center'),
@@ -870,7 +877,7 @@ class NewProductForm(forms.Form):
         ),
         Div(
             Div(
-                Field('price',
+                Field('new_price',
                       id='new_price_name',
                       placeholder='Product price, e.g., R100.50',
                       css_class='form-control text-center'),

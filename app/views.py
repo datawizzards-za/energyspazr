@@ -2,6 +2,7 @@
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
+from django.db.models import Q
 from django.shortcuts import render, reverse, redirect, HttpResponse
 from django.views import View
 
@@ -414,9 +415,29 @@ class MyProducts(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
     
     def post(self, request, *args, **kwargs):
-        form = self.form_class()
+        edit_form = self.edit_form_class(request.POST)
+        new_form = self.new_form_class(request.POST)
 
-        if form.is_valid():
+        if edit_form.is_valid():
+            prod_id = edit_form.cleaned_data['edit_prod_id']
+            prod = self.products_model_class.objects.filter(pk=prod_id)[0]
+            user = self.user_model_class.objects.filter(user=request.user)[0]
+            price = edit_form.cleaned_data['edit_price']
+            user_prod = self.userproduct_model_class.objects.filter(
+                Q(user=user),
+                Q(product=prod)
+            )
+            if len(user_prod):
+                my_prod = user_prod[0]
+                my_prod.price = price
+                my_prod.save()
+            else:
+                self.userproduct_model_class.objects.create(
+                    user=user,
+                    product=prod,
+                    price=price
+                )
+        elif new_form.is_valid():
             price = kwargs['price']
             product_id = kwargs['product']
             
@@ -426,7 +447,7 @@ class MyProducts(LoginRequiredMixin, View):
                 product=product 
             )
 
-        return render(request, self.template_name, context)
+        return redirect(reverse('my-products'))
 
 
 class OrderQuotes(View):
