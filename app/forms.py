@@ -232,7 +232,9 @@ class UserAccountUpdateForm(ModelForm):
         ),
     )
 
-
+"""
+Forms for the three different products start here
+"""
 class PVTOrderForm(ModelForm):
     
     def __init__(self, p_choices, *args, **kwargs):
@@ -500,7 +502,6 @@ class PVTOrderForm(ModelForm):
             css_class='card login-box long finish_order animated zoomIn'
         ),
     )
-
 
 class GeyserOrderForm(forms.Form):
 
@@ -781,7 +782,9 @@ class GeyserOrderForm(forms.Form):
         ),
     )
 
-
+"""
+Product order forms end here
+"""
 class ResendForm(forms.Form):
     email = forms.CharField(max_length=1000)
 
