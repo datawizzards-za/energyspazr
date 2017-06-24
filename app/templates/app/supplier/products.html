@@ -29,14 +29,14 @@
         <table class="table table-hover table-bordered" id="table_my_products">
           <thead>
             <tr>
-              <th class='col-md-10'>Product Name</th>
-              <th class='col-md-10'>Product Price</th>
+              <th class='col-md-5'>Product Name</th>
+              <th class='col-md-5'>Product Price</th>
               <th class='col-md-2 text-center'>Actions</th>
             </tr>
           </thead>
             <tbody>
               {% for p in my_products %}
-              <tr value={{ p.product.pk }}>
+              <tr value={{ p.product.pk }} >
                 <td>{{ p.product.name }}</td>
                 <td>R{{ p.price }}</td>
                 <td class='text-center'>
