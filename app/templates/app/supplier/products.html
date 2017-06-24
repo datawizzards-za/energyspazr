@@ -1,10 +1,12 @@
 {% extends "app/supplier/layout.html" %}
-<<<<<<< HEAD
+{% load i18n %}
+{% load crispy_forms_tags %}
+
 {% block content %}
 <div class="content-wrapper">
   <div class="page-title">
     <div>
-      <h1><i class="fa fa-dashboard"></i> Products</h1>
+      <h1><i class="fa fa-dashboard"></i>Products</h1>
     </div>
     <div>
       <ul class="breadcrumb">
@@ -16,10 +18,10 @@
   <div class="row zoomIn animated">
     <div class="col-md-12 zoomIn animated card" id='my_products'>
       <div class="card-title-w-btn">
-        <h3 class="title">My Products.</h3>
+        <h3 class="title">My Products</h3>
         <p>
-          <a class="btn btn-primary icon-btn" id='btn_add_product'>
-              <i class="fa fa-plus"></i>Add Item(s)
+          <a class="btn btn-primary icon-btn" id='btn_add_products'>
+            <i class="fa fa-plus"></i>Add Item(s)
           </a>
         </p>
       </div>
@@ -31,171 +33,79 @@
               <th class='col-md-2 text-center'>Actions</th>
             </tr>
           </thead>
-          <tbody>
-            {% for product in my_products %}
-            <tr>
-              <td>{{ product.name }}</td>
-              <td class='text-center'>
-                <div class="btn-group">
-                  <a class="btn btn-info" href="#"><i class="fa fa-lg fa-edit"></i></a>
-                  <a class="btn btn-warning" href="#"><i class="fa fa-lg fa-trash"></i></a>
-                </div>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
+            <tbody>
+              {% for product in my_products %}
+              <tr>
+                <td>{{ product.name }}</td>
+                <td class='text-center'>
+                  <div class="btn-group">
+                    <a class="btn btn-info" id="btn_edit_product" ><i class="fa fa-lg fa-edit"></i></a>
+                    <a class="btn btn-warning" href="#"><i class="fa fa-lg fa-trash"></i></a>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
         </table>
       </div>
+  </div>
+  <div class="col-md-12 zoomIn animated card" id='add_products'>
+    <div class="card-title-w-btn">
+      <h4 class="title">Select one or more products to add (double click to select), then click add selected.</h4>
+      <p>
+        <a class="btn btn-primary icon-btn" id="btn_add_selected">
+          <i class="fa fa-plus"></i>Selected
+        </a>
+        <a class="btn btn-primary icon-btn" id="btn_add_new">
+          <i class="fa fa-plus"></i>New
+        </a>
+        <a class="btn btn-warning icon-btn" href="{% url 'my-products' %}">
+          <i class="fa fa-backward"></i>Back
+        </a>
+      </p>
     </div>
-    <div class="col-md-12 zoomIn animated card" id='add_products'>
-      <div class="card-title-w-btn">
-        <h4 class="title">Please select product you want to add by double clicking each, then click add selected.</h4>
-        <p>
-          <a class="btn btn-primary icon-btn">
-            <i class="fa fa-plus"></i>Add Selected
-          </a>
-          <a class="btn btn-warning icon-btn" id='btn_return'>
-            <i class="fa fa-backward"></i>Cancel
-          </a>
-        </p>
+    <div class="card-body">
+      <table class="table table-hover table-bordered">
+        <thead>
+          <tr>
+            <th class='col-md-6 text-center'>Product Name</th>
+            <th class='col-md-6 text-center'>Average Selling Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for product in all_products %}
+          <tr>
+            <td class="text-center">{{ product.name }}</td>
+            <td class="text-center">{{ product.price }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 zoomIn animated card" id='edit_product'>
+      <div class="card-title text-center">
+        <h4 class="title">
+          Enter the product price below.
+        </h4>
       </div>
       <div class="card-body">
-        <table class="table table-hover table-bordered" id="table_add_products">
-          <thead>
-            <tr>
-              <th class='col-md-10'>Product Name</th>
-              <th class='col-md-2 text-center'>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for product in all_products %}
-            <tr>
-              <td>{{ product.name }}</td>
-              <td class="text-center">
-                <div class="btn-group">
-                  <a class="btn btn-info" href="#"><i class="fa fa-lg fa-edit"></i></a>
-                  <a class="btn btn-warning" href="#"><i class="fa fa-lg fa-trash"></i></a>
-                </div>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-=======
-{% load i18n %}
-{% load crispy_forms_tags %}
-
-{% block content %}
-      <div class="content-wrapper">
-        <div class="page-title">
-          <div>
-            <h1><i class="fa fa-dashboard"></i> Products</h1>
-          </div>
-          <div>
-            <ul class="breadcrumb">
-              <li><i class="fa fa-home fa-lg"></i></li>
-              <li><a href="">Products</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="row zoomIn animated">
-        <div class="col-md-12 zoomIn animated card" id='my_products'>
-            <div class="card-title-w-btn">
-              <h3 class="title">My Products.</h3>
-              <p>
-                  <a class="btn btn-primary icon-btn" id='btn_add_products'>
-                      <i class="fa fa-plus"></i>Add Item(s)
-                  </a>
-              </p>
-            </div>
-            <div class="card-body">
-                <table class="table table-hover table-bordered" id="table_my_products">
-                    <thead>
-                      <tr>
-                        <th class='col-md-10'>Product Name</th>
-                        <th class='col-md-2 text-center'>Actions</th>
-                      </tr>
-                    </thead>
-                      <tbody>
-                        <tr>
-                          <td>Tiger Nixon</td>
-                          <td class='text-center'>
-                            <div class="btn-group">
-                                <a class="btn btn-info" id="btn_edit_product" ><i class="fa fa-lg fa-edit"></i></a>
-
-                                <a class="btn btn-warning" href="#"><i class="fa fa-lg fa-trash"></i></a>
-                            </div>
-                          </td>
-                        </tr>
-                      </tbody>
-                </table>
-            </div>
-        </div>
-         
-        <div class="col-md-12 zoomIn animated card" id='add_products'>
-            <div class="card-title-w-btn">
-                <h4 class="title">Select one or more products to add (double click to select), then click add selected.</h4>
-                <p>
-                    <a class="btn btn-primary icon-btn" id="btn_add_selected">
-                        <i class="fa fa-plus"></i>Selected
-                    </a>
-                    <a class="btn btn-primary icon-btn" id="btn_add_new">
-                        <i class="fa fa-plus"></i>New
-                    </a>
-                    <a class="btn btn-warning icon-btn" href="{% url 'my-products' %}">
-                        <i class="fa fa-backward"></i>Back
-                    </a>
-                </p>
-            </div>
-            <div class="card-body">
-                <table class="table table-hover table-bordered">
-                    <thead>
-                        <tr>
-                            <th class='col-md-6 text-center'>Product Name</th>
-                            <th class='col-md-6 text-center'>Average Selling Price</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="text-center">Tiger Nixon</td>
-                            <td class="text-center">R550.00</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-            
-        
-        <div class="col-md-12">
-            <div class="col-md-3"></div>
-            <div class="col-md-6 zoomIn animated card" id='edit_product'>
-                <div class="card-title text-center">
-                    <h4 class="title">
-                        Enter the product price below.
-                    </h4>
-                </div>
-                <div class="card-body">
-                    {% crispy form %}
-                </div>
-            </div>
-        </div>
-            
-        <div class="col-md-12">
-            <div class="col-md-3"></div>
-            <div class="col-md-6 zoomIn animated card" id='add_new_product'>
-                <div class="card-title text-center">
-                    <h4 class="title">
-                        Add new product.
-                    </h4>
-                </div>
-                <div class="card-body">
-                    {% crispy form %}
-                </div>
-            </div>
-        </div>
-            
-        </div>
->>>>>>> dev
+        {% crispy form %}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 zoomIn animated card" id='add_new_product'>
+      <div class="card-title text-center">
+        <h4 class="title">
+          Add new product.
+        </h4>
+      </div>
+      <div class="card-body">
+        {% crispy form %}
       </div>
     </div>
   </div>
