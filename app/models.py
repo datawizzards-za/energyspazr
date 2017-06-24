@@ -71,10 +71,9 @@ class SystemOrder(models.Model):
 class GeyserSystemOrder(SystemOrder):
     property_type = models.CharField(max_length=10)
     roof_inclination = models.CharField(max_length=10)
-    current_geyser_size = models.PositiveSmallIntegerField(null=True)
     users_number = models.PositiveSmallIntegerField(null=True)
     required_geyser_size = models.PositiveSmallIntegerField(null=True)
-    same_as_existing = models.BooleanField()
+    water_collector = models.CharField(max_length=15)
 
 
 class PVTSystem(SystemOrder):

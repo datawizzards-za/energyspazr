@@ -486,10 +486,6 @@ class GeyserOrderForm(forms.Form):
                                                  ['evacuated_tubes',
                                                   'EVACUATED TUBES']))
 
-    current_geyser_size = forms.ChoiceField(
-        choices=((50, "50Lt"),(100, "100Lt"), (150, '150Lt'),
-                 (200, '150Lt'), (250, '250Lt')))
-
     users_number = forms.IntegerField()
     required_geyser_size = forms.ChoiceField(
         choices=((50, "50Lt"),(100, "100Lt"), (150, '150Lt'),
@@ -507,9 +503,8 @@ class GeyserOrderForm(forms.Form):
 
     class Meta:
         model = models.GeyserSystemOrder
-        fields = ['property_type', 'roof_inclination', 'existing_geyser',
-                  'current_geyser_size', 'users_number',
-                  'required_geyser_size']
+        fields = ['property_type', 'roof_inclination', 'users_number',
+                  'water_collector', 'required_geyser_size']
 
     helper = FormHelper()
     helper.form_method = 'POST'
@@ -570,16 +565,6 @@ class GeyserOrderForm(forms.Form):
             ),
             Div(
                 HTML("<label class='control-label col-md-7'> \
-                Size of current geyser \
-                </label>"),
-                Div(
-                    Field('current_geyser_size', css_class='form-control'),
-                    css_class='col-md-5 text-center'
-                ),
-                css_class='form-group form-horizontal'
-            ),
-            Div(
-                HTML("<label class='control-label col-md-7'> \
                 Required geyser size \
                 </label>"),
                 Div(
@@ -633,7 +618,7 @@ class GeyserOrderForm(forms.Form):
             ),
 
             css_id = 'targetElement',
-            css_class = 'card login-box vlong'
+            css_class = 'card login-box long'
         ),
         Div(
             HTML(

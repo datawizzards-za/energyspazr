@@ -275,11 +275,9 @@ class OrderGeyser(View):
             property_type = form.cleaned_data['property_type']
             roof_inclination = form.cleaned_data['roof_inclination']
             required_geyser_size = form.cleaned_data['required_geyser_size']
-            current_geyser_size = form.cleaned_data['current_geyser_size']
             include_installation = form.cleaned_data['include_installation']
             users_number = form.cleaned_data['users_number']
             need_finance = form.cleaned_data['need_finance']
-            existing_geyser = form.cleaned_data['existing_geyser']
 
             contact_number = form.cleaned_data['contact_number']
             first_name = form.cleaned_data['first_name']
@@ -303,13 +301,9 @@ class OrderGeyser(View):
                 include_installation=include_installation,
                 property_type=property_type,
                 roof_inclination=roof_inclination,
-                existing_geyser=existing_geyser,
-                new_system=existing_geyser,
                 water_collector=water_collector,
-                current_geyser_size=current_geyser_size,
                 users_number=users_number,
-                required_geyser_size=required_geyser_size,
-                same_as_existing=existing_geyser
+                required_geyser_size=required_geyser_size
             )
 
             client = models.Client.objects.create(
@@ -333,6 +327,7 @@ class OrderGeyser(View):
                 order = order,
                 system = system_order
             )
+            print(form.data.values())
 
         return redirect('/app/dashboard/')
 
