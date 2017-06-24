@@ -227,15 +227,16 @@ class OrderPVTSystem(View):
             need_finance = form.cleaned_data['need_finance']
             include_installation = form.cleaned_data['include_installation']
 
-            pvt_system = models.PVTSystem.objects.create(
+            pvt_system = models.PVTSystem(
                 need_finance = need_finance,
                 include_installation=include_installation,
                 intended_use = intended_use,
-                possible_appliances = name,
                 roof_inclination=roof_inclination,
                 property_type=property_type,
                 site_visit=site_visit
             )
+            pvt_system.possible_appliances.add(*name)
+            pvt_system.save()
 
         #pdf_name = quotation_pdf.generate_pdf(form.data)
         #return redirect('/app/view-slip/' + pdf_name)
