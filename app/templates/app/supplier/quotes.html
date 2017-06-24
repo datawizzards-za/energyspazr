@@ -1,0 +1,43 @@
+{% extends "app/supplier/layout.html" %}
+
+{% block content %}
+      
+      <div class="content-wrapper">
+        <div class="page-title">
+          <div>
+            <h1><i class="fa fa-dashboard"></i> My Quotes</h1>
+          </div>
+          <div>
+            <ul class="breadcrumb">
+              <li><i class="fa fa-home fa-lg"></i></li>
+              <li><a href="">Dashboard</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="row zoomIn animated">
+          <div class="col-md-12">
+            <div class="panel panel-primary">
+              <div class="panel-body">
+                <table class="table table-hover table-bordered" id="table_all_quotes">
+                  <thead>
+                    <tr>
+                      <th data-field="product_name" class='col-md-6 text-center'>Product Name</th>
+                      <th data-field="product_price" class='col-md-6 text-center'>Average Selling Price</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for q in quotes %}
+                    <tr value={{ product.pk }}>
+                      <td class="text-center">{{ q }}</td>
+                      <td class="text-center">{{ q }}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+  {% endblock content %}

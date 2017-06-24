@@ -417,31 +417,39 @@ class MyProducts(LoginRequiredMixin, View):
     user_model_class = models.SpazrUser
     products_model_class = models.Product
     userproduct_model_class = models.SpazrUserProduct
-    edit_form_class = forms.EditProductForm
+    #edit_form_class = forms.EditProductForm
+    edit_panel_form_class = forms.EditPanelForm
     new_form_class = forms.NewProductForm
 
     def get(self, request, *args, **kwargs):
         """
         """
         req_user = request.user
-        edit_form = self.edit_form_class()
+        edit_panel_form = self.edit_panel_form_class
         new_form = self.new_form_class()
         user = self.user_model_class.objects.filter(user=req_user)[0]
         my_prods = self.userproduct_model_class.objects.filter(user=user)
         averages = []
+        prod_list = []
+
         all_prods = self.products_model_class.objects.all()
+
         for prod in all_prods:
             products = self.userproduct_model_class.objects.filter(product=prod)
+            prod_items = []
+            print products
             if len(products):
-                avg = sum([p.price for p in products]) / len(products)
-            else:
-                avg = 'N/A'
-            entry = {'avg': avg}
-            averages.append(entry)
+                prod_items = [(p.price, p.product.name) for p in products]
+                entry = {'name': prod_items[0][1], 'count': prod_items[0][0]}
+            
+            #print entry
+            prod_list.append(entry)
+        
+        #print prod_list
 
-        context = {'user': user, 'all_products': zip(all_prods, averages),
+        context = {'user': user, 'all_products': prod_list, #zip(all_prods, averages),
                    'averages': averages, 'my_products': my_prods,
-                   'edit_form': edit_form, 'new_form': new_form}
+                   'edit_form': edit_panel_form, 'new_form': new_form}
 
         return render(request, self.template_name, context)
     
@@ -496,3 +504,19 @@ class OrderQuotes(View):
         image_data = open(pdf_dir + str(kwargs['generate']) + '.pdf',
                           "rb").read()
         return HttpResponse(image_data, content_type="application/pdf")
+
+
+class MyQuotes(LoginRequiredMixin, View):
+    template_name = 'app/supplier/quotes.html'
+    user_model_class = models.SpazrUser
+
+    def get(self, request, *args, **kwargs):
+        """
+        """
+        req_user = request.user
+        user = self.user_model_class.objects.filter(user=req_user)[0]
+        quotes = range(5)
+
+        context = {'user': user, 'quotes':quotes}
+
+        return render(request, self.template_name, context)

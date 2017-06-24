@@ -25,6 +25,7 @@ urlpatterns = [
         name='user_account_update'),
     url(r'^our-products/$', views.OurProducts.as_view(), name='our-products'),
     url(r'^my-products/$', views.MyProducts.as_view(), name='my-products'),
+    url(r'^my-quotes/$', views.MyQuotes.as_view(), name='my-quotes'),
     url(r'^pvt-order/$', views.OrderPVTSystem.as_view(), name='pvt-order'),
     url(r'^geyser-order/$', views.OrderGeyser.as_view(), name='geyser-order'),
     url(r'^order-quotes/$', views.OrderQuotes.as_view(), name='order-quotes'),

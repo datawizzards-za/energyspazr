@@ -824,9 +824,10 @@ class AddComponentForm(forms.Form):
     )
 
 
-class EditProductForm(forms.Form):
-    edit_name = forms.CharField(max_length=100)
-    edit_price = forms.FloatField()
+class EditPanelForm(forms.Form):
+    edit_panel_name = forms.CharField(max_length=100)
+    edit_panel_size = forms.CharField(max_length=100)
+    edit_panel_price = forms.FloatField()
     edit_prod_id = forms.IntegerField(widget=forms.HiddenInput())
 
     helper = FormHelper()
@@ -838,8 +839,18 @@ class EditProductForm(forms.Form):
         'edit_prod_id',
         Div(
             Div(
-                Field('edit_name', 
-                      id='edit_prod_name',
+                Field('edit_panel_name', 
+                      id='edit_panel_name',
+                      placeholder='Product name',
+                      css_class='form-control text-center'),
+                css_class='col-md-12 text-center'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                Field('edit_panel_size', 
+                      id='edit_panel_size',
                       placeholder='Product name',
                       css_class='form-control text-center'),
                 css_class='col-md-12 text-center'

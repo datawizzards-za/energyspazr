@@ -31,9 +31,15 @@
     <script type="text/javascript">
         
         var table_my_prods = $('#table_my_products').DataTable();
-        var table_all_prods = $('#table_all_products').DataTable();
+        var table_all_quote = $('#table_all_quotes').DataTable();
+        var table_all_quote = $('#table_all_panels').DataTable();
+        
+        $('#add_new_product').hide();
+        $('#add_products').hide();
+        $('#my_panels').hide();
+        $('#edit_panel').hide();
 
-       $('#table_all_products tbody').on( 'click', 'tr', function (e) {
+       $('#table_my_products tbody').on( 'click', 'tr', function (e) {
             var row = $('tr', this);
             var id = row.context.attributes[0].value;
             var name = $('td', this).eq(0).text();
@@ -43,17 +49,28 @@
             $('#edit_prod_price').val(price);
             $('#id_edit_prod_id').val(id);
 
-            $('#add_products').hide();
-            $('#edit_product').show();
+            $('#my_products').hide();
+            $('#my_panels').show();
+        });
+
+       $('#table_all_panels tbody').on( 'click', 'tr', function (e) {
+            var row = $('tr', this);
+            var id = row.context.attributes[0].value;
+            var name = $('td', this).eq(0).text();
+            var price = $('td', this).eq(1).text();
+
+            $('#edit_prod_name').val(name);
+            $('#edit_prod_price').val(price);
+            $('#id_edit_prod_id').val(id);
+
+            $('#my_panels').hide();
+            $('#edit_panel').show();
         });
      
         $('#button').click( function () {
             alert( table.rows('.selected').data().length +' row(s) selected' );
         });
         
-        $('#add_new_product').hide();
-        $('#add_products').hide();
-        $('#edit_product').hide();
         $('#btn_add_products').click(
             function(){
                 $('#btn_add_selected').addClass('disabled')
@@ -76,9 +93,15 @@
                 $('#edit_product').show();
             }
         );
+        $('#btn_panels_back').click(
+            function(){
+                $('#my_panels').hide();
+                $('#my_products').show();
+            }
+        );
         $('#btn_add_new').click(
             function(){
-                $('#add_products').hide();
+                $('#my_products').hide();
                 $('#add_new_product').show();
             }
         );
