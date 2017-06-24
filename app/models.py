@@ -33,10 +33,10 @@ class Product(models.Model):
     name = models.CharField(max_length=100)
 
 
-class OrderProduct(models.Model):
+class SpazrUserProduct(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    price = models.PositiveIntegerField()
-    group = models.ManyToManyField(Group)
+    user = models.ForeignKey(SpazrUser, on_delete=models.CASCADE)
+    price = models.FloatField()
 
 
 class System(models.Model):

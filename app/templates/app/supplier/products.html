@@ -31,8 +31,9 @@
             </tr>
           </thead>
           <tbody>
+            {% for product in my_products %}
             <tr>
-              <td>Tiger Nixon</td>
+              <td>{{ product.name }}</td>
               <td class='text-center'>
                 <div class="btn-group">
                   <a class="btn btn-info" href="#"><i class="fa fa-lg fa-edit"></i></a>
@@ -40,6 +41,7 @@
                 </div>
               </td>
             </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
@@ -65,8 +67,9 @@
             </tr>
           </thead>
           <tbody>
+            {% for product in all_products %}
             <tr>
-              <td>Tiger Nixon</td>
+              <td>{{ product.name }}</td>
               <td class="text-center">
                 <div class="btn-group">
                   <a class="btn btn-info" href="#"><i class="fa fa-lg fa-edit"></i></a>
@@ -74,6 +77,7 @@
                 </div>
               </td>
             </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
