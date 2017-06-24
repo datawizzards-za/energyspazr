@@ -394,11 +394,21 @@ class MyProducts(LoginRequiredMixin, View):
         edit_form = self.edit_form_class()
         new_form = self.new_form_class()
         user = self.user_model_class.objects.filter(user=req_user)[0]
-        my_products = self.userproduct_model_class.objects.filter(user=user)
-        all_products = self.products_model_class.objects.all()
-        context = {'user': user, 'all_products': all_products,
-                   'my_products': my_products, 'edit_form': edit_form,
-                   'new_form': new_form}
+        my_prods = self.userproduct_model_class.objects.filter(user=user)
+        averages = []
+        all_prods = self.products_model_class.objects.all()
+        for prod in all_prods:
+            products = self.userproduct_model_class.objects.filter(product=prod)
+            if len(products):
+                avg = sum([p.price for p in products]) / len(products)
+            else:
+                avg = 'N/A'
+            entry = {'avg': avg}
+            averages.append(entry)
+
+        context = {'user': user, 'all_products': zip(all_prods, averages),
+                   'averages': averages, 'my_products': my_prods,
+                   'edit_form': edit_form, 'new_form': new_form}
 
         return render(request, self.template_name, context)
     
