@@ -344,18 +344,21 @@ class MyProducts(LoginRequiredMixin, View):
     user_model_class = models.SpazrUser
     products_model_class = models.Product
     userproduct_model_class = models.SpazrUserProduct
-    form_class = forms.MyProductForm
+    edit_form_class = forms.EditProductForm
+    new_form_class = forms.NewProductForm
 
     def get(self, request, *args, **kwargs):
         """
         """
         req_user = request.user
-        form = self.form_class()
+        edit_form = self.edit_form_class()
+        new_form = self.new_form_class()
         user = self.user_model_class.objects.filter(user=req_user)[0]
         my_products = self.userproduct_model_class.objects.filter(user=user)
         all_products = self.products_model_class.objects.all()
         context = {'user': user, 'all_products': all_products,
-                   'my_products': my_products, 'form': form}
+                   'my_products': my_products, 'edit_form': edit_form,
+                   'new_form': new_form}
 
         return render(request, self.template_name, context)
     
@@ -373,7 +376,6 @@ class MyProducts(LoginRequiredMixin, View):
             )
 
         return render(request, self.template_name, context)
-
 
 
 class OrderQuotes(View):
