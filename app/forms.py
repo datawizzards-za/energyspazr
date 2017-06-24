@@ -237,13 +237,13 @@ class PVTOrderForm(ModelForm):
                                                ['house', 'HOUSE']))
     roof_inclination = forms.ChoiceField(choices=(['tilted', 'TILTED'],
                                                   ['flat', 'FLAT']))
-    need_finance = forms.ChoiceField(choices=(['yes', 'YES'], ['no', 'NO']))
-    include_installation = forms.ChoiceField(choices=(['yes', 'YES'],
-                                                      ['no', 'NO']))
+    need_finance = forms.ChoiceField(choices=((True, 'YES'), (False, 'NO')))
+    include_installation = forms.ChoiceField(choices=((True, 'YES'),
+                                                      (False, 'NO')))
 
     intended_use = forms.ChoiceField(choices=(['main_power', 'MAIN POWER'],
                                               ['backup_power', 'BACK UP']))
-    site_visit = forms.ChoiceField(choices=(['yes', 'YES'], ['no', 'NO']))
+    site_visit = forms.ChoiceField(choices=((True, 'YES'), (False, 'NO')))
     OPTIONS = ((p.name, p.name) for p in models.Appliance.objects.all())
     name = forms.ChoiceField(choices=OPTIONS, required=True)
     username = forms.CharField(max_length=1000)
@@ -465,35 +465,47 @@ class PVTOrderForm(ModelForm):
 
 
 class GeyserOrderForm(forms.Form):
+
+    building_name = forms.CharField(max_length=30)
+    street_name = forms.CharField(max_length=30)
+    province = forms.ChoiceField(choices=(), required=True)
+    city = forms.CharField(max_length=30)
+    suburb = forms.CharField(max_length=30)
+    zip_code = forms.IntegerField()
+
+    def __init__(self, p_choices, *args, **kwargs):
+        super(GeyserOrderForm, self).__init__(*args, **kwargs)
+        self.fields['province'].choices = p_choices
+
     property_type = forms.ChoiceField(
         choices=(['flat', 'FLAT'], ['house', 'HOUSE']))
     roof_inclination = forms.ChoiceField(
         choices=(['tilted', 'TILTED'], ['flat', 'FLAT']))
-    # new_system = forms.ChoiceField(choices=(['yes', 'YES'], ['no', 'NO']))
-    existing_geyser = forms.ChoiceField(choices=([False, 'NO'],
-                                                 [True, 'YES']))
+
+    existing_geyser = forms.ChoiceField(choices=((True, "Yes"),(False, "No")))
 
     water_collector = forms.ChoiceField(choices=(['flat_plate', 'FLAT PLATE'],
                                                  ['evacuated_tubes',
                                                   'EVACUATED TUBES']))
-    current_geyser_size = forms.CharField(max_length=1000)
-    users_number = forms.CharField(max_length=1000)
-    required_geyser_size = forms.ChoiceField(
-        choices=(['same_size', 'SAME AS CURRENT'],
-                 ['recommended', 'X (RECOMMENDED)'],
-                 ['100_liters', '100L'],
-                 ['150_liters', '150L'],
-                 ['200_liters', '200L']))
-    # same_as_existing = forms.ChoiceField(choices=(['yes', 'YES'], ['no', 'NO']))
-    need_finance = forms.ChoiceField(choices=(['yes', 'YES'], ['no', 'NO']))
-    include_installation = forms.ChoiceField(
-        choices=(['yes', 'YES'], ['no', 'NO']))
 
-    username = forms.CharField(max_length=1000)
-    physical_address = forms.CharField(max_length=1000)
-    contact_number = forms.CharField(max_length=1000)
-    last_name = forms.CharField(max_length=1000)
-    first_name = forms.CharField(max_length=1000)
+    current_geyser_size = forms.ChoiceField(
+        choices=((50, "50Lt"),(100, "100Lt"), (150, '150Lt'),
+                 (200, '150Lt'), (250, '250Lt')))
+
+    users_number = forms.IntegerField()
+    required_geyser_size = forms.ChoiceField(
+        choices=((50, "50Lt"),(100, "100Lt"), (150, '150Lt'),
+                 (200, '150Lt'), (250, '250Lt'))
+        )
+
+    need_finance = forms.ChoiceField(choices=((True, "Yes"),(False, "No")))
+    include_installation = forms.ChoiceField(
+        choices=((True, "Yes"),(False, "No")))
+
+    username = forms.CharField(max_length=30)
+    contact_number = forms.CharField(max_length=40)
+    last_name = forms.CharField(max_length=30)
+    first_name = forms.CharField(max_length=30)
 
     class Meta:
         model = models.GeyserSystemOrder
@@ -627,7 +639,6 @@ class GeyserOrderForm(forms.Form):
 
             css_id = 'targetElement',
             css_class = 'card login-box vlong'
-
         ),
         Div(
             HTML(
@@ -696,36 +707,62 @@ class GeyserOrderForm(forms.Form):
             ),
             Div(
                 Div(
-                    Div(
-                        Field('physical_address',
-                              css_class='form-control text-center textinput textInput '
-                                        'form-control',
-                              placeholder='Delivery address',
-                              required='true'),
-                        css_class='controls'
-                    ),
-                    css_class='form-group'
+                    Field('building_name',
+                          css_class='form-control text-center ',
+                          placeholder='Building Name'), css_class='col-md-6'
                 ),
-                css_class='col-md-12'
+                Div(
+                    Field('street_name', css_class='form-control text-center ',
+                          placeholder='Street Name'), css_class='col-md-6'
+                ),
+                css_class='row mb-20'
             ),
+            Div(
+                Div(
+                    Field('province', css_class='form-control text-center ',
+                          placeholder='Provice'),
+                    css_class='col-md-6 text-center'
+                ),
+                Div(
+                    Field('city', css_class='form-control text-center ',
+                          placeholder='City'), css_class='col-md-6 '
+                ),
+                css_class='row mb-20'
+            ),
+            Div(
+                Div(
+                    Field('suburb', css_class='form-control text-center ',
+                          placeholder='Suburb'), css_class='col-md-6'
+                ),
+                Div(
+                    Field('zip_code', css_class='form-control text-center ',
+                          placeholder='ZIP Code'), css_class='col-md-6'
+                ),
+                css_class='row mb-20'
+            )
+            ,
             Div(
                 Div(
                     css_class='form-group col-md-3'
                 ),
                 Div(
                     Div(
-                        Submit('place_order', 'FINISH',
-                               css_class='btn btn-primary btn btn-primary btn-block'
-                               ),
-                        css_class='controls'
+                        Div(
+                            Submit('place_order', 'FINISH',
+                                   css_class='btn btn-primary btn btn-primary btn-block'
+                                   ),
+                            css_class='controls'
+                        ),
+                        css_class='form-group col-md-6'
                     ),
-                    css_class='form-group col-md-6'
+                    css_class='form-group btn-container'
                 ),
-                css_class='form-group btn-container'
+                css_class='row mb-20 ',
             ),
-
-            css_class='card login-box finish_order'
+            css_class='card login-box long finish_order animated zoomIn'
         ),
+
+
     )
 
 

@@ -7,6 +7,7 @@ from django.contrib.auth.models import User, Group
 class Province(models.Model):
     name = models.CharField(max_length=30)
 
+
 class PhysicalAddress(models.Model):
     building_name = models.CharField(max_length=30)
     street_name = models.CharField(max_length=30)
@@ -17,13 +18,19 @@ class PhysicalAddress(models.Model):
 
 
 class Client(models.Model):
+    username = models.CharField(max_length=30)
+    lastname = models.CharField(max_length=30)
+    firstname = models.CharField(max_length=30)
+    contact_number = models.CharField(max_length=40)
+    physical_address = models.OneToOneField(PhysicalAddress, \
+                                            on_delete=models.CASCADE)
+
+
+class SpazrUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     contact_number = models.CharField(max_length=40)
     physical_address = models.OneToOneField(PhysicalAddress, \
-    on_delete=models.CASCADE)
-
-
-class SpazrUser(Client):
+                                            on_delete=models.CASCADE)
     company_name = models.CharField(max_length=30)
     company_reg = models.CharField(max_length=40)
     web_address = models.URLField(null=True)

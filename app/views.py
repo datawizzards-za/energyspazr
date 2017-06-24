@@ -84,7 +84,7 @@ class UserAccountUpdate(LoginRequiredMixin, View):
             web_address = form.cleaned_data['web_address']
             province_id = form.cleaned_data['province']
             province = \
-            self.province_model_class.objects.filter(pk=province_id)[0]
+                self.province_model_class.objects.filter(pk=province_id)[0]
 
             physical_address = self.address_model_class.objects.create(
                 building_name=form.cleaned_data['contact_number'],
@@ -203,6 +203,7 @@ class OrderPVTSystem(View):
     template_name = 'app/pvt_order.html'
     appliances_model_class = models.Appliance
     form_class = forms.PVTOrderForm
+    province_model_class = models.Province
 
     def get(self, request, *args, **kwargs):
         """
@@ -218,62 +219,86 @@ class OrderPVTSystem(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             appliances_model = self.appliances_model_class(request.POST)
-            # user = request.user
             intended_use = form.cleaned_data['intended_use']
             site_visit = bool(form.cleaned_data['site_visit'])
             property_type = form.cleaned_data['property_type']
             roof_inclination = form.cleaned_data['roof_inclination']
-            # print (form.cleaned_data['name'])
-            # possible_appliances = Appliance(name=form.cleaned_data['name'])
-            # possible_appliances.save()
-            #
-            print form.cleaned_data['name']
-            # pvt_system = PVTSystem(
-            #     roof_inclination=roof_inclination,
-            #     property_type=property_type,
-            #     site_visit=site_visit,
-            #     intended_use=intended_use)
-            #
-            # pvt_system.save()
-            # pvt_system.possible_appliances.add(possible_appliances)
-        pdf_name = quotation_pdf.generate_pdf(form.data)
-        return redirect('/app/view-slip/' + pdf_name)
+            names = request.POST.getlist('name')
+            need_finance = form.cleaned_data['need_finance']
+            include_installation = form.cleaned_data['include_installation']
+
+            pvt_system = models.PVTSystem.objects.create(
+                need_finance = need_finance,
+                include_installation=include_installation,
+                intended_use = intended_use,
+                roof_inclination=roof_inclination,
+                property_type=property_type,
+                site_visit=site_visit
+            )
+            for name in names:
+                id_name = models.Appliance.objects.filter(name=name)[0]
+                pvt_system.possible_appliances.add(id_name)
+
+        #pdf_name = quotation_pdf.generate_pdf(form.data)
+        #return redirect('/app/view-slip/' + pdf_name)
+        return redirect('/app/dashboard/')
 
     def appliances_choices(self):
-        appliance = Appliance.objects.all()
+        appliance = models.Appliance.objects.all()
         return tuple([[p.pk, p.name] for p in appliance])
+
+    def provinces_choices(self):
+        provinces = self.province_model_class.objects.all()
+        return tuple([[p.pk, p.name] for p in provinces])
 
 
 class OrderGeyser(View):
     template_name = 'app/geyser_order.html'
     form_class = forms.GeyserOrderForm
+    address_model_class = models.PhysicalAddress
+    province_model_class = models.Province
 
     def get(self, request, *args, **kwargs):
-        form = self.form_class()
+        p_choices = OrderPVTSystem().provinces_choices
+        form = self.form_class(p_choices)
         context = {'form': form}
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
+        p_choices = OrderPVTSystem().provinces_choices
+        form = self.form_class(p_choices, request.POST)
+        print form.errors
+        print form.is_valid()
         if form.is_valid():
+            address_model = self.address_model_class(request)
             water_collector = form.cleaned_data['water_collector']
             property_type = form.cleaned_data['property_type']
             roof_inclination = form.cleaned_data['roof_inclination']
             required_geyser_size = form.cleaned_data['required_geyser_size']
             current_geyser_size = form.cleaned_data['current_geyser_size']
-            include_installation = True #form.cleaned_data[
-            # 'include_installation']
+            include_installation = form.cleaned_data['include_installation']
             users_number = form.cleaned_data['users_number']
-            need_finance = True #form.cleaned_data['need_finance']
-            existing_geyser = True #bool(form.cleaned_data['existing_geyser'])
+            need_finance = form.cleaned_data['need_finance']
+            existing_geyser = form.cleaned_data['existing_geyser']
 
             contact_number = form.cleaned_data['contact_number']
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
-            physical_address = form.cleaned_data['physical_address']
             username = form.cleaned_data['username']
+            province_id = form.cleaned_data['province']
+            province = \
+                self.province_model_class.objects.filter(pk=province_id)[0]
 
-            pvt_system = models.GeyserSystemOrder.objects.create(
+            physical_address = self.address_model_class.objects.create(
+                building_name=form.cleaned_data['contact_number'],
+                street_name=form.cleaned_data['street_name'],
+                suburb=form.cleaned_data['suburb'],
+                province=province,
+                city=form.cleaned_data['city'],
+                zip_code=form.cleaned_data['zip_code']
+            )
+
+            geyser_order = models.GeyserSystemOrder.objects.create(
                 need_finance=need_finance,
                 include_installation=include_installation,
                 property_type=property_type,
@@ -281,19 +306,35 @@ class OrderGeyser(View):
                 existing_geyser=existing_geyser,
                 new_system=existing_geyser,
                 water_collector=water_collector,
-                current_geyser_size=int(current_geyser_size),
-                users_number=int(users_number),
-                required_geyser_size=3, #required_geyser_size,
-                same_as_existing=existing_geyser,
+                current_geyser_size=current_geyser_size,
+                users_number=users_number,
+                required_geyser_size=required_geyser_size,
+                same_as_existing=existing_geyser
             )
 
-            # possible_appliances = form.cleaned_data['possible_appliances']
-            # for appliance in possible_appliances:
-            #     this_appliance = appliance.objects.filter(pk=appliance)[0]
-            #     pvt_system.possible_appliances.add(this_appliance)
-            #     pvt_system.save()
+            client = models.Client.objects.create(
+                username=username,
+                lastname=last_name,
+                firstname=first_name,
+                contact_number=contact_number,
+                physical_address=physical_address
+            )
 
-        return render(request, self.template_name, {'form': form})
+            order = models.Order.objects.create(
+                client=client
+            )
+
+            system_order = models.SystemOrder.objects.create(
+                need_finance=need_finance,
+                include_installation=include_installation
+            )
+
+            order_item = models.OrderItem.objects.create(
+                order = order,
+                system = system_order
+            )
+
+        return redirect('/app/dashboard/')
 
 
 class DisplayPDF(View):
@@ -354,11 +395,21 @@ class MyProducts(LoginRequiredMixin, View):
         edit_form = self.edit_form_class()
         new_form = self.new_form_class()
         user = self.user_model_class.objects.filter(user=req_user)[0]
-        my_products = self.userproduct_model_class.objects.filter(user=user)
-        all_products = self.products_model_class.objects.all()
-        context = {'user': user, 'all_products': all_products,
-                   'my_products': my_products, 'edit_form': edit_form,
-                   'new_form': new_form}
+        my_prods = self.userproduct_model_class.objects.filter(user=user)
+        averages = []
+        all_prods = self.products_model_class.objects.all()
+        for prod in all_prods:
+            products = self.userproduct_model_class.objects.filter(product=prod)
+            if len(products):
+                avg = sum([p.price for p in products]) / len(products)
+            else:
+                avg = 'N/A'
+            entry = {'avg': avg}
+            averages.append(entry)
+
+        context = {'user': user, 'all_products': zip(all_prods, averages),
+                   'averages': averages, 'my_products': my_prods,
+                   'edit_form': edit_form, 'new_form': new_form}
 
         return render(request, self.template_name, context)
     
@@ -380,19 +431,15 @@ class MyProducts(LoginRequiredMixin, View):
 
 class OrderQuotes(View):
     template_name = 'app/order_quotes.html'
-    #user_model_class = models.SpazrUser
 
     def get(self, request, *args, **kwargs):
         """
         """
-        #req_user = request.user
-        #user = self.user_model_class.objects.filter(user=req_user)[0]
-        #context = {'user': user}
         
         return render(request, self.template_name) # , context)
 
 
-    def get(self, request, *args, **kwargs):
+    def get_pdf(self, request, *args, **kwargs):
         pdf_dir = 'app/static/app/slips/'
         image_data = open(pdf_dir + str(kwargs['generate']) + '.pdf',
                           "rb").read()
