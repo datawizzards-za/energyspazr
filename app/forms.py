@@ -14,6 +14,7 @@ from app import models
 
 
 class SigninForm(auth_forms.AuthenticationForm):
+
     class Meta(auth_forms.AuthenticationForm):
         model = User
         fields = ['username', 'password']
@@ -123,7 +124,8 @@ class SignupForm(auth_forms.UserCreationForm):
                 HTML('<br /><p class="semibold-text mb-0 text-center">' \
                      "<a href='{% url 'signin' %}'>Already Registered?</a></p>")
             ),
-            css_class='form-group')
+            css_class='form-group'
+        )
     )
 
 
@@ -505,223 +507,225 @@ class GeyserOrderForm(forms.Form):
 
     helper.layout = Layout(
         Div(
-        HTML('<h3 class="login-head">SOLAR GEYSER</h3>'),
-        Div(
-            HTML("<label class='control-label col-md-7'> \
-            What type of property do you have?</label>"),
+            HTML('<h3 class="login-head">SOLAR GEYSER</h3>'),
             Div(
-                Field('property_type', css_class='form-control',
-                      placeholder='Type of Property'),
-                css_class='col-md-5 text-center'
-            ),
-            css_class='form-group form-horizontal'
-        ),
-        Div(
-            HTML("<label class='control-label col-md-7'> \
-            What is the inclination of your roof? \
-            </label>"),
-            Div(
-                Field('roof_inclination', css_class='form-control text-center',
-                      placeholder='Select Roof'),
-                css_class='col-md-5 text-center'
-            ),
-            css_class='form-group form-horizontal'
-        ),
-        Div(
-            HTML("<label class='control-label col-md-7'> \
-             Preferred water collector\
-            </label>"),
-            Div(
-                Field('water_collector', css_class='form-control text-center'),
-                css_class='col-md-5 text-center'
-            ),
-            css_class='form-group form-horizontal'
-        ),
-        Div(
-            HTML("<label class='control-label col-md-7'> \
-            Number of people using geyser \
-            </label>"),
-            Div(
-                Field('users_number', css_class='form-control'),
-                css_class='col-md-5 text-center'
-            ),
-            css_class='form-group form-horizontal'
-        ),
-        Div(
-            HTML("<label class='control-label col-md-7'> \
-            Do you currently have a geyser? \
-            </label>"),
-            Div(
-                Field('existing_geyser', css_class='form-control'),
-                css_class='col-md-5 text-center'
-            ),
-            css_class='form-group form-horizontal'
-        ),
-        Div(
-            HTML("<label class='control-label col-md-7'> \
-            Size of current geyser \
-            </label>"),
-            Div(
-                Field('current_geyser_size', css_class='form-control'),
-                css_class='col-md-5 text-center'
-            ),
-            css_class='form-group form-horizontal'
-        ),
-        Div(
-            HTML("<label class='control-label col-md-7'> \
-            Required geyser size \
-            </label>"),
-            Div(
-                Field('required_geyser_size', css_class='form-control'),
-                css_class='col-md-5 text-center'
-            ),
-            css_class='form-group form-horizontal'
-        ),
-
-        Div(
-            HTML("<label class='control-label col-md-7'> \
-            Include installation costs? \
-            </label>"),
-            Div(
-                Field('include_installation', css_class='form-control'),
-                css_class='col-md-5 text-center'
-            ),
-            css_class='form-group form-horizontal'
-        ),
-        Div(
-            HTML("<label class='control-label col-md-7'> \
-            Apply for finance? \
-            </label>"),
-            Div(
-                Field('need_finance', css_class='form-control'),
-                css_class='col-md-5 text-center'
-            ),
-            css_class='form-group form-horizontal'
-        ),
-        Div(
-            Div(
-                HTML(""),
-                css_class='col-md-4'
-            ),
-            Div(
-                HTML("<a class='btn btn-default btn-block icon-btn' \
-                 href='{% url 'our-products' %}'> Cancel</a>"),
-                css_class='col-md-4'
-            ),
-            Div(
-                FormActions(Button('login', 'PROCEED',
-                                   css_class='btn btn-primary btn-block',
-                                   data_target="#targetElement",
-                                   data_toggle="collapse",
-                                   css_id='proceed'
-                                   )
-                            ),
-                css_class='col-md-4'
-            ),
-            css_class='card-footer'
-        ),
-
-        css_id = 'targetElement',
-        css_class = 'card login-box vlong'
-
-    ),
-    Div(
-        HTML(
-            "<h3 class ='login-head'>Let's complete your order.</h3>"),
-        Div(
-            Div(
+                HTML("<label class='control-label col-md-7'> \
+                What type of property do you have?</label>"),
                 Div(
-                    Div(
-                        Field('first_name',
-                              css_class='form-control text-center form-control'
-                              , placeholder='First Name',
-                              type='text',
-                              maxlength='30'
-                              ),
-                        css_class='controls'),
-                    css_class='form-group'
+                    Field('property_type', css_class='form-control',
+                          placeholder='Type of Property'),
+                    css_class='col-md-5 text-center'
                 ),
-                css_class='col-md-6'
+                css_class='form-group form-horizontal'
+            ),
+            Div(
+                HTML("<label class='control-label col-md-7'> \
+                What is the inclination of your roof? \
+                </label>"),
+                Div(
+                    Field('roof_inclination',
+                          css_class='form-control text-center',
+                          placeholder='Select Roof'),
+                    css_class='col-md-5 text-center'
+                ),
+                css_class='form-group form-horizontal'
+            ),
+            Div(
+                HTML("<label class='control-label col-md-7'> \
+                 Preferred water collector\
+                </label>"),
+                Div(
+                    Field('water_collector',
+                          css_class='form-control text-center'),
+                          css_class='col-md-5 text-center'
+                ),
+                css_class='form-group form-horizontal'
+            ),
+            Div(
+                HTML("<label class='control-label col-md-7'> \
+                Number of people using geyser \
+                </label>"),
+                Div(
+                    Field('users_number', css_class='form-control'),
+                    css_class='col-md-5 text-center'
+                ),
+                css_class='form-group form-horizontal'
+            ),
+            Div(
+                HTML("<label class='control-label col-md-7'> \
+                Do you currently have a geyser? \
+                </label>"),
+                Div(
+                    Field('existing_geyser', css_class='form-control'),
+                    css_class='col-md-5 text-center'
+                ),
+                css_class='form-group form-horizontal'
+            ),
+            Div(
+                HTML("<label class='control-label col-md-7'> \
+                Size of current geyser \
+                </label>"),
+                Div(
+                    Field('current_geyser_size', css_class='form-control'),
+                    css_class='col-md-5 text-center'
+                ),
+                css_class='form-group form-horizontal'
+            ),
+            Div(
+                HTML("<label class='control-label col-md-7'> \
+                Required geyser size \
+                </label>"),
+                Div(
+                    Field('required_geyser_size', css_class='form-control'),
+                    css_class='col-md-5 text-center'
+                ),
+                css_class='form-group form-horizontal'
+            ),
+
+            Div(
+                HTML("<label class='control-label col-md-7'> \
+                Include installation costs? \
+                </label>"),
+                Div(
+                    Field('include_installation', css_class='form-control'),
+                    css_class='col-md-5 text-center'
+                ),
+                css_class='form-group form-horizontal'
+            ),
+            Div(
+                HTML("<label class='control-label col-md-7'> \
+                Apply for finance? \
+                </label>"),
+                Div(
+                    Field('need_finance', css_class='form-control'),
+                    css_class='col-md-5 text-center'
+                ),
+                css_class='form-group form-horizontal'
             ),
             Div(
                 Div(
-                    Div(
-                        Field('last_name',
-                              css_class='form-control text-center form-control'
-                              , placeholder='Last Name',
-                              type='text',
-                              maxlength='30'
-                              ),
-                        css_class='controls'),
-                    css_class='form-group'
+                    HTML(""),
+                    css_class='col-md-4'
                 ),
-                css_class='col-md-6'
+                Div(
+                    HTML("<a class='btn btn-default btn-block icon-btn' \
+                     href='{% url 'our-products' %}'> Cancel</a>"),
+                    css_class='col-md-4'
+                ),
+                Div(
+                    FormActions(Button('login', 'PROCEED',
+                                       css_class='btn btn-primary btn-block',
+                                       data_target="#targetElement",
+                                       data_toggle="collapse",
+                                       css_id='proceed'
+                                       )
+                                ),
+                    css_class='col-md-4'
+                ),
+                css_class='card-footer'
             ),
-            css_class='row mb-20',
+
+            css_id = 'targetElement',
+            css_class = 'card login-box vlong'
+
         ),
         Div(
+            HTML(
+                "<h3 class ='login-head'>Let's complete your order.</h3>"),
             Div(
                 Div(
                     Div(
-                        Field('username',
-                              css_class='form-control emailinput text-center form-control'
-                              , placeholder='Email Address',
-                              type='text',
-                              maxlength='30'
-                              ),
-                        css_class='controls'),
-                    css_class='form-group'
+                        Div(
+                            Field('first_name',
+                                  css_class='form-control text-center form-control'
+                                  , placeholder='First Name',
+                                  type='text',
+                                  maxlength='30'
+                                  ),
+                            css_class='controls'),
+                        css_class='form-group'
+                    ),
+                    css_class='col-md-6'
                 ),
-                css_class='col-md-6'
+                Div(
+                    Div(
+                        Div(
+                            Field('last_name',
+                                  css_class='form-control text-center form-control'
+                                  , placeholder='Last Name',
+                                  type='text',
+                                  maxlength='30'
+                                  ),
+                            css_class='controls'),
+                        css_class='form-group'
+                    ),
+                    css_class='col-md-6'
+                ),
+                css_class='row mb-20',
             ),
             Div(
                 Div(
                     Div(
-                        Field('contact_number',
-                              css_class='form-control text-center form-control'
-                              , placeholder='Contact Number',
-                              type='text',
-                              maxlength='30'
-                              ),
-                        css_class='controls'),
+                        Div(
+                            Field('username',
+                                  css_class='form-control emailinput text-center form-control'
+                                  , placeholder='Email Address',
+                                  type='text',
+                                  maxlength='30'
+                                  ),
+                            css_class='controls'),
+                        css_class='form-group'
+                    ),
+                    css_class='col-md-6'
+                ),
+                Div(
+                    Div(
+                        Div(
+                            Field('contact_number',
+                                  css_class='form-control text-center form-control'
+                                  , placeholder='Contact Number',
+                                  type='text',
+                                  maxlength='30'
+                                  ),
+                            css_class='controls'),
+                        css_class='form-group'
+                    ),
+                    css_class='col-md-6'
+                ),
+                css_class='row mb-20',
+            ),
+            Div(
+                Div(
+                    Div(
+                        Field('physical_address',
+                              css_class='form-control text-center textinput textInput '
+                                        'form-control',
+                              placeholder='Delivery address',
+                              required='true'),
+                        css_class='controls'
+                    ),
                     css_class='form-group'
                 ),
-                css_class='col-md-6'
-            ),
-            css_class='row mb-20',
-        ),
-        Div(
-            Div(
-                Div(
-                    Field('physical_address',
-                          css_class='form-control text-center textinput textInput '
-                                    'form-control',
-                          placeholder='Delivery address',
-                          required='true'),
-                    css_class='controls'
-                ),
-                css_class='form-group'
-            ),
-            css_class='col-md-12'
-        ),
-        Div(
-            Div(
-                css_class='form-group col-md-3'
+                css_class='col-md-12'
             ),
             Div(
                 Div(
-                    Submit('place_order', 'FINISH',
-                           css_class='btn btn-primary btn btn-primary btn-block'
-                           ),
-                    css_class='controls'
+                    css_class='form-group col-md-3'
                 ),
-                css_class='form-group col-md-6'
+                Div(
+                    Div(
+                        Submit('place_order', 'FINISH',
+                               css_class='btn btn-primary btn btn-primary btn-block'
+                               ),
+                        css_class='controls'
+                    ),
+                    css_class='form-group col-md-6'
+                ),
+                css_class='form-group btn-container'
             ),
-            css_class='form-group btn-container'
-        ),
 
-        css_class='card login-box finish_order'
-    ),
+            css_class='card login-box finish_order'
+        ),
     )
 
 
@@ -763,10 +767,10 @@ class AddComponentForm(forms.Form):
         ),
     )
 
-class MyProductForm(forms.Form):
-    price = forms.IntegerField()
-    prod_price = forms.IntegerField()
-    prod_name = forms.CharField(max_length=100)
+
+class EditProductForm(forms.Form):
+    name = forms.CharField(max_length=100)
+    price = forms.FloatField()
 
     helper = FormHelper()
     helper.form_method = 'POST'
@@ -775,7 +779,8 @@ class MyProductForm(forms.Form):
     helper.layout = Layout(
         Div(
             Div(
-                Field('prod_name',
+                Field('name', 
+                      id='edit_prod_name',
                       placeholder='Product name',
                       css_class='form-control text-center'),
                 css_class='col-md-12 text-center'
@@ -784,7 +789,53 @@ class MyProductForm(forms.Form):
         ),
         Div(
             Div(
-                Field('prod_price',
+                Field('price',
+                      id='edit_prod_price',
+                      placeholder='Product price, e.g., R100.50',
+                      css_class='form-control text-center'),
+                css_class='col-md-12 text-center'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                HTML("<a class='btn btn-warning btn-block icon-btn' \
+                 href='{% url 'my-products' %}'> Cancel</a>"),
+                css_class='col-md-6'
+            ),
+            Div(
+                FormActions(Submit('okay', 'Okay',
+                                   css_class='btn btn-primary btn-block')),
+                css_class='form-group col-md-6'
+            ),
+            css_class='card-footer col-md-12'
+        ),
+    )
+
+
+class NewProductForm(forms.Form):
+    name = forms.CharField(max_length=100)
+    price = forms.FloatField()
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.form_show_labels = False
+
+    helper.layout = Layout(
+        Div(
+            Div(
+                Field('name',
+                      id='new_prod_name',
+                      placeholder='Product name',
+                      css_class='form-control text-center'),
+                css_class='col-md-12 text-center'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                Field('price',
+                      id='new_price_name',
                       placeholder='Product price, e.g., R100.50',
                       css_class='form-control text-center'),
                 css_class='col-md-12 text-center'
