@@ -23,7 +23,9 @@ select.selectpicker {
 .bootstrap-select > .dropdown-toggle.bs-placeholder:hover,
 .bootstrap-select > .dropdown-toggle.bs-placeholder:focus,
 .bootstrap-select > .dropdown-toggle.bs-placeholder:active {
-  color: #999;
+  color: #000;
+  border: 2px solid #ccc;
+
 }
 .bootstrap-select > select {
   position: absolute !important;
@@ -122,7 +124,7 @@ select.selectpicker {
   display: inline-block;
   overflow: hidden;
   width: 100%;
-  text-align: left;
+  text-align: center;
 }
 .bootstrap-select.btn-group .dropdown-toggle .caret {
   position: absolute;
