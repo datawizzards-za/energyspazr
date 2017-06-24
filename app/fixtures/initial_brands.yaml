@@ -1,0 +1,24 @@
+- model: app.ProductBrand
+  pk: 1
+  fields:
+    name: Sunrise
+
+- model: app.ProductBrand
+  pk: 2
+  fields:
+    name: IBC
+
+- model: app.ProductBrand
+  pk: 3
+  fields:
+    name: Axpert
+
+- model: app.ProductBrand
+  pk: 4
+  fields:
+    name: SolarEdge 
+
+- model: app.ProductBrand
+  pk: 5
+  fields:
+    name: SMA 
