@@ -36,14 +36,48 @@ class SpazrUser(models.Model):
     web_address = models.URLField(null=True)
 
 
+class ProductBrand(models.Model):
+    name = models.CharField(max_length=100, primary_key=True)
+
+
 class Product(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, primary_key=True)
 
 
 class SpazrUserProduct(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     user = models.ForeignKey(SpazrUser, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     price = models.FloatField()
+    brand = models.ForeignKey(ProductBrand, on_delete=models.CASCADE)
+
+
+class PanelSize(models.Model):
+    value = models.FloatField()
+
+
+class InverterSize(models.Model):
+    value = models.CharField(max_length=20)
+
+
+class BatterySize(models.Model):
+    value = models.IntegerField()
+
+
+class SolarPanel(SpazrUserProduct):
+    size = models.ForeignKey(PanelSize, on_delete=models.CASCADE)
+
+
+class Inverter(SpazrUserProduct):
+    size = models.ForeignKey(InverterSize, on_delete=models.CASCADE)
+
+
+class Battery(SpazrUserProduct):
+    size = models.ForeignKey(BatterySize, on_delete=models.CASCADE)
+
+
+class DCCable(SpazrUserProduct):
+    size = models.FloatField()
+    length = models.FloatField()
 
 
 class System(models.Model):
