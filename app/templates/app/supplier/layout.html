@@ -30,18 +30,26 @@
     <script type="text/javascript" src="{% static 'app/js/plugins/dataTables.bootstrap.min.js' %}"></script>
     <script type="text/javascript">
         $('#table_my_products').DataTable();
-        $('#table_add_products').DataTable();
         
+        $('#add_new_product').hide();
         $('#add_products').hide();
-        $('#btn_add_product').click(
+        $('#edit_product').hide();
+        $('#btn_add_products').click(
                 function(){
+                    $('#btn_add_selected').addClass('disabled')
                     $('#my_products').hide();
                     $('#add_products').show();
                 });
-        $('#btn_return').click(
+        $('#btn_edit_product').click(
+                function(){
+                    $('#my_products').hide();
+                    $('#id_prod_name').hide(); //prop('disabled', true)
+                    $('#edit_product').show();
+                });
+        $('#btn_add_new').click(
                 function(){
                     $('#add_products').hide();
-                    $('#my_products').show();
+                    $('#add_new_product').show();
                 });
     </script>
   {% endblock %}

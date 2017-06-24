@@ -101,7 +101,8 @@ class UserAccountUpdate(LoginRequiredMixin, View):
                 company_reg=company_reg,
                 contact_number=contact_number,
                 web_address=web_address,
-                physical_address=physical_address)
+                physical_address=physical_address
+            )
 
             return redirect(reverse('dashboard'))
 
@@ -218,29 +219,30 @@ class OrderPVTSystem(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             appliances_model = self.appliances_model_class(request.POST)
-            # user = request.user
             intended_use = form.cleaned_data['intended_use']
             site_visit = bool(form.cleaned_data['site_visit'])
             property_type = form.cleaned_data['property_type']
             roof_inclination = form.cleaned_data['roof_inclination']
-            # print (form.cleaned_data['name'])
-            # possible_appliances = Appliance(name=form.cleaned_data['name'])
-            # possible_appliances.save()
-            #
-            print form.cleaned_data['name']
-            # pvt_system = PVTSystem(
-            #     roof_inclination=roof_inclination,
-            #     property_type=property_type,
-            #     site_visit=site_visit,
-            #     intended_use=intended_use)
-            #
-            # pvt_system.save()
-            # pvt_system.possible_appliances.add(possible_appliances)
-        pdf_name = quotation_pdf.generate_pdf(form.data)
-        return redirect('/app/view-slip/' + pdf_name)
+            name = request.POST.getlist('name')
+            need_finance = form.cleaned_data['need_finance']
+            include_installation = form.cleaned_data['include_installation']
+
+            pvt_system = models.PVTSystem.objects.create(
+                need_finance = need_finance,
+                include_installation=include_installation,
+                intended_use = intended_use,
+                possible_appliances = name,
+                roof_inclination=roof_inclination,
+                property_type=property_type,
+                site_visit=site_visit
+            )
+
+        #pdf_name = quotation_pdf.generate_pdf(form.data)
+        #return redirect('/app/view-slip/' + pdf_name)
+        return redirect('/app/dashboard/')
 
     def appliances_choices(self):
-        appliance = Appliance.objects.all()
+        appliance = models.Appliance.objects.all()
         return tuple([[p.pk, p.name] for p in appliance])
 
     def provinces_choices(self):
@@ -334,6 +336,7 @@ class OrderGeyser(View):
 
 
 class DisplayPDF(View):
+
     def get(self, request, *args, **kwargs):
         pdf_dir = 'app/static/app/slips/'
         image_data = open(pdf_dir + str(kwargs['generate']) + '.pdf',
@@ -378,13 +381,35 @@ class AddComponent(View):
 class MyProducts(LoginRequiredMixin, View):
     template_name = 'app/supplier/products.html'
     user_model_class = models.SpazrUser
+    products_model_class = models.Product
+    userproduct_model_class = models.SpazrUserProduct
+    form_class = forms.MyProductForm
 
     def get(self, request, *args, **kwargs):
         """
         """
         req_user = request.user
+        form = self.form_class()
         user = self.user_model_class.objects.filter(user=req_user)[0]
-        context = {'user': user}
+        my_products = self.userproduct_model_class.objects.filter(user=user)
+        all_products = self.products_model_class.objects.all()
+        context = {'user': user, 'all_products': all_products,
+                   'my_products': my_products, 'form': form}
+
+        return render(request, self.template_name, context)
+    
+    def post(self, request, *args, **kwargs):
+        form = self.form_class()
+
+        if form.is_valid():
+            price = kwargs['price']
+            product_id = kwargs['product']
+            
+            product = self.products_model_class.objects.filter(pk=product_id)
+            user_product = self.userproduct_model_class.objects.create(
+                user=request.user,
+                product=product 
+            )
 
         return render(request, self.template_name, context)
 
@@ -392,13 +417,15 @@ class MyProducts(LoginRequiredMixin, View):
 class OrderQuotes(View):
     template_name = 'app/order_quotes.html'
 
-    # user_model_class = models.SpazrUser
-
     def get(self, request, *args, **kwargs):
         """
         """
-        # req_user = request.user
-        # user = self.user_model_class.objects.filter(user=req_user)[0]
-        # context = {'user': user}
+        
+        return render(request, self.template_name) # , context)
 
-        return render(request, self.template_name)  # , context)
+
+    def get_pdf(self, request, *args, **kwargs):
+        pdf_dir = 'app/static/app/slips/'
+        image_data = open(pdf_dir + str(kwargs['generate']) + '.pdf',
+                          "rb").read()
+        return HttpResponse(image_data, content_type="application/pdf")
