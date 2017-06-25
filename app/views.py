@@ -442,8 +442,8 @@ class MyProducts(LoginRequiredMixin, View):
                 prod_items = [(p.price, p.product.name) for p in products]
                 entry = {'name': prod_items[0][1], 'count': prod_items[0][0]}
             
-            #print entry
-            prod_list.append(entry)
+                #print entry
+                prod_list.append(entry)
         
         #print prod_list
 
