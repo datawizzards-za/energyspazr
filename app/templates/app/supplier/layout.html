@@ -38,6 +38,7 @@
         $('#add_products').hide();
         $('#my_panels').hide();
         $('#edit_panel').hide();
+        $('#all_products').hide();
 
        $('#table_my_products tbody').on( 'click', 'tr', function (e) {
             var row = $('tr', this);
@@ -58,6 +59,7 @@
             var id = row.context.attributes[0].value;
             var name = $('td', this).eq(0).text();
             var price_text = $('td', this).eq(1).text();
+            //TODO: Replace 'R' with '' instead
             var price = price_text.substring(1, price_text.length).replace(',','');
 
             $('#edit_prod_name').val(name);
@@ -109,7 +111,8 @@
         $('#btn_add').click(
             function(){
                 $('#my_products').hide();
-                $('#add_products').show();
+                $('#all_products').show();
+                //$('#add_products').show();
             }
         );
     </script>
