@@ -1,0 +1,164 @@
+- model: app.InverterSize
+  pk: 1
+  fields:
+    value: 0,8 (12V)
+
+- model: app.InverterSize
+  pk: 2
+  fields:
+    value: 2,4 (12V)
+
+- model: app.InverterSize
+  pk: 3
+  fields:
+    value: 2,4 (24V)
+
+- model: app.InverterSize
+  pk: 4
+  fields:
+    value: 2,4 (48V)
+
+- model: app.InverterSize
+  pk: 5
+  fields:
+    value: SE 2200
+
+- model: app.InverterSize
+  pk: 6
+  fields:
+    value: SE 3000
+
+- model: app.InverterSize
+  pk: 7
+  fields:
+    value: SE 3500
+
+- model: app.InverterSize
+  pk: 8
+  fields:
+    value: SE 4000
+
+- model: app.InverterSize
+  pk: 9
+  fields:
+    value: SE 5K
+
+- model: app.InverterSize
+  pk: 10
+  fields:
+    value: SE 7K
+
+- model: app.InverterSize
+  pk: 11
+  fields:
+    value: SMA SB 1.5-1VL-40
+
+- model: app.InverterSize
+  pk: 12
+  fields:
+    value: SMA SB 2.5-1VL-40
+
+- model: app.InverterSize
+  pk: 13
+  fields:
+    value: SMA SB 3000TL-21
+
+- model: app.InverterSize
+  pk: 14
+  fields:
+    value: SMA SB 4000TL-21
+
+- model: app.InverterSize
+  pk: 15
+  fields:
+    value: SMA SB 5000TL-20
+
+- model: app.InverterSize
+  pk: 16
+  fields:
+    value: SMA SB 6000TL-20
+
+- model: app.InverterSize
+  pk: 17
+  fields:
+    value: SMA SB 7000TL-20
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 2
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 3
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 4
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 5
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 6
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 7
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 8
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 9
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 10
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 11
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 12
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 13
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 14
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 15
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 16
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 17
