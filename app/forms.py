@@ -157,6 +157,18 @@ class UserAccountUpdateForm(ModelForm):
         HTML('<h3 class="login-head">ACCOUNT DETAILS</h3>'),
         Div(
             Div(
+                HTML('<h5 class="text-right">Select User Type</h5>'),
+                css_class='col-md-6'
+            ),
+            Div(
+                Field('roles', css_class='form-control text-center ',
+                      placeholder='Role(s)'), 
+                css_class='col-md-6 text-center'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
                 Field('company_name', css_class='form-control text-center',
                       placeholder='Compay Name'), css_class='col-md-6'
             ),
@@ -174,13 +186,6 @@ class UserAccountUpdateForm(ModelForm):
             Div(
                 Field('web_address', css_class='form-control text-center ',
                       placeholder='Web Address'), css_class='col-md-6'
-            ),
-            css_class='row mb-20'
-        ),
-        Div(
-            Div(
-                Field('roles', css_class='form-control text-center ',
-                      placeholder='Role(s)'), css_class='col-md-6'
             ),
             css_class='row mb-20'
         ),
