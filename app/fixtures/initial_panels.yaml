@@ -1,0 +1,40 @@
+- model: app.PanelSize
+  pk: 1
+  fields:
+    value: 250
+
+- model: app.PanelSize
+  pk: 2
+  fields:
+    value: 260
+
+- model: app.PanelSize
+  pk: 3
+  fields:
+    value: 280
+
+- model: app.PanelSize
+  pk: 4
+  fields:
+    value: 318
+
+- model: app.SolarPanel
+  pk: Solar Panel
+  fields:
+    size: 250
+
+- model: app.SolarPanel
+  pk: Solar Panel
+  fields:
+    size: 260
+
+- model: app.SolarPanel
+  pk: Solar Panel
+  fields:
+    size: 280
+
+- model: app.SolarPanel
+  pk: Solar Panel
+  fields:
+    name: Solar Panel
+    size: 318

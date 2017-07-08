@@ -382,7 +382,7 @@ class PVTOrderForm(ModelForm):
 
         Div(
             HTML(
-                "<h3 class ='login-head'>Let's complete your order.</h3>"),
+                "<h3 class ='login-head'>Let's get your details.</h3>"),
             Div(
                 Div(
                     Div(
@@ -661,7 +661,7 @@ class GeyserOrderForm(forms.Form):
         ),
         Div(
             HTML(
-                "<h3 class ='login-head'>Let's complete your order.</h3>"),
+                "<h3 class ='login-head'>Let's get your details.</h3>"),
             Div(
                 Div(
                     Div(

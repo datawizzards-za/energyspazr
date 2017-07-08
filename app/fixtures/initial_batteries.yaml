@@ -7,3 +7,13 @@
   pk: 2
   fields:
     value: 200
+
+- model: app.battery
+  pk: Battery
+  fields:
+    size: 1
+
+- model: app.battery
+  pk: Battery
+  fields:
+    size: 2

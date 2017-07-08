@@ -14,29 +14,62 @@
             </ul>
           </div>
         </div>
-        <div class="row zoomIn animated">
-          <div class="col-md-12">
+        <div class="row col-md-12 zoomIn animated" id='all_quotes'>
             <div class="panel panel-primary">
               <div class="panel-body">
                 <table class="table table-hover table-bordered" id="table_all_quotes">
                   <thead>
                     <tr>
-                      <th data-field="product_name" class='col-md-6 text-center'>Product Name</th>
-                      <th data-field="product_price" class='col-md-6 text-center'>Average Selling Price</th>
+                      <th data-field="quote_num" class='col-md-3 text-center'>Quote No.</th>
+                      <th data-field="quote_client" class='col-md-3 text-center'>Client</th>
+                      <th data-field="quote_date" class='col-md-3 text-center'>Date</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {% for q in quotes %}
+                    {% for q in orders %}
                     <tr value={{ product.pk }}>
-                      <td class="text-center">{{ q }}</td>
-                      <td class="text-center">{{ q }}</td>
+                      <td class="text-center">{{ q.order_number }}</td>
+                      <td class="text-center">{{ q.client_id }}</td>
+                      <td class="text-center">{{ q.date }}</td>
                     </tr>
                     {% endfor %}
                   </tbody>
                 </table>
               </div>
             </div>
-          </div>
+        </div>
+          
+        <div class="row col-md-12 zoomIn animated" id='view_quote'>
+            <div class="bs-component col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                      <h3 class="panel-title text-center">Quote Details</h3>
+                    </div>
+                    <div class="panel-body">
+                        hdhshs
+                    </div>
+                </div>
+            </div>
+            <div class="bs-component col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                      <h3 class="panel-title text-center">Client Details</h3>
+                    </div>
+                    <div class="panel-body">
+                        hdhshs
+                    </div>
+                </div>
+            </div>
+            <div class="bs-component col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                      <h3 class="panel-title text-center">Quote Statistics</h3>
+                    </div>
+                    <div class="panel-body">
+                        hdhshs
+                    </div>
+                </div>
+            </div>
         </div>
       </div>
   

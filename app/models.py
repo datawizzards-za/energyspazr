@@ -52,7 +52,7 @@ class SpazrUserProduct(models.Model):
 
 
 class PanelSize(models.Model):
-    value = models.FloatField()
+    value = models.FloatField(primary_key=True)
 
 
 class InverterSize(models.Model):
@@ -63,19 +63,19 @@ class BatterySize(models.Model):
     value = models.IntegerField()
 
 
-class SolarPanel(SpazrUserProduct):
+class SolarPanel(Product):
     size = models.ForeignKey(PanelSize, on_delete=models.CASCADE)
 
 
-class Inverter(SpazrUserProduct):
+class Inverter(Product):
     size = models.ForeignKey(InverterSize, on_delete=models.CASCADE)
 
 
-class Battery(SpazrUserProduct):
+class Battery(Product):
     size = models.ForeignKey(BatterySize, on_delete=models.CASCADE)
 
 
-class DCCable(SpazrUserProduct):
+class DCCable(Product):
     size = models.FloatField()
     length = models.FloatField()
 
@@ -125,6 +125,7 @@ class SolarComponentOrder(SystemOrder):
 class Order(models.Model):
     order_number = models.AutoField(primary_key=True)
     client = models.OneToOneField(Client, on_delete=models.CASCADE)
+    supplier = models.ForeignKey(SpazrUser)
     date = models.DateField(auto_now_add=True)
 
 

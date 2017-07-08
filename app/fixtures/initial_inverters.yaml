@@ -82,3 +82,83 @@
   pk: 17
   fields:
     value: SMA SB 7000TL-20
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 2
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 3
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 4
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 5
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 6
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 7
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 8
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 9
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 10
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 11
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 12
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 13
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 14
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 15
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 16
+
+- model: app.inverter
+  pk: Inverter
+  fields:
+    size: 17
