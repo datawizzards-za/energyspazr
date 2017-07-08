@@ -8,6 +8,7 @@ from django.views import View
 
 # Other Libraries
 from registration.backends.hmac.views import ActivationView
+from wsgiref.util import FileWrapper
 
 # Local Django
 from app import forms
@@ -278,7 +279,8 @@ class OrderPVTSystem(View):
 
         #pdf_name = quotation_pdf.generate_pdf(form.data)
         #return redirect('/app/view-slip/' + pdf_name)
-        return redirect('/app/order-quotes/')
+        return redirect('/app/order-quotes/' +
+                        str(pvt_system.systemorder_ptr_id) )
 
     def appliances_choices(self):
         appliance = models.Appliance.objects.all()
@@ -369,7 +371,8 @@ class OrderGeyser(View):
                 system = system_order
             )
 
-        return redirect('/app/order-quotes/')
+        return redirect('/app/order-quotes/' +
+                        str(geyser_order.systemorder_ptr_id) )
 
 
 class DisplayPDF(View):
@@ -493,15 +496,21 @@ class OrderQuotes(View):
     def get(self, request, *args, **kwargs):
         """
         """
-        
-        return render(request, self.template_name) # , context)
+        #systemorder_ptr_id
+        user_id = int(kwargs['user_id'])
+        data = models.GeyserSystemOrder.objects.filter(systemorder_ptr_id =
+                                                   user_id)
+        context = {'data': data}
+        return render(request, self.template_name, context) # , context)
 
 
-    def get_pdf(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         pdf_dir = 'app/static/app/slips/'
         image_data = open(pdf_dir + str(kwargs['generate']) + '.pdf',
-                          "rb").read()
-        return HttpResponse(image_data, content_type="application/pdf")
+                          "rb")
+        response = HttpResponse(FileWrapper(image_data), content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename=quotation.pdf'
+        return response
 
 
 class MyQuotes(LoginRequiredMixin, View):

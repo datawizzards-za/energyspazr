@@ -16,10 +16,13 @@
           </p>
         </div>
         <div class="card-body">
+            {% for item in data %}
+            <p> {{ item.property_type }}</p>
+            {% endfor %}
             <table class="table table-bordered table-hover">
                 <thead>
                     <tr >
-                        <th class="text-center">PRODUCT</th>
+                    <th class="text-center">PRODUCT</th>
                     <th class="text-center">QUOTE 1</th>
                     <th class="text-center">QUOTE 2</th>
                     <th class="text-center">QUOTE 3</th>
