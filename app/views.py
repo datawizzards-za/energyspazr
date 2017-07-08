@@ -2,7 +2,7 @@
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.shortcuts import render, reverse, redirect, HttpResponse
 from django.views import View
 
@@ -431,31 +431,22 @@ class MyProducts(LoginRequiredMixin, View):
         """
         req_user = request.user
         edit_panel_form = self.edit_panel_form_class
-        #new_form = self.new_form_class()
-        user = self.user_model_class.objects.filter(user=req_user)[0]
-        my_prods = self.userproduct_model_class.objects.filter(user=user)
+        new_form = self.new_form_class()
         averages = []
-        prod_list = []
 
-        all_prods = self.products_model_class.objects.all()
-        entry = {}
+        all_prods = self.products_model_class.objects.annotate(
+            count=Count('spazruserproduct')
+        )
 
-        for prod in all_prods:
-            products = self.userproduct_model_class.objects.filter(product=prod)
-            prod_items = []
-            print products
-            if len(products):
-                prod_items = [(p.price, p.product.name) for p in products]
-                entry = {'name': prod_items[0][1], 'count': prod_items[0][0]}
-            
-            #print entry
-            prod_list.append(entry)
+        user = self.user_model_class.objects.filter(user=req_user)[0]
+        my_prods = self.products_model_class.objects\
+            .filter(spazruserproduct__user=user).annotate(
+                count=Count('spazruserproduct')
+        )
         
-        #print prod_list
-
-        context = {'user': user, 'all_products': prod_list, #zip(all_prods, averages),
-                   'averages': averages, 'my_products': my_prods,
-                   'edit_form': edit_panel_form, 'new_form': new_form}
+        context = {'user': user, 'averages': averages, 'my_products': my_prods,
+                   'all_products': all_prods, 'edit_form': edit_panel_form,
+                   'new_form': new_form}
 
         return render(request, self.template_name, context)
     
