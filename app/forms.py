@@ -254,8 +254,8 @@ class PVTOrderForm(ModelForm):
     
     site_visit = forms.ChoiceField(choices=((True, 'YES'), (False, 'NO')))
     
-    OPTIONS = ((p.name, p.name) for p in models.Appliance.objects.all())
-    name = forms.ChoiceField(choices=OPTIONS, required=True)
+    #OPTIONS = ((p.name, p.name) for p in models.Appliance.objects.all())
+    #name = forms.ChoiceField(choices=OPTIONS, required=True)
 
     building_name = forms.CharField(max_length=30)
     street_name = forms.CharField(max_length=30)

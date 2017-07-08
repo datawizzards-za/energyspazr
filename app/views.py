@@ -5,6 +5,7 @@ from django.contrib.auth.models import Group
 from django.db.models import Q
 from django.shortcuts import render, reverse, redirect, HttpResponse
 from django.views import View
+from django.core import serializers
 
 # Other Libraries
 from registration.backends.hmac.views import ActivationView
@@ -222,12 +223,12 @@ class OrderPVTSystem(View):
         """
         p_choices = self.provinces_choices()
         form = self.form_class(p_choices, request.POST)
-        
+
         if form.is_valid():
             p_choices = self.provinces_choices()
             form = self.form_class(p_choices, request.POST)
-            print "Errors: " ,form.errors
-            
+            print "Errors: ", form.errors
+
             appliances_model = self.appliances_model_class(request.POST)
 
             intended_use = form.cleaned_data['intended_use']
@@ -242,20 +243,20 @@ class OrderPVTSystem(View):
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
             username = form.cleaned_data['username']
-            
+
             province_id = form.cleaned_data['province']
             province = \
                 self.province_model_class.objects.filter(pk=province_id)[0]
 
             pvt_system = models.PVTSystem.objects.create(
-                need_finance = need_finance,
+                need_finance=need_finance,
                 include_installation=include_installation,
-                intended_use = intended_use,
+                intended_use=intended_use,
                 roof_inclination=roof_inclination,
                 property_type=property_type,
                 site_visit=site_visit
             )
-            
+
             physical_address = self.address_model_class.objects.create(
                 building_name=form.cleaned_data['contact_number'],
                 street_name=form.cleaned_data['street_name'],
@@ -272,15 +273,15 @@ class OrderPVTSystem(View):
                 contact_number=contact_number,
                 physical_address=physical_address
             )
-            
+
             for name in names:
                 id_name = models.Appliance.objects.filter(name=name)[0]
                 pvt_system.possible_appliances.add(id_name)
 
-        #pdf_name = quotation_pdf.generate_pdf(form.data)
-        #return redirect('/app/view-slip/' + pdf_name)
+        # pdf_name = quotation_pdf.generate_pdf(form.data)
+        # return redirect('/app/view-slip/' + pdf_name)
         return redirect('/app/order-quotes/' +
-                        str(pvt_system.systemorder_ptr_id) )
+                        str(pvt_system.systemorder_ptr_id))
 
     def appliances_choices(self):
         appliance = models.Appliance.objects.all()
@@ -364,16 +365,16 @@ class OrderGeyser(View):
             )
 
             order_item = models.OrderItem.objects.create(
-                order = order,
-                system = system_order
+                order=order,
+                system=system_order
             )
 
         return redirect('/app/order-quotes/' +
-                        str(geyser_order.systemorder_ptr_id) )
+                        str(geyser_order.systemorder_ptr_id) + '/' + str(
+            client.id))
 
 
 class DisplayPDF(View):
-
     def get(self, request, *args, **kwargs):
         pdf_dir = 'app/static/app/slips/'
         image_data = open(pdf_dir + str(kwargs['generate']) + '.pdf',
@@ -420,7 +421,7 @@ class MyProducts(LoginRequiredMixin, View):
     user_model_class = models.SpazrUser
     products_model_class = models.Product
     userproduct_model_class = models.SpazrUserProduct
-    #edit_form_class = forms.EditProductForm
+    # edit_form_class = forms.EditProductForm
     edit_panel_form_class = forms.EditPanelForm
     new_form_class = forms.NewProductForm
 
@@ -438,24 +439,26 @@ class MyProducts(LoginRequiredMixin, View):
         all_prods = self.products_model_class.objects.all()
 
         for prod in all_prods:
-            products = self.userproduct_model_class.objects.filter(product=prod)
+            products = self.userproduct_model_class.objects.filter(
+                product=prod)
             prod_items = []
             print products
             if len(products):
                 prod_items = [(p.price, p.product.name) for p in products]
                 entry = {'name': prod_items[0][1], 'count': prod_items[0][0]}
-            
-            #print entry
-            prod_list.append(entry)
-        
-        #print prod_list
 
-        context = {'user': user, 'all_products': prod_list, #zip(all_prods, averages),
+            # print entry
+            prod_list.append(entry)
+
+        # print prod_list
+
+        context = {'user': user, 'all_products': prod_list,
+                   # zip(all_prods, averages),
                    'averages': averages, 'my_products': my_prods,
                    'edit_form': edit_panel_form, 'new_form': new_form}
 
         return render(request, self.template_name, context)
-    
+
     def post(self, request, *args, **kwargs):
         edit_form = self.edit_form_class(request.POST)
         new_form = self.new_form_class(request.POST)
@@ -482,12 +485,12 @@ class MyProducts(LoginRequiredMixin, View):
         elif new_form.is_valid():
             name = new_form.cleaned_data['new_name']
             price = new_form.cleaned_data['new_price']
-            product = self.products_model_class.objects.create(name=name) 
+            product = self.products_model_class.objects.create(name=name)
             user = self.user_model_class.objects.filter(user=request.user)[0]
             user_product = self.userproduct_model_class.objects.create(
                 user=user,
                 product=product,
-                price = price
+                price=price
             )
 
         return redirect(reverse('my-products'))
@@ -499,19 +502,31 @@ class OrderQuotes(View):
     def get(self, request, *args, **kwargs):
         """
         """
-        #systemorder_ptr_id
-        user_id = int(kwargs['user_id'])
-        data = models.GeyserSystemOrder.objects.filter(systemorder_ptr_id =
-                                                   user_id)
-        context = {'data': data}
-        return render(request, self.template_name, context) # , context)
 
+        order_id = int(kwargs['order_id'])
+        client_id = int(kwargs['client_id'])
+        order_info = models.PVTSystem.objects.filter(
+            systemorder_ptr_id=order_id)[0]
+
+        client_info = models.Client.objects.filter(id=client_id)[0]
+
+        address_info = models.PhysicalAddress.objects.filter(
+            id=client_info.physical_address_id)[0]
+
+        system_order = models.SystemOrder.objects.filter(id = order_id)[0]
+        quotation_pdf.generate_pdf(client_info, order_info, address_info,
+                                   system_order)
+
+        context = {'order_info': order_info, 'client_info': client_info}
+
+        return render(request, self.template_name, context)  # , context)
 
     def post(self, request, *args, **kwargs):
         pdf_dir = 'app/static/app/slips/'
         image_data = open(pdf_dir + str(kwargs['generate']) + '.pdf',
                           "rb")
-        response = HttpResponse(FileWrapper(image_data), content_type='application/pdf')
+        response = HttpResponse(FileWrapper(image_data),
+                                content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename=quotation.pdf'
         return response
 
@@ -527,6 +542,6 @@ class MyQuotes(LoginRequiredMixin, View):
         user = self.user_model_class.objects.filter(user=req_user)[0]
         quotes = range(5)
 
-        context = {'user': user, 'quotes':quotes}
+        context = {'user': user, 'quotes': quotes}
 
         return render(request, self.template_name, context)
