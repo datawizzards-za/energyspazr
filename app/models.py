@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User, Group
 
+import uuid
+
 
 class Province(models.Model):
     name = models.CharField(max_length=30)
@@ -100,6 +102,7 @@ class Appliance(models.Model):
 class SystemOrder(models.Model):
     need_finance = models.BooleanField(default=False)
     include_installation = models.BooleanField(default=False)
+    order_number = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
 
 class GeyserSystemOrder(SystemOrder):
@@ -107,7 +110,6 @@ class GeyserSystemOrder(SystemOrder):
     roof_inclination = models.CharField(max_length=10)
     users_number = models.PositiveSmallIntegerField(null=True)
     required_geyser_size = models.PositiveSmallIntegerField(null=True)
-    same_as_existing = models.BooleanField()
     water_collector = models.CharField(max_length=15)
 
 class PVTSystem(SystemOrder):
@@ -123,12 +125,7 @@ class SolarComponentOrder(SystemOrder):
 
     
 class Order(models.Model):
-    order_number = models.AutoField(primary_key=True)
+    order_number = models.ForeignKey(SystemOrder, on_delete=models.CASCADE)
     client = models.OneToOneField(Client, on_delete=models.CASCADE)
     supplier = models.ForeignKey(SpazrUser)
     date = models.DateField(auto_now_add=True)
-
-
-class OrderItem(models.Model):
-    order = models.ForeignKey(Order)
-    system = models.OneToOneField(SystemOrder, on_delete=models.CASCADE)
