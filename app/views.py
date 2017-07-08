@@ -225,7 +225,7 @@ class OrderPVTSystem(View):
         if form.is_valid():
             p_choices = self.provinces_choices()
             form = self.form_class(p_choices, request.POST)
-            print "Errors: ", form.errors
+            #print "Errors: ", form.errors
             
             appliances_model = self.appliances_model_class(request.POST)
 
@@ -515,6 +515,7 @@ class MyQuotes(LoginRequiredMixin, View):
         user = self.user_model_class.objects.filter(user=req_user)[0]
         
         orders = models.Order.objects.values()
+        print 'ORDERS: ', [ i for i in orders]
         for order in orders:
             client_names = models.Client.objects.filter(id=order['client_id'])[0]
             orders['name'] = client_names.username
@@ -524,3 +525,4 @@ class MyQuotes(LoginRequiredMixin, View):
         context = {'user': user, 'orders':orders}
 
         return render(request, self.template_name, context)
+
