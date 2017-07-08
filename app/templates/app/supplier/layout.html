@@ -30,48 +30,91 @@
     <script type="text/javascript" src="{% static 'app/js/plugins/dataTables.bootstrap.min.js' %}"></script>
     <script type="text/javascript">
         
-        var table = $('#table_my_products').DataTable();
+        var table_my_prods = $('#table_my_products').DataTable();
+        var table_all_quote = $('#table_all_quotes').DataTable();
+        var table_all_quote = $('#table_all_panels').DataTable();
+        
+        $('#add_new_product').hide();
+        $('#add_products').hide();
+        $('#my_panels').hide();
+        $('#edit_panel').hide();
+        $('#all_products').hide();
 
-
-       $('#table_all_products tbody').on( 'click', 'tr', function (e) {
+       $('#table_my_products tbody').on( 'click', 'tr', function (e) {
             var row = $('tr', this);
-            var id = row.context.attributes[0].nodeValue;
+            var id = row.context.attributes[0].value;
             var name = $('td', this).eq(0).text();
             var price = $('td', this).eq(1).text();
-            console.log(name + " " + price);
-            //console.log(row.context.cells[0].childNodes[0]);
-            //console.log(row.context.cells[0]);
-            //var  row = table.row(this).nodes().addClass('highlight');
-           // console.log(row);
-            $(this).toggleClass('selected');
-            $('#btn_add_selected').removeClass('disabled')
-            //$('#btn_add_selected').removeClass('disabled')
+
+            $('#edit_prod_name').val(name);
+            $('#edit_prod_price').val(price);
+            $('#id_edit_prod_id').val(id);
+
+            $('#my_products').hide();
+            $('#my_panels').show();
+        });
+
+       $('#table_all_panels tbody').on( 'click', 'tr', function (e) {
+            var row = $('tr', this);
+            var id = row.context.attributes[0].value;
+            var name = $('td', this).eq(0).text();
+            var price_text = $('td', this).eq(1).text();
+            //TODO: Replace 'R' with '' instead
+            var price = price_text.substring(1, price_text.length).replace(',','');
+
+            $('#edit_prod_name').val(name);
+            $('#edit_prod_price').val(price);
+            $('#id_edit_prod_id').val(id);
+
+            $('#my_panels').hide();
+            $('#edit_panel').show();
         });
      
         $('#button').click( function () {
             alert( table.rows('.selected').data().length +' row(s) selected' );
         });
         
-        $('#add_new_product').hide();
-        $('#add_products').hide();
-        $('#edit_product').hide();
         $('#btn_add_products').click(
-                function(){
-                    $('#btn_add_selected').addClass('disabled')
-                    $('#my_products').hide();
-                    $('#add_products').show();
-                });
-        $('#btn_edit_product').click(
-                function(){
-                    $('#my_products').hide();
-                    $('#id_prod_name').hide(); //prop('disabled', true)
-                    $('#edit_product').show();
-                });
+            function(){
+                $('#btn_add_selected').addClass('disabled')
+                $('#my_products').hide();
+                $('#add_products').show();
+            }
+        );
+        $('.btn_edit_product').click(
+            function(){
+                var name = $(this).closest('tr').find('td:nth-child(1)').text();
+                var price_text = $(this).closest('tr').find('td:nth-child(2)').text();
+                var price = price_text.substring(1, price_text.length).replace(',','');
+                var id = $(this).closest('tr')[0].attributes[0].value;
+
+                $('#edit_prod_name').val(name);
+                $('#edit_prod_price').val(price);
+                $('#id_edit_prod_id').val(id);
+
+                $('#my_products').hide();
+                $('#edit_product').show();
+            }
+        );
+        $('#btn_panels_back').click(
+            function(){
+                $('#my_panels').hide();
+                $('#my_products').show();
+            }
+        );
         $('#btn_add_new').click(
-                function(){
-                    $('#add_products').hide();
-                    $('#add_new_product').show();
-                });
+            function(){
+                $('#my_products').hide();
+                $('#add_new_product').show();
+            }
+        );
+        $('#btn_add').click(
+            function(){
+                $('#my_products').hide();
+                $('#all_products').show();
+                //$('#add_products').show();
+            }
+        );
     </script>
     {% endblock %}
   </body>

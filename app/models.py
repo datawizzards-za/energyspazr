@@ -36,14 +36,48 @@ class SpazrUser(models.Model):
     web_address = models.URLField(null=True)
 
 
+class ProductBrand(models.Model):
+    name = models.CharField(max_length=100, primary_key=True)
+
+
 class Product(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, primary_key=True)
 
 
 class SpazrUserProduct(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     user = models.ForeignKey(SpazrUser, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     price = models.FloatField()
+    brand = models.ForeignKey(ProductBrand, on_delete=models.CASCADE)
+
+
+class PanelSize(models.Model):
+    value = models.FloatField(primary_key=True)
+
+
+class InverterSize(models.Model):
+    value = models.CharField(max_length=20)
+
+
+class BatterySize(models.Model):
+    value = models.IntegerField()
+
+
+class SolarPanel(Product):
+    size = models.ForeignKey(PanelSize, on_delete=models.CASCADE)
+
+
+class Inverter(Product):
+    size = models.ForeignKey(InverterSize, on_delete=models.CASCADE)
+
+
+class Battery(Product):
+    size = models.ForeignKey(BatterySize, on_delete=models.CASCADE)
+
+
+class DCCable(Product):
+    size = models.FloatField()
+    length = models.FloatField()
 
 
 class System(models.Model):
@@ -71,8 +105,6 @@ class SystemOrder(models.Model):
 class GeyserSystemOrder(SystemOrder):
     property_type = models.CharField(max_length=10)
     roof_inclination = models.CharField(max_length=10)
-    existing_geyser = models.BooleanField()
-    current_geyser_size = models.PositiveSmallIntegerField(null=True)
     users_number = models.PositiveSmallIntegerField(null=True)
     required_geyser_size = models.PositiveSmallIntegerField(null=True)
     same_as_existing = models.BooleanField()

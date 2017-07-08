@@ -65,6 +65,7 @@ class SigninForm(auth_forms.AuthenticationForm):
 
 
 class SignupForm(auth_forms.UserCreationForm):
+
     def __init__(self, *args, **kwargs):
         super(SignupForm, self).__init__(*args, **kwargs)
 
@@ -231,8 +232,15 @@ class UserAccountUpdateForm(ModelForm):
         ),
     )
 
-
+"""
+Forms for the three different products start here
+"""
 class PVTOrderForm(ModelForm):
+    
+    def __init__(self, p_choices, *args, **kwargs):
+        super(PVTOrderForm, self).__init__(*args, **kwargs)
+        self.fields['province'].choices = p_choices
+    
     property_type = forms.ChoiceField(choices=(['flat', 'FLAT'],
                                                ['house', 'HOUSE']))
     roof_inclination = forms.ChoiceField(choices=(['tilted', 'TILTED'],
@@ -243,14 +251,23 @@ class PVTOrderForm(ModelForm):
 
     intended_use = forms.ChoiceField(choices=(['main_power', 'MAIN POWER'],
                                               ['backup_power', 'BACK UP']))
+    
     site_visit = forms.ChoiceField(choices=((True, 'YES'), (False, 'NO')))
+    
     OPTIONS = ((p.name, p.name) for p in models.Appliance.objects.all())
     name = forms.ChoiceField(choices=OPTIONS, required=True)
-    username = forms.CharField(max_length=1000)
-    physical_address = forms.CharField(max_length=1000)
-    contact_number = forms.CharField(max_length=1000)
-    last_name = forms.CharField(max_length=1000)
-    first_name = forms.CharField(max_length=1000)
+
+    building_name = forms.CharField(max_length=30)
+    street_name = forms.CharField(max_length=30)
+    province = forms.ChoiceField(choices=(), required=True)
+    city = forms.CharField(max_length=30)
+    suburb = forms.CharField(max_length=30)
+    zip_code = forms.IntegerField()
+
+    username = forms.CharField(max_length=30)
+    contact_number = forms.CharField(max_length=40)
+    last_name = forms.CharField(max_length=30)
+    first_name = forms.CharField(max_length=30)
 
     class Meta:
         model = models.Appliance
@@ -362,6 +379,7 @@ class PVTOrderForm(ModelForm):
             css_id='targetElement',
             css_class='card login-box long'
         ),
+
         Div(
             HTML(
                 "<h3 class ='login-head'>Let's complete your order.</h3>"),
@@ -429,39 +447,61 @@ class PVTOrderForm(ModelForm):
             ),
             Div(
                 Div(
-                    Div(
-                        Field('physical_address',
-                              css_class='form-control text-center textinput textInput '
-                                        'form-control',
-                              placeholder='Delivery address',
-                              required='true'),
-                        css_class='controls'
-                    ),
-                    css_class='form-group'
+                    Field('building_name',
+                          css_class='form-control text-center ',
+                          placeholder='Building Name'), css_class='col-md-6'
                 ),
-                css_class='col-md-12'
+                Div(
+                    Field('street_name', css_class='form-control text-center ',
+                          placeholder='Street Name'), css_class='col-md-6'
+                ),
+                css_class='row mb-20'
             ),
+            Div(
+                Div(
+                    Field('province', css_class='form-control text-center ',
+                          placeholder='Provice'),
+                    css_class='col-md-6 text-center'
+                ),
+                Div(
+                    Field('city', css_class='form-control text-center ',
+                          placeholder='City'), css_class='col-md-6 '
+                ),
+                css_class='row mb-20'
+            ),
+            Div(
+                Div(
+                    Field('suburb', css_class='form-control text-center ',
+                          placeholder='Suburb'), css_class='col-md-6'
+                ),
+                Div(
+                    Field('zip_code', css_class='form-control text-center ',
+                          placeholder='ZIP Code'), css_class='col-md-6'
+                ),
+                css_class='row mb-20'
+            )
+            ,
             Div(
                 Div(
                     css_class='form-group col-md-3'
                 ),
                 Div(
                     Div(
-                        Submit('place_order', 'FINISH',
-                               css_class='btn btn-primary btn btn-primary btn-block'
-                               ),
-                        css_class='controls'
+                        Div(
+                            Submit('get_quotes', 'GET QUOTES',
+                                   css_class='btn btn-primary btn btn-primary btn-block'
+                                   ),
+                            css_class='controls'
+                        ),
+                        css_class='form-group col-md-6'
                     ),
-                    css_class='form-group col-md-6'
+                    css_class='form-group btn-container'
                 ),
-                css_class='form-group btn-container'
+                css_class='row mb-20 ',
             ),
-
-            css_class='card login-box finish_order'
-        )
-
+            css_class='card login-box long finish_order animated zoomIn'
+        ),
     )
-
 
 class GeyserOrderForm(forms.Form):
 
@@ -481,15 +521,9 @@ class GeyserOrderForm(forms.Form):
     roof_inclination = forms.ChoiceField(
         choices=(['tilted', 'TILTED'], ['flat', 'FLAT']))
 
-    existing_geyser = forms.ChoiceField(choices=((True, "Yes"),(False, "No")))
-
     water_collector = forms.ChoiceField(choices=(['flat_plate', 'FLAT PLATE'],
                                                  ['evacuated_tubes',
                                                   'EVACUATED TUBES']))
-
-    current_geyser_size = forms.ChoiceField(
-        choices=((50, "50Lt"),(100, "100Lt"), (150, '150Lt'),
-                 (200, '150Lt'), (250, '250Lt')))
 
     users_number = forms.IntegerField()
     required_geyser_size = forms.ChoiceField(
@@ -508,9 +542,8 @@ class GeyserOrderForm(forms.Form):
 
     class Meta:
         model = models.GeyserSystemOrder
-        fields = ['property_type', 'roof_inclination', 'existing_geyser',
-                  'current_geyser_size', 'users_number',
-                  'required_geyser_size']
+        fields = ['property_type', 'roof_inclination', 'users_number',
+                  'water_collector', 'required_geyser_size']
 
     helper = FormHelper()
     helper.form_method = 'POST'
@@ -553,31 +586,18 @@ class GeyserOrderForm(forms.Form):
                 css_class='form-group form-horizontal'
             ),
             Div(
+                HTML("<h4 class='text-danger'> \
+                The number of people using geyser is required. \
+                </h4>"),
+                css_class='form-horizontal col-md-12 text-center',
+                css_id = "users_number_error"
+            ),
+            Div(
                 HTML("<label class='control-label col-md-7'> \
                 Number of people using geyser \
                 </label>"),
                 Div(
-                    Field('users_number', css_class='form-control'),
-                    css_class='col-md-5 text-center'
-                ),
-                css_class='form-group form-horizontal'
-            ),
-            Div(
-                HTML("<label class='control-label col-md-7'> \
-                Do you currently have a geyser? \
-                </label>"),
-                Div(
-                    Field('existing_geyser', css_class='form-control'),
-                    css_class='col-md-5 text-center'
-                ),
-                css_class='form-group form-horizontal'
-            ),
-            Div(
-                HTML("<label class='control-label col-md-7'> \
-                Size of current geyser \
-                </label>"),
-                Div(
-                    Field('current_geyser_size', css_class='form-control'),
+                    Field('users_number', css_class='form-control text-center'),
                     css_class='col-md-5 text-center'
                 ),
                 css_class='form-group form-horizontal'
@@ -619,7 +639,7 @@ class GeyserOrderForm(forms.Form):
                     css_class='col-md-4'
                 ),
                 Div(
-                    HTML("<a class='btn btn-default btn-block icon-btn' \
+                    HTML("<a class='btn btn-warning btn-block icon-btn' \
                      href='{% url 'our-products' %}'> Cancel</a>"),
                     css_class='col-md-4'
                 ),
@@ -637,7 +657,7 @@ class GeyserOrderForm(forms.Form):
             ),
 
             css_id = 'targetElement',
-            css_class = 'card login-box vlong'
+            css_class = 'card login-box long'
         ),
         Div(
             HTML(
@@ -760,11 +780,11 @@ class GeyserOrderForm(forms.Form):
             ),
             css_class='card login-box long finish_order animated zoomIn'
         ),
-
-
     )
 
-
+"""
+Product order forms end here
+"""
 class ResendForm(forms.Form):
     email = forms.CharField(max_length=1000)
 
@@ -804,19 +824,23 @@ class AddComponentForm(forms.Form):
     )
 
 
-class EditProductForm(forms.Form):
-    name = forms.CharField(max_length=100)
-    price = forms.FloatField()
+class EditPanelForm(forms.Form):
+    edit_panel_name = forms.CharField(max_length=100)
+    edit_panel_size = forms.CharField(max_length=100)
+    edit_panel_price = forms.FloatField()
+    edit_prod_id = forms.IntegerField(widget=forms.HiddenInput())
 
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.form_show_labels = False
+    helper.form_id = "edit_product_form"
 
     helper.layout = Layout(
+        'edit_prod_id',
         Div(
             Div(
-                Field('name', 
-                      id='edit_prod_name',
+                Field('edit_panel_name', 
+                      id='edit_panel_name',
                       placeholder='Product name',
                       css_class='form-control text-center'),
                 css_class='col-md-12 text-center'
@@ -825,7 +849,17 @@ class EditProductForm(forms.Form):
         ),
         Div(
             Div(
-                Field('price',
+                Field('edit_panel_size', 
+                      id='edit_panel_size',
+                      placeholder='Product name',
+                      css_class='form-control text-center'),
+                css_class='col-md-12 text-center'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                Field('edit_price',
                       id='edit_prod_price',
                       placeholder='Product price, e.g., R100.50',
                       css_class='form-control text-center'),
@@ -850,17 +884,18 @@ class EditProductForm(forms.Form):
 
 
 class NewProductForm(forms.Form):
-    name = forms.CharField(max_length=100)
-    price = forms.FloatField()
+    new_name = forms.CharField(max_length=100)
+    new_price = forms.FloatField()
 
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.form_show_labels = False
+    helper.form_id = "new_product_form"
 
     helper.layout = Layout(
         Div(
             Div(
-                Field('name',
+                Field('new_name',
                       id='new_prod_name',
                       placeholder='Product name',
                       css_class='form-control text-center'),
@@ -870,7 +905,7 @@ class NewProductForm(forms.Form):
         ),
         Div(
             Div(
-                Field('price',
+                Field('new_price',
                       id='new_price_name',
                       placeholder='Product price, e.g., R100.50',
                       css_class='form-control text-center'),
