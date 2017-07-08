@@ -225,7 +225,7 @@ class OrderPVTSystem(View):
         if form.is_valid():
             p_choices = self.provinces_choices()
             form = self.form_class(p_choices, request.POST)
-            print "Errors: " ,form.errors
+            print "Errors: ", form.errors
             
             appliances_model = self.appliances_model_class(request.POST)
 
@@ -294,6 +294,7 @@ class OrderGeyser(View):
     form_class = forms.GeyserOrderForm
     address_model_class = models.PhysicalAddress
     province_model_class = models.Province
+    supplier_model_class = models.SpazrUser
 
     def get(self, request, *args, **kwargs):
         p_choices = OrderPVTSystem().provinces_choices
@@ -352,8 +353,10 @@ class OrderGeyser(View):
                 physical_address=physical_address
             )
 
+            supplier = self.supplier_model_class.objects.filter(user=request.user)[0]
             order = models.Order.objects.create(
-                client=client
+                client=client,
+                supplier=supplier
             )
 
             system_order = models.SystemOrder.objects.create(
@@ -419,6 +422,8 @@ class MyProducts(LoginRequiredMixin, View):
     userproduct_model_class = models.SpazrUserProduct
     #edit_form_class = forms.EditProductForm
     edit_panel_form_class = forms.EditPanelForm
+    panel_size_class = models.PanelSize
+
     new_form_class = forms.NewProductForm
 
     def get(self, request, *args, **kwargs):
@@ -426,13 +431,14 @@ class MyProducts(LoginRequiredMixin, View):
         """
         req_user = request.user
         edit_panel_form = self.edit_panel_form_class
-        new_form = self.new_form_class()
+        #new_form = self.new_form_class()
         user = self.user_model_class.objects.filter(user=req_user)[0]
         my_prods = self.userproduct_model_class.objects.filter(user=user)
         averages = []
         prod_list = []
 
         all_prods = self.products_model_class.objects.all()
+        entry = {}
 
         for prod in all_prods:
             products = self.userproduct_model_class.objects.filter(product=prod)
@@ -516,8 +522,14 @@ class MyQuotes(LoginRequiredMixin, View):
         """
         req_user = request.user
         user = self.user_model_class.objects.filter(user=req_user)[0]
-        quotes = range(5)
+        
+        orders = models.Order.objects.values()
+        for order in orders:
+            client_names = models.Client.objects.filter(id=order['client_id'])[0]
+            orders['name'] = client_names.username
+            print orders['name']
+        #print orders
 
-        context = {'user': user, 'quotes':quotes}
+        context = {'user': user, 'orders':orders}
 
         return render(request, self.template_name, context)

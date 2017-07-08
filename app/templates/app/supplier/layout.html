@@ -38,6 +38,21 @@
         $('#add_products').hide();
         $('#my_panels').hide();
         $('#edit_panel').hide();
+        $('#view_quote').hide();
+
+       $('#table_all_quotes tbody').on( 'click', 'tr', function (e) {
+            var row = $('tr', this);
+            var id = row.context.attributes[0].value;
+            var name = $('td', this).eq(0).text();
+            var price = $('td', this).eq(1).text();
+
+            $('#edit_prod_name').val(name);
+            $('#edit_prod_price').val(price);
+            $('#id_edit_prod_id').val(id);
+
+            $('#all_quotes').hide();
+            $('#view_quote').show();
+        });
 
        $('#table_my_products tbody').on( 'click', 'tr', function (e) {
             var row = $('tr', this);

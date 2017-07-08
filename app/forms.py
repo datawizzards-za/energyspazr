@@ -254,8 +254,8 @@ class PVTOrderForm(ModelForm):
     
     site_visit = forms.ChoiceField(choices=((True, 'YES'), (False, 'NO')))
     
-    OPTIONS = ((p.name, p.name) for p in models.Appliance.objects.all())
-    name = forms.ChoiceField(choices=OPTIONS, required=True)
+    #OPTIONS = ((p.name, p.name) for p in models.Appliance.objects.all())
+    #name = forms.ChoiceField(choices=OPTIONS, required=True)
 
     building_name = forms.CharField(max_length=30)
     street_name = forms.CharField(max_length=30)
@@ -382,7 +382,7 @@ class PVTOrderForm(ModelForm):
 
         Div(
             HTML(
-                "<h3 class ='login-head'>Let's complete your order.</h3>"),
+                "<h3 class ='login-head'>Let's get your details.</h3>"),
             Div(
                 Div(
                     Div(
@@ -661,7 +661,7 @@ class GeyserOrderForm(forms.Form):
         ),
         Div(
             HTML(
-                "<h3 class ='login-head'>Let's complete your order.</h3>"),
+                "<h3 class ='login-head'>Let's get your details.</h3>"),
             Div(
                 Div(
                     Div(
