@@ -28,7 +28,7 @@ urlpatterns = [
     url(r'^my-quotes/$', views.MyQuotes.as_view(), name='my-quotes'),
     url(r'^pvt-order/$', views.OrderPVTSystem.as_view(), name='pvt-order'),
     url(r'^geyser-order/$', views.OrderGeyser.as_view(), name='geyser-order'),
-    url(r'^order-quotes/(?P<user_id>\d+)/$', views.OrderQuotes.as_view(),
+    url(r'^order-quotes/(?P<user_id>[0-9A-Fa-f-]+)/$', views.OrderQuotes.as_view(),
         name='order-quotes'),
     url(r'^component-order/$', views.SolarComponent.as_view(),
         name='component-order'),

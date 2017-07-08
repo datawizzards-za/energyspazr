@@ -308,7 +308,7 @@ class OrderPVTSystem(View):
         return tuple([[p.pk, p.name] for p in provinces])
 
 
-class OrderGeyser(View):
+class OrderGeyser(LoginRequiredMixin, View):
     template_name = 'app/geyser_order.html'
     form_class = forms.GeyserOrderForm
     address_model_class = models.PhysicalAddress
@@ -345,8 +345,6 @@ class OrderGeyser(View):
             province = \
                 self.province_model_class.objects.filter(pk=province_id)[0]
 
-            print '########'
-
             physical_address = self.address_model_class.objects.create(
                 building_name=form.cleaned_data['contact_number'],
                 street_name=form.cleaned_data['street_name'],
@@ -355,20 +353,21 @@ class OrderGeyser(View):
                 city=form.cleaned_data['city'],
                 zip_code=form.cleaned_data['zip_code']
             )
+            
+            system_order = models.SystemOrder.objects.create(
+                need_finance=need_finance,
+                include_installation=include_installation
+            )
 
             geyser_order = models.GeyserSystemOrder.objects.create(
-                need_finance=need_finance,
-                include_installation=include_installation,
                 property_type=property_type,
                 roof_inclination=roof_inclination,
                 water_collector=water_collector,
                 users_number=users_number,
-                required_geyser_size=required_geyser_size
+                required_geyser_size=required_geyser_size,
+                order_number=system_order.order_number
             )
-
-
-            print '################: ', geyser_order.order_number
-
+            
             client = models.Client.objects.create(
                 username=username,
                 lastname=last_name,
@@ -378,20 +377,16 @@ class OrderGeyser(View):
             )
 
             supplier = self.supplier_model_class.objects.filter(user=request.user)[0]
+            print '######: ', supplier
             order = models.Order.objects.create(
                 client=client,
-                supplier=supplier
+                supplier=supplier,
+                order_number= models.SystemOrder.objects.filter(order_number=system_order.order_number)[0]
             )
-
-            print '################: ', geyser_order.order_number
-            system_order = models.SystemOrder.objects.create(
-                order_number=geyser_order.order_number,
-                need_finance=need_finance,
-                include_installation=include_installation
-            )
+            
 
         return redirect('/app/order-quotes/' +
-                        str(geyser_order.systemorder_ptr_id) )
+                        str(system_order.order_number) )
 
 
 class DisplayPDF(View):
@@ -516,7 +511,7 @@ class OrderQuotes(View):
         """
         """
         #systemorder_ptr_id
-        user_id = int(kwargs['user_id'])
+        user_id = kwargs['user_id']
         data = models.GeyserSystemOrder.objects.filter(systemorder_ptr_id =
                                                    user_id)
         print data
