@@ -380,13 +380,12 @@ class OrderGeyser(View):
             )
 
             suppliers = self.supplier_model_class.objects.all() #.filter(user=request.user)[0]
-            for user in suppliers:
+            for supplier in suppliers:
                 order = models.Order.objects.create(
                     client=client,
-                    supplier=user,
+                    supplier=supplier,
                     order_number= models.SystemOrder.objects.filter(order_number=system_order.order_number)[0]
                 )
-            for supplier in suppliers:
                 pdf_name = quotation_pdf.generate_pdf(client, order, physical_address,
                                                   system_order, supplier)
             
