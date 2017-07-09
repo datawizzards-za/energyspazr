@@ -105,7 +105,7 @@ $(document).ready(function(){
 
     $('#btn_add_new').click(
         function(){
-            $('#my_products').hide();
+            $('#all_products').hide();
             $('#add_new_product').show();
         }
     );
@@ -115,6 +115,13 @@ $(document).ready(function(){
             $('#my_products').hide();
             $('#all_products').show();
             //$('#add_products').show();
+        }
+    );
+    
+    $('#btn_products_back').click(
+        function(){
+            $('#all_products').hide();
+            $('#my_products').show();
         }
     );
 }); 

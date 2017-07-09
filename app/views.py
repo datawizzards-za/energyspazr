@@ -341,7 +341,8 @@ class OrderGeyser(View):
                 self.province_model_class.objects.filter(pk=province_id)[0]
 
             
-            client = models.Client.objects.filter(username=username)
+            client = models.Client.objects.filter(username=username)[0]
+            physical_address = ''
 
             if len(client) == 0:
                 
@@ -361,6 +362,8 @@ class OrderGeyser(View):
                     contact_number=contact_number,
                     physical_address=physical_address
                 )
+            else:
+                physical_address = models.PhysicalAddress.objects.filter(id=client.physical_address_id)
             
             system_order = models.SystemOrder.objects.create(
                 need_finance=need_finance,
@@ -379,7 +382,7 @@ class OrderGeyser(View):
             suppliers = self.supplier_model_class.objects.all() #.filter(user=request.user)[0]
             for user in suppliers:
                 order = models.Order.objects.create(
-                    client=models.Client.objects.filter(username=username)[0],
+                    client=client,
                     supplier=user,
                     order_number= models.SystemOrder.objects.filter(order_number=system_order.order_number)[0]
                 )
