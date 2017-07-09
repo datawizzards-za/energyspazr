@@ -71,7 +71,7 @@ class ProductBrand(models.Model):
 
 
 class PanelSize(models.Model):
-    value = models.FloatField(primary_key=True)
+    value = models.IntegerField(primary_key=True)
 
 
 class SolarPanel(models.Model):
@@ -102,15 +102,18 @@ class DCCable(models.Model):
     length = models.FloatField()
     brand = models.ForeignKey(ProductBrand, on_delete=models.CASCADE)
 
+
 class Connector(models.Model):
     size = models.FloatField()
     length = models.FloatField()
     brand = models.ForeignKey(ProductBrand, on_delete=models.CASCADE)
 
+
 class Combiner(models.Model):
     size = models.FloatField()
     length = models.FloatField()
     brand = models.ForeignKey(ProductBrand, on_delete=models.CASCADE)
+
 
 class SpazrUserProduct(models.Model):
     user = models.ForeignKey(SpazrUser, on_delete=models.CASCADE)

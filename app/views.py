@@ -446,7 +446,9 @@ class MyProducts(LoginRequiredMixin, View):
         new_form = self.new_form_class()
         averages = []
 
-        prod = lambda name, model: {'name': name, 'count': model.objects.count()}
+        prod = lambda name, model: {'name': name,
+                                    'count': model.objects.count(),
+                                    'data': model.objects.all()}
 
         all_prods = [
             prod('Solar Panels', models.SolarPanel),
@@ -456,6 +458,8 @@ class MyProducts(LoginRequiredMixin, View):
             prod('DC Cables', models.DCCable),
             prod('Combiners', models.Combiner),
         ]
+
+        print [(p.brand.name.name, p.size.value) for p in all_prods[0]['data']]
 
         print [p.name for p in models.Product.objects.all()]
         #print "Number of panels: ", panels

@@ -51,17 +51,9 @@
     <div class="col-md-12 zoomIn animated card" id='all_products'>
       <div class="card-title-w-btn">
         <h4 class="title">Select one product to view details or click new to add a product not listed below.</h4>
-        <p>
-          <a class="btn btn-primary icon-btn" id="btn_add">
-            <i class="fa fa-plus"></i>Add
-          </a>
-          <a class="btn btn-primary icon-btn" id="btn_add_new">
-            <i class="fa fa-plus"></i>New
-          </a>
-        </p>
       </div>
       <div class="card-body">
-        <table class="table table-hover table-bordered" id="table_all_products">
+        <table class="table table-hover table-bordered highlight" id="table_all_products">
           <thead>
             <tr>
               <th data-field="product_name" class='col-md-6 text-center'>Product Name</th>
@@ -70,7 +62,7 @@
           </thead>
           <tbody>
             {% for product in all_products %}
-            <tr value={{ product.pk }}>
+            <tr value={{ product.name }}>
               <td class="text-center">{{ product.name }}</td>
               <td class="text-center">{{ product.count }}</td>
             </tr>
@@ -114,9 +106,9 @@
         </table>
       </div>
     </div>
-    <div class="col-md-12 zoomIn animated card" id='my_panels'>
+    <div class="col-md-12 zoomIn animated card" id='all_panels'>
       <div class="card-title-w-btn">
-        <h4 class="title">Select one panel to edit (click to select).</h4>
+        <h3 class="title">Available Solar Panels</h3>
         <p>
           <a class="btn btn-warning icon-btn" id="btn_panels_back">
             <i class="fa fa-backward"></i>Back
@@ -124,21 +116,30 @@
         </p>
       </div>
       <div class="card-body">
-        <table class="table table-hover table-bordered" id="table_all_panels">
+        <table class="table table-hover table-bordered highlight" id="table_all_panels">
           <thead>
             <tr>
               <th data-field="panel_brand_name" class='col-md-4 text-center'>Brand Name</th>
               <th data-field="panel_size" class='col-md-4 text-center'>Size</th>
-              <th data-field="panel_price" class='col-md-4 text-center'>Prize</th>
+              <th data-field="panel_price" class='col-md-4 text-center'>Price</th>
             </tr>
           </thead>
           <tbody>
-            {% for panel in all_panels %}
-            <tr value={{ product.pk }}>
-              <td class="text-center">{{ panel.brand }}</td>
-              <td class="text-center">{{ panel.size }}</td>
-              <td class="text-center">{{ panel.prize|intcomma }}</td>
+            {% for product in all_products %}
+            {% if product.name == 'Solar Panels' %}
+            {% for panel in product.data %}
+            <tr>
+              <td class="text-center">{{ panel.brand.name.name }}</td>
+              <td class="text-center">{{ panel.size.value|intcomma }} Watts</td>
+              <td class="text-center">
+                <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                  <div class="input-group-addon">R</div>
+                  <input type="number" step=0.1 data-toggle="validator" class="form-control panel-price" placeholder="Enter price e.g. 150.56">
+                </div>
+              </td>
             </tr>
+            {% endfor %}
+            {% endif %}
             {% endfor %}
           </tbody>
         </table>

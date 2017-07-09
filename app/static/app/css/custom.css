@@ -1,0 +1,4 @@
+table.highlight > tbody > tr.selected {
+    background-color:#673AB7;
+    color: #fff;
+}
