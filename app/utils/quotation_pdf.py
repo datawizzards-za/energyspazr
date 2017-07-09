@@ -11,10 +11,7 @@ from reportlab.lib import colors
 def generate_pdf(client, order, address, system, supplier):
 
     formatted_time = time.ctime()
-    pdf_file_generate = client.firstname + \
-                        client.lastname + \
-                        str(formatted_time).replace(' ','').replace(':','')
-
+    pdf_file_generate = str(system.order_number)
     slips_dir = 'app/static/app/slips/'
     document = SimpleDocTemplate(slips_dir + pdf_file_generate+".pdf",
                                  pagesize=letter,

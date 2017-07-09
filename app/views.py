@@ -383,7 +383,8 @@ class OrderGeyser(View):
                     supplier=user,
                     order_number= models.SystemOrder.objects.filter(order_number=system_order.order_number)[0]
                 )
-            pdf_name = quotation_pdf.generate_pdf(client, order, physical_address,
+            for supplier in suppliers:
+                pdf_name = quotation_pdf.generate_pdf(client, order, physical_address,
                                                   system_order, supplier)
             
 
@@ -401,7 +402,6 @@ class DisplayPDF(View):
             kwargs['generate'])+'.pdf'
         image_data.close()
         return response
-
 
 class AddComponent(View):
     template_name = 'app/add_component.html'
@@ -534,7 +534,7 @@ class OrderQuotes(View):
         data = models.GeyserSystemOrder.objects.filter(systemorder_ptr_id =
                                                    user_id)
         products = models.Product.objects.all()
-        context = {'data': data, 'products':products}
+        context = {'data': data, 'products':products, 'user_id':user_id}
         return render(request, self.template_name, context) # , context)
 
     def post(self, request, *args, **kwargs):
