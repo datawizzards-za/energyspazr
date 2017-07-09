@@ -376,14 +376,13 @@ class OrderGeyser(LoginRequiredMixin, View):
             )
 
             supplier = self.supplier_model_class.objects.filter(user=request.user)[0]
-            print '######: ', supplier
             order = models.Order.objects.create(
                 client=client,
                 supplier=supplier,
                 order_number= models.SystemOrder.objects.filter(order_number=system_order.order_number)[0]
             )
-            
-
+            pdf_name = quotation_pdf.generate_pdf(client, order, physical_address,
+                                                  system_order, supplier)
         return redirect('/app/order-quotes/' +
                         str(system_order.order_number) )
 
@@ -452,37 +451,15 @@ class MyProducts(LoginRequiredMixin, View):
         all_prods = self.products_model_class.objects.annotate(
             count=Count('spazruserproduct')
         )
+        user = self.user_model_class.objects.filter(user=req_user)[0]
+        my_prods = self.products_model_class.objects\
+            .filter(spazruserproduct__user=user).annotate(
+                count=Count('spazruserproduct')
+        )
 
-# <<<<<<< HEAD
-        for prod in all_prods:
-            products = self.userproduct_model_class.objects.filter(
-                product=prod)
-            prod_items = []
-            print products
-            if len(products):
-                prod_items = [(p.price, p.product.name) for p in products]
-                entry = {'name': prod_items[0][1], 'count': prod_items[0][0]}
-
-            # print entry
-            prod_list.append(entry)
-
-        # print prod_list
-
-        context = {'user': user, 'all_products': prod_list,
-                   # zip(all_prods, averages),
-                   'averages': averages, 'my_products': my_prods,
-                   'edit_form': edit_panel_form, 'new_form': new_form}
-# =======
-#         user = self.user_model_class.objects.filter(user=req_user)[0]
-#         my_prods = self.products_model_class.objects\
-#             .filter(spazruserproduct__user=user).annotate(
-#                 count=Count('spazruserproduct')
-#         )
-#
-#         context = {'user': user, 'averages': averages, 'my_products': my_prods,
-#                    'all_products': all_prods, 'edit_form': edit_panel_form,
-#                    'new_form': new_form}
-# >>>>>>> origin/ui
+        context = {'user': user, 'averages': averages, 'my_products': my_prods,
+                   'all_products': all_prods, 'edit_form': edit_panel_form,
+                   'new_form': new_form}
 
         return render(request, self.template_name, context)
 
@@ -533,8 +510,8 @@ class OrderQuotes(View):
         user_id = kwargs['user_id']
         data = models.GeyserSystemOrder.objects.filter(systemorder_ptr_id =
                                                    user_id)
-        print data
-        context = {'data': data}
+        products = models.Product.objects.all()
+        context = {'data': data, 'products':products}
         return render(request, self.template_name, context) # , context)
 
     def post(self, request, *args, **kwargs):

@@ -8,7 +8,7 @@ from reportlab.platypus.tables import Table, TableStyle
 from reportlab.lib import colors
 
 
-def generate_pdf(client, order, address, system, suppliers):
+def generate_pdf(client, order, address, system, supplier):
 
     formatted_time = time.ctime()
     pdf_file_generate = client.firstname + \
@@ -36,7 +36,7 @@ def generate_pdf(client, order, address, system, suppliers):
     elements.append(Paragraph(ptext, styles["Right"]))
     elements.append(Spacer(1, 12))
 
-    ptext = '<font size=12>Dear %s</font>' % client.firstname
+    ptext = '<font size=12>Dear %s</font>' % client.firstname.capitalize()
     elements.append(Paragraph(ptext, styles["Normal"]))
     elements.append(Spacer(1, 12))
     ptext = '<font size=12>' \
@@ -83,14 +83,15 @@ def generate_pdf(client, order, address, system, suppliers):
             'Details</font></center>'
     elements.append(Paragraph(ptext, styles["Center"]))
     elements.append(Spacer(1, 12))
-    data = [['Intended Use',
-             order.intended_use.upper().replace('_', ' ')],
+    data = [['Order number', str(system.order_number).upper()],
+            #['Intended Use',
+            #order.intended_use.upper().replace('_', ' ')],
             ['Need Finance', str(system.need_finance).upper()],
-            ['Site Visit', str(order.site_visit).upper()],
+            #['Site Visit', str(order.site_visit).upper()],
             ['Include Instalation',
              str(system.include_installation).upper()],
-            ['Property Type', order.property_type.upper()],
-            ['Roof Inclination', order.roof_inclination.upper()],
+            #['Property Type', order.property_type.upper()],
+            #['Roof Inclination', order.roof_inclination.upper()],
             ]
 
     table = Table(data, colWidths=190)
@@ -101,6 +102,25 @@ def generate_pdf(client, order, address, system, suppliers):
 
     elements.append(table)
     elements.append(Spacer(1, 24))
+    ptext = '<font size=16 style="text-transform:uppercase">Supplier ' \
+            'Details</font></center>'
+    elements.append(Paragraph(ptext, styles["Center"]))
+    elements.append(Spacer(1, 12))
+    data = [['Company Name', str(supplier.company_name).upper()],
+            ['Contact Number', str(supplier.contact_number).upper()],
+            ['Web Address',
+             str(supplier.web_address).upper()]
+            ]
+
+    table = Table(data, colWidths=190)
+    table.setStyle(TableStyle([
+        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+    ]))
+
+    elements.append(table)
+    elements.append(Spacer(1, 24))
+
     ptext = '<font size=12> Powered by \
              <a href="http://www.itechhub.co.za" color="blue">iTechHub</a>\
              </font>'

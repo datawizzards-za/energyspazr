@@ -16,9 +16,6 @@
           </p>
         </div>
         <div class="card-body">
-            {% for item in data %}
-            <p> {{ item.property_type }}</p>
-            {% endfor %}
             <table class="table table-bordered table-hover">
                 <thead>
                     <tr >
@@ -29,18 +26,14 @@
                   </tr>
                 </thead>
                 <tbody>
+                  {% for item in products %}
                   <tr>
-                    <td class='text-center'>P#1</td>
+                    <td class='text-center'>{{item.name}}</td>
                     <td class='text-center'>Mark</td>
                     <td class='text-center'>Otto</td>
                     <td class='text-center'>@mdo</td>
                   </tr>
-                  <tr>
-                    <td class='text-center'>P#2</td>
-                    <td class='text-center'>Jacob</td>
-                    <td class='text-center'>Thornton</td>
-                    <td class='text-center'>@fat</td>
-                  </tr>
+                  {% endfor %}
                   <tr>
                       <td class="text-center">Actions</td>
                     <td class='text-center'>
