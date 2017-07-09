@@ -456,9 +456,24 @@ class MyProducts(LoginRequiredMixin, View):
         new_form = self.new_form_class()
         averages = []
 
-        all_prods = self.products_model_class.objects.annotate(
-            count=Count('spazruserproduct')
-        )
+        prod = lambda name, model: {'name': name,
+                                    'count': model.objects.count(),
+                                    'data': model.objects.all()}
+
+        all_prods = [
+            prod('Solar Panels', models.SolarPanel),
+            prod('Inverters', models.Inverter),
+            prod('Batteries', models.Battery),
+            prod('Connectors', models.Connector),
+            prod('DC Cables', models.DCCable),
+            prod('Combiners', models.Combiner),
+        ]
+
+        print [(p.brand.name.name, p.size.value) for p in all_prods[0]['data']]
+
+        print [p.name for p in models.Product.objects.all()]
+        #print "Number of panels: ", panels
+
         user = self.user_model_class.objects.filter(user=req_user)[0]
         my_prods = self.products_model_class.objects\
             .filter(spazruserproduct__user=user).annotate(
