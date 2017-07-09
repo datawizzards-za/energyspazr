@@ -245,8 +245,32 @@ class OrderPVTSystem(View):
             username = form.cleaned_data['username']
             
             province_id = form.cleaned_data['province']
-            province = \
-                self.province_model_class.objects.filter(pk=province_id)[0]
+            province = self.province_model_class.objects.filter(pk=province_id)[0]
+            
+            client = models.Client.objects.filter(username=username)
+
+            if len(client) == 0:
+                physical_address = self.address_model_class.objects.create(
+                    building_name=form.cleaned_data['contact_number'],
+                    street_name=form.cleaned_data['street_name'],
+                    suburb=form.cleaned_data['suburb'],
+                    province=province,
+                    city=form.cleaned_data['city'],
+                    zip_code=form.cleaned_data['zip_code']
+                )
+                
+                client = models.Client.objects.create(
+                    username=username,
+                    lastname=last_name,
+                    firstname=first_name,
+                    contact_number=contact_number,
+                    physical_address=physical_address
+                )
+            
+            system_order = models.SystemOrder.objects.create(
+                need_finance=need_finance,
+                include_installation=include_installation
+            )
 
             pvt_system = models.PVTSystem.objects.create(
                 need_finance = need_finance,
@@ -254,46 +278,22 @@ class OrderPVTSystem(View):
                 intended_use = intended_use,
                 roof_inclination=roof_inclination,
                 property_type=property_type,
-                site_visit=site_visit
-            )
-            
-            physical_address = self.address_model_class.objects.create(
-                building_name=form.cleaned_data['contact_number'],
-                street_name=form.cleaned_data['street_name'],
-                suburb=form.cleaned_data['suburb'],
-                province=province,
-                city=form.cleaned_data['city'],
-                zip_code=form.cleaned_data['zip_code']
+                site_visit=site_visit,
+                order_number=system_order.order_number
             )
 
-            client = models.Client.objects.create(
-                username=username,
-                lastname=last_name,
-                firstname=first_name,
-                contact_number=contact_number,
-                physical_address=physical_address
-            )
-
-            supplier = self.supplier_model_class.objects.filter(user=request.user)[0]
-            order = models.Order.objects.create(
-                client=client,
-                supplier=supplier
-            )
-
-            system_order = models.SystemOrder.objects.create(
-                need_finance=need_finance,
-                include_installation=include_installation
-            )
-
-            order_item = models.OrderItem.objects.create(
-                order = order,
-                system = system_order
-            )
+            suppliers = self.supplier_model_class.objects.all() #.filter(user=request.user)[0]
+            for user in suppliers:
+                order = models.Order.objects.create(
+                    client=models.Client.objects.filter(username=username)[0],
+                    supplier=user,
+                    order_number= models.SystemOrder.objects.filter(order_number=pvt_system.order_number)[0]
+                )
 
         #pdf_name = quotation_pdf.generate_pdf(form.data)
         #return redirect('/app/view-slip/' + pdf_name)
         return redirect('/app/order-quotes/' +
-                        str(pvt_system.systemorder_ptr_id) )
+                        str(system_order.order_number) )
 
     def appliances_choices(self):
         appliance = models.Appliance.objects.all()
@@ -304,7 +304,7 @@ class OrderPVTSystem(View):
         return tuple([[p.pk, p.name] for p in provinces])
 
 
-class OrderGeyser(LoginRequiredMixin, View):
+class OrderGeyser(View):
     template_name = 'app/geyser_order.html'
     form_class = forms.GeyserOrderForm
     address_model_class = models.PhysicalAddress
@@ -341,14 +341,27 @@ class OrderGeyser(LoginRequiredMixin, View):
             province = \
                 self.province_model_class.objects.filter(pk=province_id)[0]
 
-            physical_address = self.address_model_class.objects.create(
-                building_name=form.cleaned_data['contact_number'],
-                street_name=form.cleaned_data['street_name'],
-                suburb=form.cleaned_data['suburb'],
-                province=province,
-                city=form.cleaned_data['city'],
-                zip_code=form.cleaned_data['zip_code']
-            )
+            
+            client = models.Client.objects.filter(username=username)
+
+            if len(client) == 0:
+                
+                physical_address = self.address_model_class.objects.create(
+                    building_name=form.cleaned_data['contact_number'],
+                    street_name=form.cleaned_data['street_name'],
+                    suburb=form.cleaned_data['suburb'],
+                    province=province,
+                    city=form.cleaned_data['city'],
+                    zip_code=form.cleaned_data['zip_code']
+                )
+                
+                client = models.Client.objects.create(
+                    username=username,
+                    lastname=last_name,
+                    firstname=first_name,
+                    contact_number=contact_number,
+                    physical_address=physical_address
+                )
             
             system_order = models.SystemOrder.objects.create(
                 need_finance=need_finance,
@@ -363,21 +376,14 @@ class OrderGeyser(LoginRequiredMixin, View):
                 required_geyser_size=required_geyser_size,
                 order_number=system_order.order_number
             )
-            
-            client = models.Client.objects.create(
-                username=username,
-                lastname=last_name,
-                firstname=first_name,
-                contact_number=contact_number,
-                physical_address=physical_address
-            )
 
-            supplier = self.supplier_model_class.objects.filter(user=request.user)[0]
-            order = models.Order.objects.create(
-                client=client,
-                supplier=supplier,
-                order_number= models.SystemOrder.objects.filter(order_number=system_order.order_number)[0]
-            )
+            suppliers = self.supplier_model_class.objects.all() #.filter(user=request.user)[0]
+            for user in suppliers:
+                order = models.Order.objects.create(
+                    client=models.Client.objects.filter(username=username)[0],
+                    supplier=user,
+                    order_number= models.SystemOrder.objects.filter(order_number=system_order.order_number)[0]
+                )
             
 
         return redirect('/app/order-quotes/' +

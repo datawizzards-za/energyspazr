@@ -9,6 +9,7 @@ $(document).ready(function(){
     $('#all_panels').hide();
     $('#edit_panel').hide();
     $('#all_products').hide();
+    $('#view_quote').hide();
 
     $('#table_my_products tbody').on( 'click', 'tr', function (e) {
         var row = $('tr', this);

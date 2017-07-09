@@ -167,6 +167,6 @@ class SolarComponentOrder(SystemOrder):
     
 class Order(models.Model):
     order_number = models.ForeignKey(SystemOrder, on_delete=models.CASCADE)
-    client = models.OneToOneField(Client, on_delete=models.CASCADE)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
     supplier = models.ForeignKey(SpazrUser)
     date = models.DateField(auto_now_add=True)
