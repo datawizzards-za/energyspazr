@@ -289,10 +289,6 @@ class OrderPVTSystem(View):
                 order = order,
                 system = system_order
             )
-            
-            for name in names:
-                id_name = models.Appliance.objects.filter(name=name)[0]
-                pvt_system.possible_appliances.add(id_name)
 
         #pdf_name = quotation_pdf.generate_pdf(form.data)
         #return redirect('/app/view-slip/' + pdf_name)
@@ -377,7 +373,6 @@ class OrderGeyser(LoginRequiredMixin, View):
             )
 
             supplier = self.supplier_model_class.objects.filter(user=request.user)[0]
-            print '######: ', supplier
             order = models.Order.objects.create(
                 client=client,
                 supplier=supplier,
@@ -538,15 +533,34 @@ class MyQuotes(LoginRequiredMixin, View):
         req_user = request.user
         user = self.user_model_class.objects.filter(user=req_user)[0]
         
-        orders = models.Order.objects.values()
-        print 'ORDERS: ', [ i for i in orders]
-        for order in orders:
-            client_names = models.Client.objects.filter(id=order['client_id'])[0]
-            orders['name'] = client_names.username
-            print orders['name']
+        orders = models.Order.objects.filter(supplier__user=req_user)
+        
+        #client_id = orders.values()[0]['client_id']
+        #client = models.Client.objects.filter(id=client_id)
+
+        client_ids = [ c.client_id for c in orders ]
+        clients = models.Client.objects.filter(id__in=client_ids)
+        #print [c for c in clients]
+
+        address_ids = [a.physical_address_id for a in clients]
+        address = models.PhysicalAddress.objects.filter(id__in=address_ids) 
+
+        #print clients_to_address #[a for a in address]
+
+        data = zip(orders, clients)
+        addr = zip(clients, address)
+
+        #print res
+        #order = (orders, client)
+        #print 'ORDERS: ', order
+        #for order in orders:
+            #print models.Client.objects.filter(id=order.client_id)['username'] #order.client_id
+            #client_names = models.Client.objects.filter(id=client_id)[0]
+            #orders['client_name'] = client_names.username
+            #print orders['client_name']
         #print orders
 
-        context = {'user': user, 'orders':orders}
+        context = {'user': user, 'data':data, 'address':addr}
 
         return render(request, self.template_name, context)
 

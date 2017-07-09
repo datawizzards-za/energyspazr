@@ -26,11 +26,11 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {% for q in orders %}
+                    {% for o,c in data %}
                     <tr value={{ product.pk }}>
-                      <td class="text-center">{{ q.order_number }}</td>
-                      <td class="text-center">{{ q.client_id }}</td>
-                      <td class="text-center">{{ q.date }}</td>
+                      <td class="text-center">{{ o.order_number_id }}</td>
+                      <td class="text-center">{{ c.firstname }} {{ c.lastname }}</td>
+                      <td class="text-center">{{ o.date }}</td>
                     </tr>
                     {% endfor %}
                   </tbody>
@@ -43,7 +43,7 @@
             <div class="bs-component col-md-6">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
-                      <h3 class="panel-title text-center">Quote Details</h3>
+                      <h3 class="panel-title text-center">System Details</h3>
                     </div>
                     <div class="panel-body">
                         hdhshs
@@ -56,7 +56,14 @@
                       <h3 class="panel-title text-center">Client Details</h3>
                     </div>
                     <div class="panel-body">
-                        hdhshs
+                        {% for c, a in address %}
+                        <h4 class="col-sm-6 text-center"> {{ c.firstname }} </h4>
+                        <h4 class="col-sm-6 text-center"> {{ c.lastname }} </h4>
+                        <h4 class="col-sm-6 text-center"> {{ c.username }} </h4>
+                        <h4 class="col-sm-6 text-center"> {{ c.contact_number }} </h4>
+                        <h4 class="col-sm-6 text-center"> {{ a.building_name }} </h4>
+                        <h4 class="col-sm-6 text-center"> {{ a.street_name }} </h4>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -66,7 +73,7 @@
                       <h3 class="panel-title text-center">Quote Statistics</h3>
                     </div>
                     <div class="panel-body">
-                        hdhshs
+                        <h3>Names</h3>
                     </div>
                 </div>
             </div>
