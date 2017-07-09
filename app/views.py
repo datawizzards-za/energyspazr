@@ -390,9 +390,13 @@ class OrderGeyser(LoginRequiredMixin, View):
 class DisplayPDF(View):
     def get(self, request, *args, **kwargs):
         pdf_dir = 'app/static/app/slips/'
-        image_data = open(pdf_dir + str(kwargs['generate']) + '.pdf',
-                          "rb").read()
-        return HttpResponse(image_data, content_type="application/pdf")
+        image_data = open(pdf_dir + str(kwargs['generate']) + '.pdf', "r")
+
+        response = HttpResponse(FileWrapper(image_data), content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename=' + str(
+            kwargs['generate'])+'.pdf'
+        image_data.close()
+        return response
 
 
 class AddComponent(View):
