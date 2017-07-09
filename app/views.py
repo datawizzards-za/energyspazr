@@ -246,7 +246,7 @@ class OrderPVTSystem(View):
             province_id = form.cleaned_data['province']
             province = self.province_model_class.objects.filter(pk=province_id)[0]
             
-            client = models.Client.objects.filter(username=username)
+            client = models.Client.objects.filter(username=username)[0]
 
             if len(client) == 0:
                 physical_address = self.address_model_class.objects.create(
@@ -341,7 +341,7 @@ class OrderGeyser(View):
                 self.province_model_class.objects.filter(pk=province_id)[0]
 
             
-            client = models.Client.objects.filter(username=username)[0]
+            client = models.Client.objects.filter(username=username)
             physical_address = ''
 
             if len(client) == 0:
@@ -363,7 +363,7 @@ class OrderGeyser(View):
                     physical_address=physical_address
                 )
             else:
-                physical_address = models.PhysicalAddress.objects.filter(id=client.physical_address_id)
+                physical_address = models.PhysicalAddress.objects.filter(id=client[0].physical_address_id)[0]
             
             system_order = models.SystemOrder.objects.create(
                 need_finance=need_finance,
@@ -382,11 +382,11 @@ class OrderGeyser(View):
             suppliers = self.supplier_model_class.objects.all() #.filter(user=request.user)[0]
             for supplier in suppliers:
                 order = models.Order.objects.create(
-                    client=client,
+                    client=client[0],
                     supplier=supplier,
                     order_number= models.SystemOrder.objects.filter(order_number=system_order.order_number)[0]
                 )
-                pdf_name = quotation_pdf.generate_pdf(client, order, physical_address,
+                pdf_name = quotation_pdf.generate_pdf(client[0], order, physical_address,
                                                   system_order, supplier)
             
 
