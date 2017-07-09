@@ -19,25 +19,21 @@
             <table class="table table-bordered table-hover">
                 <thead>
                     <tr >
-                        <th class="text-center">PRODUCT</th>
+                    <th class="text-center">PRODUCT</th>
                     <th class="text-center">QUOTE 1</th>
                     <th class="text-center">QUOTE 2</th>
                     <th class="text-center">QUOTE 3</th>
                   </tr>
                 </thead>
                 <tbody>
+                  {% for item in products %}
                   <tr>
-                    <td class='text-center'>P#1</td>
+                    <td class='text-center'>{{item.name}}</td>
                     <td class='text-center'>Mark</td>
                     <td class='text-center'>Otto</td>
                     <td class='text-center'>@mdo</td>
                   </tr>
-                  <tr>
-                    <td class='text-center'>P#2</td>
-                    <td class='text-center'>Jacob</td>
-                    <td class='text-center'>Thornton</td>
-                    <td class='text-center'>@fat</td>
-                  </tr>
+                  {% endfor %}
                   <tr>
                       <td class="text-center">Actions</td>
                     <td class='text-center'>
@@ -45,7 +41,7 @@
                             <a class="btn btn-sm btn-primary" href="#">
                                 <i class="fa fa-lg fa-mail-forward"></i>
                             </a>
-                            <a class="btn btn-sm btn-primary" href="#">
+                            <a class="btn btn-sm btn-primary" href="../../../app/view-slip/leroleroSunJul090147092017/">
                                 <i class="fa fa-lg fa-download"></i>
                             </a>
                         </div>
