@@ -5,6 +5,7 @@ from django.contrib.auth.models import Group
 from django.db.models import Q, Count
 from django.shortcuts import render, reverse, redirect, HttpResponse
 from django.views import View
+from django.core import serializers
 
 # Other Libraries
 from registration.backends.hmac.views import ActivationView
@@ -223,12 +224,10 @@ class OrderPVTSystem(View):
         """
         p_choices = self.provinces_choices()
         form = self.form_class(p_choices, request.POST)
-        
+
         if form.is_valid():
             p_choices = self.provinces_choices()
             form = self.form_class(p_choices, request.POST)
-            #print "Errors: ", form.errors
-            
             appliances_model = self.appliances_model_class(request.POST)
 
             intended_use = form.cleaned_data['intended_use']
@@ -243,7 +242,7 @@ class OrderPVTSystem(View):
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
             username = form.cleaned_data['username']
-            
+
             province_id = form.cleaned_data['province']
             province = self.province_model_class.objects.filter(pk=province_id)[0]
             
@@ -273,9 +272,9 @@ class OrderPVTSystem(View):
             )
 
             pvt_system = models.PVTSystem.objects.create(
-                need_finance = need_finance,
+                need_finance=need_finance,
                 include_installation=include_installation,
-                intended_use = intended_use,
+                intended_use=intended_use,
                 roof_inclination=roof_inclination,
                 property_type=property_type,
                 site_visit=site_visit,
@@ -290,8 +289,8 @@ class OrderPVTSystem(View):
                     order_number= models.SystemOrder.objects.filter(order_number=pvt_system.order_number)[0]
                 )
 
-        #pdf_name = quotation_pdf.generate_pdf(form.data)
-        #return redirect('/app/view-slip/' + pdf_name)
+        # pdf_name = quotation_pdf.generate_pdf(form.data)
+        # return redirect('/app/view-slip/' + pdf_name)
         return redirect('/app/order-quotes/' +
                         str(system_order.order_number) )
 
@@ -384,6 +383,8 @@ class OrderGeyser(View):
                     supplier=user,
                     order_number= models.SystemOrder.objects.filter(order_number=system_order.order_number)[0]
                 )
+            pdf_name = quotation_pdf.generate_pdf(client, order, physical_address,
+                                                  system_order, supplier)
             
 
         return redirect('/app/order-quotes/' +
@@ -391,12 +392,15 @@ class OrderGeyser(View):
 
 
 class DisplayPDF(View):
-
     def get(self, request, *args, **kwargs):
         pdf_dir = 'app/static/app/slips/'
-        image_data = open(pdf_dir + str(kwargs['generate']) + '.pdf',
-                          "rb").read()
-        return HttpResponse(image_data, content_type="application/pdf")
+        image_data = open(pdf_dir + str(kwargs['generate']) + '.pdf', "r")
+
+        response = HttpResponse(FileWrapper(image_data), content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename=' + str(
+            kwargs['generate'])+'.pdf'
+        image_data.close()
+        return response
 
 
 class AddComponent(View):
@@ -438,7 +442,7 @@ class MyProducts(LoginRequiredMixin, View):
     user_model_class = models.SpazrUser
     products_model_class = models.Product
     userproduct_model_class = models.SpazrUserProduct
-    #edit_form_class = forms.EditProductForm
+    # edit_form_class = forms.EditProductForm
     edit_panel_form_class = forms.EditPanelForm
     panel_size_class = models.PanelSize
 
@@ -452,24 +456,9 @@ class MyProducts(LoginRequiredMixin, View):
         new_form = self.new_form_class()
         averages = []
 
-        prod = lambda name, model: {'name': name,
-                                    'count': model.objects.count(),
-                                    'data': model.objects.all()}
-
-        all_prods = [
-            prod('Solar Panels', models.SolarPanel),
-            prod('Inverters', models.Inverter),
-            prod('Batteries', models.Battery),
-            prod('Connectors', models.Connector),
-            prod('DC Cables', models.DCCable),
-            prod('Combiners', models.Combiner),
-        ]
-
-        print [(p.brand.name.name, p.size.value) for p in all_prods[0]['data']]
-
-        print [p.name for p in models.Product.objects.all()]
-        #print "Number of panels: ", panels
-
+        all_prods = self.products_model_class.objects.annotate(
+            count=Count('spazruserproduct')
+        )
         user = self.user_model_class.objects.filter(user=req_user)[0]
         my_prods = self.products_model_class.objects\
             .filter(spazruserproduct__user=user).annotate(
@@ -481,7 +470,7 @@ class MyProducts(LoginRequiredMixin, View):
                    'new_form': new_form}
 
         return render(request, self.template_name, context)
-    
+
     def post(self, request, *args, **kwargs):
         edit_form = self.edit_form_class(request.POST)
         new_form = self.new_form_class(request.POST)
@@ -508,12 +497,12 @@ class MyProducts(LoginRequiredMixin, View):
         elif new_form.is_valid():
             name = new_form.cleaned_data['new_name']
             price = new_form.cleaned_data['new_price']
-            product = self.products_model_class.objects.create(name=name) 
+            product = self.products_model_class.objects.create(name=name)
             user = self.user_model_class.objects.filter(user=request.user)[0]
             user_product = self.userproduct_model_class.objects.create(
                 user=user,
                 product=product,
-                price = price
+                price=price
             )
 
         return redirect(reverse('my-products'))
@@ -529,16 +518,16 @@ class OrderQuotes(View):
         user_id = kwargs['user_id']
         data = models.GeyserSystemOrder.objects.filter(systemorder_ptr_id =
                                                    user_id)
-        print data
-        context = {'data': data}
+        products = models.Product.objects.all()
+        context = {'data': data, 'products':products}
         return render(request, self.template_name, context) # , context)
-
 
     def post(self, request, *args, **kwargs):
         pdf_dir = 'app/static/app/slips/'
         image_data = open(pdf_dir + str(kwargs['generate']) + '.pdf',
                           "rb")
-        response = HttpResponse(FileWrapper(image_data), content_type='application/pdf')
+        response = HttpResponse(FileWrapper(image_data),
+                                content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename=quotation.pdf'
         return response
 
