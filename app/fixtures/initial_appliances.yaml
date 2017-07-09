@@ -1,0 +1,20 @@
+- model: app.Appliance
+  pk: 1
+  fields:
+    name: Stove
+
+- model: app.Appliance
+  pk: 2
+  fields:
+    name: Light Bulbs
+
+- model: app.Appliance
+  pk: 3
+  fields:
+    name: Geyser
+
+- model: app.Appliance
+  pk: 4
+  fields:
+    name: Washing Machine
+
