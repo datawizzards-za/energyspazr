@@ -1,40 +1,55 @@
-- model: app.PanelSize
+- model: app.panelsize
   pk: 1
   fields:
     value: 250
 
-- model: app.PanelSize
+- model: app.panelsize
   pk: 2
   fields:
     value: 260
 
-- model: app.PanelSize
+- model: app.panelsize
   pk: 3
   fields:
     value: 280
 
-- model: app.PanelSize
+- model: app.panelsize
   pk: 4
   fields:
     value: 318
 
-- model: app.SolarPanel
-  pk: Solar Panel
+- model: app.productbrand
+  pk: null
+  fields:
+    name: Sunrise
+    product: Solar Panel
+
+- model: app.productbrand
+  pk: null
+  fields:
+    name: IBC
+    product: Solar Panel
+
+- model: app.solarpanel
+  pk: 1
   fields:
     size: 250
+    brand: [Sunrise, Solar Panel]
 
-- model: app.SolarPanel
-  pk: Solar Panel
+- model: app.solarpanel
+  pk: 2
   fields:
     size: 260
+    brand: [IBC, Solar Panel]
 
-- model: app.SolarPanel
-  pk: Solar Panel
+- model: app.solarpanel
+  pk: 3
   fields:
     size: 280
+    brand: [IBC, Solar Panel]
 
-- model: app.SolarPanel
-  pk: Solar Panel
+- model: app.solarpanel
+  pk: 4
   fields:
-    name: Solar Panel
     size: 318
+    brand: [IBC, Solar Panel]

@@ -1,19 +1,28 @@
-- model: app.BatterySize
+- model: app.batterysize
   pk: 1
   fields:
     value: 100
 
-- model: app.BatterySize
+- model: app.batterysize
   pk: 2
   fields:
     value: 200
 
-- model: app.battery
-  pk: Battery
+- model: app.productbrand
+  pk: null
   fields:
-    size: 1
+    name: Vision
+    product: Battery
 
 - model: app.battery
-  pk: Battery
+  pk: 1
+  fields:
+    size: 1
+    brand: [Vision, Battery]
+
+- model: app.battery
+  pk: 2
   fields:
     size: 2
+    brand: [Vision, Battery]
+
