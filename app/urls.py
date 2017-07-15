@@ -43,8 +43,6 @@ urlpatterns = [
     url(r'^register/$', views.Register.as_view(), name='register'),
     url(r'^view-slip/(?P<generate>[0-9A-Fa-f-]+)/$', views.DisplayPDF.as_view(),
         name='slips'),
-    url(r'^api/list_solar_panels/$', api_views.ListSolarPanels.as_view(), 
-        name='list_solar_panels'),
     url(r'api/get_brand/(?P<brand_id>\d+)/$', 
         api_views.GetProductBrand.as_view(), name='get_brand'),
 ]

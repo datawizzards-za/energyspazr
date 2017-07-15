@@ -1,21 +1,32 @@
-- model: app.panelsize
-  pk: 1
+- model: app.dimensionname
+  pk: Panel Size
   fields:
+    name: Panel Size
+
+
+
+- model: app.dimension
+  pk: null
+  fields:
+    name: Panel Size
     value: 250
 
-- model: app.panelsize
-  pk: 2
+- model: app.dimension
+  pk: null
   fields:
+    name: Panel Size
     value: 260
 
-- model: app.panelsize
-  pk: 3
+- model: app.dimension
+  pk: null
   fields:
+    name: Panel Size
     value: 280
 
-- model: app.panelsize
-  pk: 4
+- model: app.dimension
+  pk: null
   fields:
+    name: Panel Size
     value: 318
 
 - model: app.productbrand
@@ -30,26 +41,26 @@
     name: IBC
     product: Solar Panel
 
-- model: app.solarpanel
-  pk: 1
+- model: app.generalproduct
+  pk: null
   fields:
-    size: 250
     brand: [Sunrise, Solar Panel]
+    dimensions: [[Panel Size, 250]]
 
-- model: app.solarpanel
-  pk: 2
+- model: app.generalproduct
+  pk: null
   fields:
-    size: 260
     brand: [IBC, Solar Panel]
+    dimensions: [[Panel Size, 260]]
 
-- model: app.solarpanel
-  pk: 3
+- model: app.generalproduct
+  pk: null
   fields:
-    size: 280
     brand: [IBC, Solar Panel]
+    dimensions: [[Panel Size, 280]]
 
-- model: app.solarpanel
-  pk: 4
+- model: app.generalproduct
+  pk: null
   fields:
-    size: 318
     brand: [IBC, Solar Panel]
+    dimensions: [[Panel Size, 318]]

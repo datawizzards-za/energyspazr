@@ -443,11 +443,8 @@ class MyProducts(LoginRequiredMixin, View):
     template_name = 'app/supplier/products.html'
     user_model_class = models.SpazrUser
     products_model_class = models.Product
-    userproduct_model_class = models.SpazrUserProduct
-    # edit_form_class = forms.EditProductForm
+    userproduct_model_class = models.SellingProduct
     edit_panel_form_class = forms.EditPanelForm
-    panel_size_class = models.PanelSize
-
     new_form_class = forms.NewProductForm
 
     def get(self, request, *args, **kwargs):
