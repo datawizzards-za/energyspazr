@@ -47,4 +47,6 @@ urlpatterns = [
         name='list_solar_panels'),
     url(r'api/get_brand/(?P<brand_id>\d+)/$', 
         api_views.GetProductBrand.as_view(), name='get_brand'),
+    url(r'^email/(?P<uuid>[0-9A-Fa-f-]+)/$', views.SendEmail.as_view(),
+        name='email'),
 ]

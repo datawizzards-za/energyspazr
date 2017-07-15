@@ -6,7 +6,8 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 from reportlab.platypus.tables import Table, TableStyle
 from reportlab.lib import colors
-
+from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
 
 def generate_pdf(client, order, address, system, supplier):
 
@@ -118,6 +119,26 @@ def generate_pdf(client, order, address, system, supplier):
     elements.append(table)
     elements.append(Spacer(1, 24))
 
+    elements.append(Spacer(1, 24))
+    ptext = '<font size=16 style="text-transform:uppercase">Charges ' \
+            '</font></center>'
+    elements.append(Paragraph(ptext, styles["Center"]))
+    elements.append(Spacer(1, 12))
+    data = [['Amount ', 'R' +str(supplier.company_name).upper()],
+            ['Items', str(supplier.contact_number).upper()],
+            ['',
+             str(supplier.web_address).upper()]
+            ]
+
+    table = Table(data, colWidths=190)
+    table.setStyle(TableStyle([
+        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+    ]))
+
+    elements.append(table)
+    elements.append(Spacer(1, 24))
+
     ptext = '<font size=12> Powered by \
              <a href="http://www.itechhub.co.za" color="blue">iTechHub</a>\
              </font>'
@@ -127,8 +148,6 @@ def generate_pdf(client, order, address, system, supplier):
     document.build(elements)
 
     return pdf_file_generate
-
-
 
     # if __name__ == '__main__':
     #     values = {'username': 'ofentswel@gmail.com',

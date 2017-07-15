@@ -15,7 +15,7 @@ from wsgiref.util import FileWrapper
 from app import forms
 from app import models
 from app.utils import quotation_pdf
-
+from app.utils.send_pdf import TransactionVerification
 
 class Dashboard(LoginRequiredMixin, View):
     template_name = 'app/supplier/dashboard.html'
@@ -363,7 +363,8 @@ class OrderGeyser(View):
                     physical_address=physical_address
                 )
             else:
-                physical_address = models.PhysicalAddress.objects.filter(id=client[0].physical_address_id)[0]
+                physical_address = models.PhysicalAddress.objects.filter(
+                    id=client[0].physical_address_id)[0]
             
             system_order = models.SystemOrder.objects.create(
                 need_finance=need_finance,
@@ -386,7 +387,8 @@ class OrderGeyser(View):
                     supplier=supplier,
                     order_number= models.SystemOrder.objects.filter(order_number=system_order.order_number)[0]
                 )
-                pdf_name = quotation_pdf.generate_pdf(client[0], order, physical_address,
+                pdf_name = quotation_pdf.generate_pdf(client[0], order,
+                                                      physical_address,
                                                   system_order, supplier)
             
 
@@ -587,3 +589,12 @@ class MyQuotes(LoginRequiredMixin, View):
 
         return render(request, self.template_name, context)
 
+class SendEmail(View):
+    def get(self, request, *args, **kwargs):
+        order = kwargs['uuid']
+        data = {'email': 'ofentswel@gmail.com', 'domain':
+            '127.0.0.1:8000'}
+        tv = TransactionVerification(data, order)
+
+        tv.send_verification_mail()
+        return redirect('/app/order-quotes/'+order+'/')
