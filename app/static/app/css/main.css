@@ -140,7 +140,7 @@ Copyright (c) 2015 Daniel Eden
  }
  .sidebar .user-panel:before{content:" ";display:table}
  .sidebar .user-panel:after{content:" ";display:table;clear:both}
- .sidebar .user-panel>.image>img{width:100%;max-width:45px;height:auto}
+ .sidebar .user-panel>.image>img{width:100%;max-width:45px;height:40px}
  .sidebar .user-panel>.info{padding:5px 5px 5px 15px;line-height:1;position:absolute;left:55px}
  .sidebar .user-panel>.info>p{margin-top:2px;margin-bottom:5px;font-family:"Lato",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-size:17px}.sidebar .user-panel>.info>.designation{font-size:10px}
  .sidebar-menu{

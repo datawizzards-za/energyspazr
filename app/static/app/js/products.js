@@ -1,6 +1,5 @@
 $(document).ready(function(){
     var table_my_prods = $('#table_my_products').DataTable();
-    var table_all_quote = $('#table_all_quotes').DataTable();
     var table_all_panels = $('#table_all_panels').DataTable();
     var table_all_prods = $('#table_all_products').DataTable();
     
@@ -9,7 +8,6 @@ $(document).ready(function(){
     $('#all_panels').hide();
     $('#edit_panel').hide();
     $('#all_products').hide();
-    $('#view_quote').hide();
 
     $('#table_my_products tbody').on( 'click', 'tr', function (e) {
         var row = $('tr', this);

@@ -533,6 +533,7 @@ class OrderQuotes(View):
         """
         #systemorder_ptr_id
         user_id = kwargs['user_id']
+        print user_id
         data = models.GeyserSystemOrder.objects.filter(systemorder_ptr_id =
                                                    user_id)
         products = models.Product.objects.all()
@@ -556,13 +557,11 @@ class MyQuotes(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         """
         """
+        div = 'all'
         req_user = request.user
         user = self.user_model_class.objects.filter(user=req_user)[0]
         
         orders = models.Order.objects.filter(supplier__user=req_user)
-        
-        #client_id = orders.values()[0]['client_id']
-        #client = models.Client.objects.filter(id=client_id)
 
         client_ids = [ c.client_id for c in orders ]
         clients = models.Client.objects.filter(id__in=client_ids)
@@ -570,8 +569,6 @@ class MyQuotes(LoginRequiredMixin, View):
 
         address_ids = [a.physical_address_id for a in clients]
         address = models.PhysicalAddress.objects.filter(id__in=address_ids) 
-
-        #print clients_to_address #[a for a in address]
 
         data = zip(orders, clients)
         addr = zip(clients, address)
@@ -585,8 +582,96 @@ class MyQuotes(LoginRequiredMixin, View):
             #orders['client_name'] = client_names.username
             #print orders['client_name']
         #print orders
-
-        context = {'user': user, 'data':data, 'address':addr}
+        print '########', div
+        context = {'user': user, 'data':data, 'address':addr, 'div':div}
 
         return render(request, self.template_name, context)
+
+class MyQuotesQuote(View):
+    template_name = 'app/supplier/quotes.html'
+
+    def get(self, request, *args, **kwargs):
+        """
+        """
+        div = 'div'
+        
+        context = {'div':div}
+        return render(request, self.template_name, context)
+
+class UserAccount(LoginRequiredMixin, View):
+    template_name = 'app/supplier/account.html'
+    form_class = forms.UserAccountForm
+    address_model_class = models.PhysicalAddress
+    user_model_class = models.SpazrUser
+    province_model_class = models.Province
+
+    def get(self, request, *args, **kwargs):
+        """
+        """
+        req_user = request.user
+        user = self.user_model_class.objects.filter(user=req_user)[0]
+        
+        spazar_user = models.SpazrUser.objects.filter(user=req_user)[0]
+        #print spazar_user.contact_number
+
+        address = models.PhysicalAddress.objects.filter(id=spazar_user.physical_address_id)[0]
+        
+        p_choices = self.provinces_choices
+        form = self.form_class(p_choices)
+
+        context = {'form': form, 'user':spazar_user, 'address':address}
+
+        return render(request, self.template_name, context)
+    """
+    def post(self, request, *args, **kwargs):
+        
+        p_choices = self.provinces_choices
+        r_choices = self.roles_choices
+        form = self.form_class(p_choices, r_choices, request.POST)
+
+        if form.is_valid():
+            address_model = self.address_model_class(request)
+
+            user = request.user
+            group_id = int(form.cleaned_data['roles'])
+            group = Group.objects.filter(pk=group_id)[0]
+            user.groups.add(group)
+
+            company_name = form.cleaned_data['company_name']
+            company_reg = form.cleaned_data['company_reg']
+            contact_number = form.cleaned_data['contact_number']
+            web_address = form.cleaned_data['web_address']
+            province_id = form.cleaned_data['province']
+            province = \
+                self.province_model_class.objects.filter(pk=province_id)[0]
+
+            physical_address = self.address_model_class.objects.create(
+                building_name=form.cleaned_data['contact_number'],
+                street_name=form.cleaned_data['street_name'],
+                suburb=form.cleaned_data['suburb'],
+                province=province,
+                city=form.cleaned_data['city'],
+                zip_code=form.cleaned_data['zip_code']
+            )
+
+            self.user_model_class.objects.create(
+                user=user,
+                company_name=company_name,
+                company_reg=company_reg,
+                contact_number=contact_number,
+                web_address=web_address,
+                physical_address=physical_address
+            )
+
+            return redirect(reverse('dashboard'))
+
+        form = self.form_class(self.provinces_choices())
+        context = {'form': form}
+
+        return render(request, self.template_name, context)
+        """
+    def provinces_choices(self):
+        provinces = self.province_model_class.objects.all()
+        return tuple([[p.pk, p.name] for p in provinces])
+
 
