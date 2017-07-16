@@ -15,7 +15,7 @@ from wsgiref.util import FileWrapper
 from app import forms
 from app import models
 from app.utils import quotation_pdf
-
+from app.utils.send_pdf import TransactionVerification
 
 class Dashboard(LoginRequiredMixin, View):
     template_name = 'app/supplier/dashboard.html'
@@ -363,7 +363,8 @@ class OrderGeyser(View):
                     physical_address=physical_address
                 )
             else:
-                physical_address = models.PhysicalAddress.objects.filter(id=client[0].physical_address_id)[0]
+                physical_address = models.PhysicalAddress.objects.filter(
+                    id=client[0].physical_address_id)[0]
             
             system_order = models.SystemOrder.objects.create(
                 need_finance=need_finance,
@@ -386,7 +387,8 @@ class OrderGeyser(View):
                     supplier=supplier,
                     order_number= models.SystemOrder.objects.filter(order_number=system_order.order_number)[0]
                 )
-                pdf_name = quotation_pdf.generate_pdf(client[0], order, physical_address,
+                pdf_name = quotation_pdf.generate_pdf(client[0], order,
+                                                      physical_address,
                                                   system_order, supplier)
             
 
@@ -458,23 +460,20 @@ class MyProducts(LoginRequiredMixin, View):
         new_form = self.new_form_class()
         averages = []
 
-        prod = lambda name, model: {'name': name,
-                                    'count': model.objects.count(),
-                                    'data': model.objects.all()}
+        product = lambda name, model: {
+            'name': name,
+            'count': model.objects.count(),
+            'data': model.objects.all()
+        }
 
         all_prods = [
-            prod('Solar Panels', models.SolarPanel),
-            prod('Inverters', models.Inverter),
-            prod('Batteries', models.Battery),
-            prod('Connectors', models.Connector),
-            prod('DC Cables', models.DCCable),
-            prod('Combiners', models.Combiner),
+            product('Solar Panels', models.SolarPanel),
+            product('Inverters', models.Inverter),
+            product('Batteries', models.Battery),
+            product('Connectors', models.Connector),
+            product('DC Cables', models.DCCable),
+            product('Combiners', models.Combiner),
         ]
-
-        print [(p.brand.name.name, p.size.value) for p in all_prods[0]['data']]
-
-        print [p.name for p in models.Product.objects.all()]
-        #print "Number of panels: ", panels
 
         user = self.user_model_class.objects.filter(user=req_user)[0]
         my_prods = self.products_model_class.objects\
@@ -675,3 +674,12 @@ class UserAccount(LoginRequiredMixin, View):
         return tuple([[p.pk, p.name] for p in provinces])
 
 
+class SendEmail(View):
+    def get(self, request, *args, **kwargs):
+        order = kwargs['uuid']
+        data = {'email': 'ofentswel@gmail.com', 'domain':
+            '127.0.0.1:8000'}
+        tv = TransactionVerification(data, order)
+
+        tv.send_verification_mail()
+        return redirect('/app/order-quotes/'+order+'/')
