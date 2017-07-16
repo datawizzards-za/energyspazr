@@ -1,0 +1,9 @@
+- model: app.dimensionname
+  pk: 1
+  fields:
+    name: Size
+
+- model: app.dimensionname
+  pk: 2
+  fields:
+    name: Length

@@ -3,12 +3,6 @@ from rest_framework.permissions import IsAuthenticated
 from app import serializers, models
 
 
-class ListSolarPanels(generics.ListAPIView):
-    queryset = models.SolarPanel.objects.all()
-    serializer_class = serializers.SolarPanelSerializer
-    permissions = (IsAuthenticated,)
-
-
 class GetProductBrand(generics.ListAPIView):
     serializer_class = serializers.ProductBrandSerializer
     permissions = (IsAuthenticated,)
