@@ -454,7 +454,8 @@ class MyProducts(LoginRequiredMixin, View):
         edit_panel_form = self.edit_panel_form_class
         new_form = self.new_form_class()
         averages = []
-
+        
+        """
         product = lambda name, model: {
             'name': name,
             'count': model.objects.count(),
@@ -469,10 +470,40 @@ class MyProducts(LoginRequiredMixin, View):
             product('DC Cables', models.DCCable),
             product('Combiners', models.Combiner),
         ]
+        """
+
+        prods = models.GeneralProduct.objects.values(
+            'brand__product'
+        ).annotate(
+            pcount=Count('brand__product'),
+        )
+
+        #print "Type: ", type(all_prods[0]['dimensions'])
+        dims = map(
+            lambda prod: self._prepare_dimensions(
+                            models.GeneralProduct.objects.filter(
+                                brand__product=prod['brand__product']
+                             ).values(
+                                 'brand__name', 
+                                 'dimensions__name', 
+                                 'dimensions__value'
+                               )
+                         ),
+            prods
+        )
+
+
+        all_prods = map(
+            lambda prod: dict(prod[0], dimensions=prod[1]),
+            zip(prods, dims)
+        )
+
+        print all_prods
+
 
         user = self.user_model_class.objects.filter(user=req_user)[0]
         my_prods = self.products_model_class.objects\
-            .filter(spazruserproduct__user=user).annotate(
+            .filter(sellingproduct__user=user).annotate(
                 count=Count('name')
         )
 
@@ -517,6 +548,20 @@ class MyProducts(LoginRequiredMixin, View):
             )
 
         return redirect(reverse('my-products'))
+
+    def _prepare_dimensions(self, queryset):
+        result = {'brand':[]}
+
+        for item in queryset:
+            key = item['dimensions__name'].lower().replace(' ','_')
+            value = item['dimensions__value']
+            if key in result:
+                result[key].append(value)
+            else:
+                result[key] = [value]   
+            result['brand'].append(item['brand__name'])
+
+        return result
 
 
 class OrderQuotes(View):

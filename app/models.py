@@ -78,21 +78,25 @@ class DimensionName(models.Model):
 
 
 class DimensionManager(models.Manager):
-    def get_by_natural_key(self, name, value):
-        return self.get(name=name, value=value)
+    def get_by_natural_key(self, product, name, value):
+        return self.get(product=product, name=name, value=value)
 
 
 class Dimension(models.Model):
     objects = DimensionManager()
 
     name = models.ForeignKey(DimensionName, on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE
+    )
     value = models.CharField(max_length=100)
 
     def natural_key(self):
-        return (self.name, self.value)
+        return (self.product, self.name, self.value)
 
     class Meta:
-        unique_together = (('name', 'value'),)
+        unique_together = (('product', 'name', 'value'),)
 
 
 class GeneralProduct(models.Model):
