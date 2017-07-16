@@ -50,7 +50,7 @@ abbr[title]{border-bottom:1px dotted}b,strong{font-weight:bold}dfn{font-style:it
                  -moz-user-select:none;
                  -ms-user-select:none;user-select:none;transition:box-shadow 0.3s cubic-bezier(0.35, 0, 0.25, 1),transform 0.2s cubic-bezier(0.35, 0, 0.25, 1),background-color 0.3s ease-in-out}.btn:hover,.btn:focus,.btn.focus{color:#fff;text-decoration:none;transform:translate3d(0, -1px, 0);box-shadow:0 4px 8px 0 rgba(0,0,0,0.4);outline:none}.btn.disabled,.btn[disabled],fieldset[disabled] .btn{cursor:not-allowed;pointer-events:none;opacity:.65;filter:alpha(opacity=65);box-shadow:none}.btn.icon-btn i{font-size:16px;margin-right:5px}.btn.btn-flat{border-radius:0}a.btn.disabled,fieldset[disabled] a.btn{pointer-events:none}
                  .btn-default{
-                     color:#0000;
+                     color:#000;
                      background-color:#FFF;
                      border-color:transparent; 
                      text-align: center;

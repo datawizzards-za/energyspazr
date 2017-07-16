@@ -50,4 +50,6 @@ urlpatterns = [
         api_views.GetProductBrand.as_view(), name='get_brand'),
     url(r'^email/(?P<uuid>[0-9A-Fa-f-]+)/$', views.SendEmail.as_view(),
         name='email'),
+    url(r'api/get_order_details/(?P<order_number>[0-9A-Fa-f-]+)/$', 
+        api_views.GetOrderDetails.as_view(), name='get_order_details'),
 ]

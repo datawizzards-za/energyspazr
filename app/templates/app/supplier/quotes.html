@@ -23,7 +23,6 @@
                       <th data-field="quote_num" class='col-md-3 text-center'>Quote No.</th>
                       <th data-field="quote_client" class='col-md-3 text-center'>Client</th>
                       <th data-field="quote_date" class='col-md-3 text-center'>Date</th>
-                      <th data-field="quote_date" class='col-md-3 text-center'>Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -32,11 +31,6 @@
                       <td class="text-center">{{ o.order_number_id }}</td>
                       <td class="text-center">{{ c.firstname }} {{ c.lastname }}</td>
                       <td class="text-center">{{ o.date }}</td>
-                      <td class="text-center">
-                          <a class="btn btn-block btn-default text-center" href="">
-                              View
-                          </a>
-                      </td>
                     </tr>
                     {% endfor %}
                   </tbody>
@@ -87,12 +81,3 @@
       </div>
   
   {% endblock content %}
-  {% block extrajs %}
-{% load staticfiles %}
-<script type="text/javascript">
-    var div = "{{div|safe}}";
-    
-    console.log(div);
-</script>
-
-{% endblock %}
