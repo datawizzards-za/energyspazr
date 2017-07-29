@@ -168,23 +168,22 @@ class SystemOrder(models.Model):
     need_finance = models.BooleanField(default=False)
     include_installation = models.BooleanField(default=False)
     order_number = models.CharField(max_length=100, primary_key=True, default=uuid.uuid4)
-    #order_number = models.AutoField(primary_key=True)
-    #order_number = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
-
-class GeyserSystemOrder(SystemOrder):
+class GeyserSystemOrder(models.Model):
     property_type = models.CharField(max_length=10)
     roof_inclination = models.CharField(max_length=10)
     users_number = models.PositiveSmallIntegerField(null=True)
     required_geyser_size = models.PositiveSmallIntegerField(null=True)
     water_collector = models.CharField(max_length=15)
+    order_number = models.ForeignKey(SystemOrder, on_delete=models.CASCADE)
 
-class PVTSystem(SystemOrder):
+class PVTSystem(models.Model):
     intended_use = models.CharField(max_length=50)
     possible_appliances = models.ManyToManyField(Appliance)
     site_visit = models.BooleanField()
     property_type = models.CharField(max_length=10)
     roof_inclination = models.CharField(max_length=10)
+    order_number = models.ForeignKey(SystemOrder, on_delete=models.CASCADE)
 
 
 class SolarComponentOrder(SystemOrder):

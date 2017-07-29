@@ -262,7 +262,7 @@ class PVTOrderForm(ModelForm):
     OPTIONS = ((p.name, p.name) for p in models.Appliance.objects.all())
     name = forms.ChoiceField(choices=OPTIONS, required=True)
 
-    building_name = forms.CharField(max_length=30)
+    building_name = forms.CharField(max_length=30, required=True)
     street_name = forms.CharField(max_length=30)
     province = forms.ChoiceField(choices=(), required=True)
     city = forms.CharField(max_length=30)
@@ -312,8 +312,7 @@ class PVTOrderForm(ModelForm):
             What do you intend to use this sytem for? \
             </label>"),
                 Div(
-                    Field('intended_use', css_class='form-control',
-                          placeholder='Type of Property'),
+                    Field('intended_use', css_class='form-control'),
                     css_class='col-md-5 text-center'
                 ),
                 css_class='form-group form-horizontal'
@@ -930,5 +929,127 @@ class NewProductForm(forms.Form):
                 css_class='form-group col-md-6'
             ),
             css_class='card-footer col-md-12'
+        ),
+    )
+
+class UserAccountForm(ModelForm):
+    username = forms.CharField(max_length=30)
+    email = forms.CharField(max_length=30)
+    building_name = forms.CharField(max_length=30)
+    street_name = forms.CharField(max_length=30)
+    province = forms.ChoiceField(choices=(), required=True)
+    city = forms.CharField(max_length=30)
+    suburb = forms.CharField(max_length=30)
+    zip_code = forms.IntegerField()
+
+    def __init__(self, p_choices, *args, **kwargs):
+        super(UserAccountForm, self).__init__(*args, **kwargs)
+        self.fields['province'].choices = p_choices
+
+    class Meta:
+        model = models.SpazrUser
+        fields = ['company_name', 'company_reg', 'contact_number',
+                  'web_address']
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.form_show_labels = False
+
+    helper.layout = Layout(
+        Div(
+            Div(
+                Field('username', 
+                    css_class='form-control text-center'), 
+                css_class='col-md-6'
+            ),
+            Div(
+                Field('email', 
+                    css_class='form-control text-center'), 
+                css_class='col-md-6'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                Field('company_name', 
+                    css_class='form-control text-center'),
+                css_class='col-md-6'
+            ),
+            Div(
+                Field('company_reg', 
+                    css_class='form-control text-center '), 
+                css_class='col-md-6'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                Field('contact_number', 
+                    css_class='form-control text-center'), 
+                css_class='col-md-6'
+            ),
+            Div(
+                Field('web_address', 
+                    css_class='form-control text-center'), 
+                css_class='col-md-6'
+            ),
+            css_class='row mb-20'
+        ),
+        HTML('<h5 class="text-center">Physical Address</h5><hr>'),
+        Div(
+            Div(
+                Field('building_name', 
+                    css_class='form-control text-center'), 
+                css_class='col-md-6'
+            ),
+            Div(
+                Field('street_name', 
+                    css_class='form-control text-center'), 
+                css_class='col-md-6'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                Field('province', 
+                    css_class='form-control text-center'), 
+                css_class='col-md-6 text-center'
+            ),
+            Div(
+                Field('city', 
+                    css_class='form-control text-center'), 
+                css_class='col-md-6 '
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                Field('suburb', 
+                    css_class='form-control text-center'), 
+                css_class='col-md-6'
+            ),
+            Div(
+                Field('zip_code',
+                    css_class='form-control text-center'), 
+                css_class='col-md-6'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                HTML(""),
+                css_class='col-md-2'
+            ),
+            Div(
+                FormActions(Submit('save', 'SAVE',
+                                   css_class='btn btn-primary btn-block')),
+                css_class='col-md-4'
+            ),
+            Div(
+                FormActions(Submit('btn_delete', 'DELETE ACCOUNT',
+                                   css_class='btn btn-danger btn-block')),
+                css_class='col-md-4'
+            ),
+            css_class='card-footer'
         ),
     )
