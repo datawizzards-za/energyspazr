@@ -57,7 +57,6 @@ $(document).ready(function(){
             tr.addClass('selected');
         }
     });
- 
 
     $('#table_all_products tbody').on( 'click', 'tr', function (e) {
         var selected = $(this).attr('value');
@@ -69,7 +68,6 @@ $(document).ready(function(){
                 $('#all_products').hide();
                 $('#all_panels').show();
                 break;
-
         }
     });
 
@@ -89,8 +87,6 @@ $(document).ready(function(){
         return cookieValue;
     }
     var csrftoken = getCookie('csrftoken');
-    console.log(csrftoken);
-
 
     $('#btn_submit_panels').click(function(){
         var selected = $('#table_all_panels tbody').find('tr.selected');

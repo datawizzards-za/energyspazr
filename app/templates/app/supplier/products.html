@@ -67,9 +67,9 @@
           </thead>
           <tbody>
             {% for product in all_products %}
-            <tr value={{ product.name }}>
-              <td class="text-center">{{ product.name }}</td>
-              <td class="text-center">{{ product.count }}</td>
+            <tr value={{ product.brand__product }}>
+              <td class="text-center">{{ product.brand__product }}</td>
+              <td class="text-center">{{ product.pcount }}</td>
             </tr>
             {% endfor %}
           </tbody>
@@ -132,11 +132,11 @@
           </thead>
           <tbody>
             {% for product in all_products %}
-            {% if product.name == 'Solar Panels' %}
-            {% for panel in product.data %}
+            {% if product.brand__product == 'Solar Panels' %}
+            {% for brand in product.data %}
             <tr>
-              <td class="text-center">{{ panel.brand.name.name }}</td>
-              <td class="text-center">{{ panel.size.value|intcomma }} Watts</td>
+              <td class="text-center">{{ brand }}</td>
+              <td class="text-center">{{ product.dimensions.size[i]|intcomma }} Watts</td>
               <td class="text-center">
                 <div class="input-group form-group mb-2 mr-sm-2 mb-sm-0 has-danger">
                   <div class="input-group-addon">R</div>

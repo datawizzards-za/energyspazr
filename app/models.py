@@ -70,15 +70,41 @@ class ProductBrand(models.Model):
         unique_together = (('name', 'product'),)
 
 
-class PanelSize(models.Model):
-    value = models.IntegerField(primary_key=True)
+class DimensionName(models.Model):
+    name = models.CharField(max_length=100, primary_key=True)
+
+    def natural_key(self):
+        return (self.name)
 
 
-class SolarPanel(models.Model):
-    size = models.ForeignKey(PanelSize, on_delete=models.CASCADE)
+class DimensionManager(models.Manager):
+    def get_by_natural_key(self, product, name, value):
+        return self.get(product=product, name=name, value=value)
+
+
+class Dimension(models.Model):
+    objects = DimensionManager()
+
+    name = models.ForeignKey(DimensionName, on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE
+    )
+    value = models.CharField(max_length=100)
+
+    def natural_key(self):
+        return (self.product, self.name, self.value)
+
+    class Meta:
+        unique_together = (('product', 'name', 'value'),)
+
+
+class GeneralProduct(models.Model):
     brand = models.ForeignKey(ProductBrand, on_delete=models.CASCADE)
+    dimensions = models.ManyToManyField(Dimension)
 
 
+'''
 class InverterSize(models.Model):
     value = models.CharField(max_length=20)
 
@@ -113,9 +139,9 @@ class Combiner(models.Model):
     size = models.FloatField()
     length = models.FloatField()
     brand = models.ForeignKey(ProductBrand, on_delete=models.CASCADE)
+'''
 
-
-class SpazrUserProduct(models.Model):
+class SellingProduct(models.Model):
     user = models.ForeignKey(SpazrUser, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     price = models.FloatField()
