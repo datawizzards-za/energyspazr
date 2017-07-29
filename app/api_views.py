@@ -2,6 +2,9 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from app import serializers, models
 
+from rest_framework.decorators import api_view
+from rest_framework import status
+from rest_framework.response import Response
 
 class GetProductBrand(generics.ListAPIView):
     serializer_class = serializers.ProductBrandSerializer
@@ -11,10 +14,34 @@ class GetProductBrand(generics.ListAPIView):
         brand_id = self.kwargs['brand_id']
         return models.ProductBrand.objects.filter(id=brand_id)
 
-class GetOrderDetails(generics.ListAPIView):
-    serializer_class = serializers.QuoteDetailsSerializer
+class GetSystemOrderDetails(generics.ListAPIView):
+    serializer_class = serializers.SystemOrderDetailsSerializer
     permissions = (IsAuthenticated,)
 
     def get_queryset(self):
         order_number = self.kwargs['order_number']
-        return models.Order.objects.filter(order_number__order_number=order_number)
+        return models.SystemOrder.objects.filter(order_number=order_number)
+
+class GetOrderDetails(generics.ListAPIView):
+    serializer_class = serializers.OrderDetailsSerializer
+    permissions = (IsAuthenticated,)
+
+    def get_queryset(self):
+        order_number = self.kwargs['order_number']
+        return models.Order.objects.filter(order_number=order_number)
+
+class GetClientDetails(generics.ListAPIView):
+    serializer_class = serializers.ClientSerializer
+    permissions = (IsAuthenticated,)
+
+    def get_queryset(self):
+        client_id = self.kwargs['id']
+        return models.Client.objects.filter(id=client_id)
+
+
+"""
+@api_view(['GET', 'POST'])
+def system_order_details(request, order_num):
+    
+    system_order = models.SystemOrder.objects.all()
+    """

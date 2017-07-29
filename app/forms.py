@@ -312,8 +312,7 @@ class PVTOrderForm(ModelForm):
             What do you intend to use this sytem for? \
             </label>"),
                 Div(
-                    Field('intended_use', css_class='form-control',
-                          placeholder='Type of Property'),
+                    Field('intended_use', css_class='form-control'),
                     css_class='col-md-5 text-center'
                 ),
                 css_class='form-group form-horizontal'

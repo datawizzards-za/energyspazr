@@ -29,7 +29,7 @@ urlpatterns = [
     url(r'^my-account/$', views.UserAccount.as_view(), name='my-account'),
     url(r'^pvt-order/$', views.OrderPVTSystem.as_view(), name='pvt-order'),
     url(r'^geyser-order/$', views.OrderGeyser.as_view(), name='geyser-order'),
-    url(r'^order-quotes/(?P<user_id>[0-9A-Fa-f-]+)/$', views.OrderQuotes.as_view(),
+    url(r'^order-quotes/(?P<order_number>[0-9A-Fa-f-]+)/$', views.OrderQuotes.as_view(),
         name='order-quotes'),
     url(r'^component-order/$', views.SolarComponent.as_view(),
         name='component-order'),
@@ -50,4 +50,8 @@ urlpatterns = [
         name='email'),
     url(r'api/get_order_details/(?P<order_number>[0-9A-Fa-f-]+)/$', 
         api_views.GetOrderDetails.as_view(), name='get_order_details'),
+    url(r'api/get_sysorder_details/(?P<order_number>[0-9A-Fa-f-]+)/$', 
+        api_views.GetSystemOrderDetails.as_view(), name='get_sysorder_details'),
+    url(r'api/get_client_details/(?P<id>\d+)/$', 
+        api_views.GetClientDetails.as_view(), name='get_client_details'),
 ]

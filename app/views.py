@@ -215,7 +215,7 @@ class OrderPVTSystem(View):
         """
         p_choices = self.provinces_choices()
         form = self.form_class(p_choices)
-        print form.data
+        
         context = {'form': form}
         return render(request, self.template_name, context)
 
@@ -223,12 +223,10 @@ class OrderPVTSystem(View):
         """
         """
         p_choices = self.provinces_choices()
+        appliances_model = self.appliances_model_class(request.POST)
         form = self.form_class(p_choices, request.POST)
 
         if form.is_valid():
-            p_choices = self.provinces_choices()
-            form = self.form_class(p_choices, request.POST)
-            appliances_model = self.appliances_model_class(request.POST)
 
             intended_use = form.cleaned_data['intended_use']
             site_visit = form.cleaned_data['site_visit']
@@ -246,9 +244,11 @@ class OrderPVTSystem(View):
             province_id = form.cleaned_data['province']
             province = self.province_model_class.objects.filter(pk=province_id)[0]
             
-            client = models.Client.objects.filter(username=username)[0]
+            client = models.Client.objects.filter(username=username)
+            physical_address = ''
 
             if len(client) == 0:
+                
                 physical_address = self.address_model_class.objects.create(
                     building_name=form.cleaned_data['contact_number'],
                     street_name=form.cleaned_data['street_name'],
@@ -265,34 +265,42 @@ class OrderPVTSystem(View):
                     contact_number=contact_number,
                     physical_address=physical_address
                 )
+                
+                client = models.Client.objects.filter(username=username)
+            else:
+                physical_address = models.PhysicalAddress.objects.filter(
+                    id=client[0].physical_address_id)[0]
             
             system_order = models.SystemOrder.objects.create(
                 need_finance=need_finance,
                 include_installation=include_installation
             )
 
+            order_number = models.SystemOrder.objects.filter(order_number=system_order.order_number)[0]
+
             pvt_system = models.PVTSystem.objects.create(
-                need_finance=need_finance,
-                include_installation=include_installation,
                 intended_use=intended_use,
                 roof_inclination=roof_inclination,
                 property_type=property_type,
                 site_visit=site_visit,
-                order_number=system_order.order_number
+                order_number=order_number
             )
 
             suppliers = self.supplier_model_class.objects.all() #.filter(user=request.user)[0]
-            for user in suppliers:
+            for supplier in suppliers:
                 order = models.Order.objects.create(
-                    client=models.Client.objects.filter(username=username)[0],
-                    supplier=user,
-                    order_number= models.SystemOrder.objects.filter(order_number=pvt_system.order_number)[0]
+                    client=client[0],
+                    supplier=supplier,
+                    order_number= order_number
                 )
+                pdf_name = quotation_pdf.generate_pdf(client[0], order,
+                                                      physical_address,
+                                                  system_order, supplier)
 
         # pdf_name = quotation_pdf.generate_pdf(form.data)
         # return redirect('/app/view-slip/' + pdf_name)
         return redirect('/app/order-quotes/' +
-                        str(system_order.order_number) )
+                        str(system_order.order_number))
 
     def appliances_choices(self):
         appliance = models.Appliance.objects.all()
@@ -319,7 +327,7 @@ class OrderGeyser(View):
     def post(self, request, *args, **kwargs):
         p_choices = OrderPVTSystem().provinces_choices
         form = self.form_class(p_choices, request.POST)
-        print form.errors
+        
         if form.is_valid():
             address_model = self.address_model_class(request)
 
@@ -362,6 +370,8 @@ class OrderGeyser(View):
                     contact_number=contact_number,
                     physical_address=physical_address
                 )
+                
+                client = models.Client.objects.filter(username=username)
             else:
                 physical_address = models.PhysicalAddress.objects.filter(
                     id=client[0].physical_address_id)[0]
@@ -371,13 +381,15 @@ class OrderGeyser(View):
                 include_installation=include_installation
             )
 
+            order_number = models.SystemOrder.objects.filter(order_number=system_order.order_number)[0]
+
             geyser_order = models.GeyserSystemOrder.objects.create(
                 property_type=property_type,
                 roof_inclination=roof_inclination,
                 water_collector=water_collector,
                 users_number=users_number,
                 required_geyser_size=required_geyser_size,
-                order_number=system_order.order_number
+                order_number=order_number
             )
 
             suppliers = self.supplier_model_class.objects.all() #.filter(user=request.user)[0]
@@ -385,13 +397,12 @@ class OrderGeyser(View):
                 order = models.Order.objects.create(
                     client=client[0],
                     supplier=supplier,
-                    order_number= models.SystemOrder.objects.filter(order_number=system_order.order_number)[0]
+                    order_number=order_number
                 )
                 pdf_name = quotation_pdf.generate_pdf(client[0], order,
                                                       physical_address,
                                                   system_order, supplier)
             
-
         return redirect('/app/order-quotes/' +
                         str(system_order.order_number) )
 
@@ -573,12 +584,10 @@ class OrderQuotes(View):
         """
         """
         #systemorder_ptr_id
-        user_id = kwargs['user_id']
-        print user_id
-        data = models.GeyserSystemOrder.objects.filter(systemorder_ptr_id =
-                                                   user_id)
+        order_number = kwargs['order_number']
+        data = models.GeyserSystemOrder.objects.filter(order_number=order_number)
         products = models.Product.objects.all()
-        context = {'data': data, 'products':products, 'user_id':user_id}
+        context = {'data': data, 'products':products, 'user_id':order_number}
         return render(request, self.template_name, context) # , context)
 
     def post(self, request, *args, **kwargs):
@@ -598,33 +607,22 @@ class MyQuotes(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         """
         """
-        div = 'all'
         req_user = request.user
-        user = self.user_model_class.objects.filter(user=req_user)[0]
         
         orders = models.Order.objects.filter(supplier__user=req_user)
 
         client_ids = [ c.client_id for c in orders ]
         clients = models.Client.objects.filter(id__in=client_ids)
-        #print [c for c in clients]
 
-        address_ids = [a.physical_address_id for a in clients]
-        address = models.PhysicalAddress.objects.filter(id__in=address_ids) 
+        #address_ids = [a.physical_address_id for a in clients]
+        #address = models.PhysicalAddress.objects.filter(id__in=address_ids) 
 
         data = zip(orders, clients)
-        addr = zip(clients, address)
-
-        #print res
-        #order = (orders, client)
-        #print 'ORDERS: ', order
-        #for order in orders:
-            #print models.Client.objects.filter(id=order.client_id)['username'] #order.client_id
-            #client_names = models.Client.objects.filter(id=client_id)[0]
-            #orders['client_name'] = client_names.username
-            #print orders['client_name']
-        #print orders
-        print '########', div
-        context = {'user': user, 'data':data, 'address':addr, 'div':div}
+        #addr = zip(clients, address)
+        
+        spazar_user = models.SpazrUser.objects.filter(user=req_user)[0]
+        
+        context = {'user': spazar_user, 'data':data} # , 'address':addr}
 
         return render(request, self.template_name, context)
 
@@ -650,7 +648,7 @@ class UserAccount(LoginRequiredMixin, View):
         """
         """
         req_user = request.user
-        user = self.user_model_class.objects.filter(user=req_user)[0]
+        #user = self.user_model_class.objects.filter(user=req_user)[0]
         
         spazar_user = models.SpazrUser.objects.filter(user=req_user)[0]
         #print spazar_user.contact_number

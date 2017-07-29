@@ -39,41 +39,63 @@
             </div>
         </div>
           
-        <div class="row col-md-12 zoomIn animated" id='view_quote'>
-            <div class="bs-component col-md-6">
+          <div class="bs-component col-md-6 zoomIn animated" id='system_details'>
                 <div class="panel panel-primary">
                     <div class="panel-heading">
                       <h3 class="panel-title text-center">System Details</h3>
                     </div>
                     <div class="panel-body">
-                        hdhshs
+                        <table class="table table-striped">
+                          <tbody>
+                            <tr>
+                              <td id="c_firstname" class="text-center"></td>
+                              <td id="c_lastname" class="text-center"></td>
+                            </tr>
+                            <tr>
+                              <td id="c_username" class="text-center"></td>
+                              <td id="c_contact_number" class="text-center"></td>
+                            </tr>
+                            <tr>
+                              <td id="a_building_name" class="text-center"></td>
+                              <td id="a_street_name" class="text-center"></td>
+                            </tr>
+                          </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-            <div class="bs-component col-md-6">
+            <div class="bs-component col-md-6 zoomIn animated" id='client_details'>
                 <div class="panel panel-primary">
                     <div class="panel-heading">
                       <h3 class="panel-title text-center">Client Details</h3>
                     </div>
                     <div class="panel-body">
-                        {% for c, a in address %}
-                        <h4 class="col-sm-6 text-center"> {{ c.firstname }} </h4>
-                        <h4 class="col-sm-6 text-center"> {{ c.lastname }} </h4>
-                        <h4 class="col-sm-6 text-center"> {{ c.username }} </h4>
-                        <h4 class="col-sm-6 text-center"> {{ c.contact_number }} </h4>
-                        <h4 class="col-sm-6 text-center"> {{ a.building_name }} </h4>
-                        <h4 class="col-sm-6 text-center"> {{ a.street_name }} </h4>
-                        {% endfor %}
+                        <table class="table table-striped">
+                          <tbody>
+                            <tr>
+                              <td id="c_firstname" class="text-center"></td>
+                              <td id="c_lastname" class="text-center"></td>
+                            </tr>
+                            <tr>
+                              <td id="c_username" class="text-center"></td>
+                              <td id="c_contact_number" class="text-center"></td>
+                            </tr>
+                            <tr>
+                              <td id="a_building_name" class="text-center"></td>
+                              <td id="a_street_name" class="text-center"></td>
+                            </tr>
+                          </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-            <div class="bs-component col-md-12">
+            <div class="bs-component col-md-12 zoomIn animated" id='quotes_stats'>
                 <div class="panel panel-primary">
                     <div class="panel-heading">
                       <h3 class="panel-title text-center">Quote Statistics</h3>
                     </div>
                     <div class="panel-body">
-                        <h3>Names</h3>
+                        
                     </div>
                 </div>
             </div>
