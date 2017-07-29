@@ -527,7 +527,7 @@ class MyProducts(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        edit_form = self.edit_form_class(request.POST)
+        edit_form = self.edit_panel_form_class(request.POST)
         new_form = self.new_form_class(request.POST)
 
         if edit_form.is_valid():

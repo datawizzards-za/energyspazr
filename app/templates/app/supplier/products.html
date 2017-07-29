@@ -136,7 +136,7 @@
             {% for brand in product.data %}
             <tr>
               <td class="text-center">{{ brand }}</td>
-              <td class="text-center">{{ product.dimensions.size[i]|intcomma }} Watts</td>
+              <td class="text-center">{{ product.dimensions.size.0|intcomma }} Watts</td>
               <td class="text-center">
                 <div class="input-group form-group mb-2 mr-sm-2 mb-sm-0 has-danger">
                   <div class="input-group-addon">R</div>
