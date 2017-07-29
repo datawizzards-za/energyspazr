@@ -3,7 +3,10 @@
       <aside class="main-sidebar hidden-print">
         <section class="sidebar">
           <div class="user-panel">
-            <div class="pull-left image"><img class="img-circle" src="https://s3.amazonaws.com/uifaces/faces/twitter/jsa/48.jpg" alt="User Image"></div>
+            <div class="pull-left image">
+                {% load staticfiles %}
+                <img class="img-circle" src="{% static 'common/energyspazr.jpg' %}" alt="energyspazr">
+            </div>
             <div class="pull-left info">
                 <p><a href="{{ user.web_address }}" target="_blank">{{ user.company_name }}</a></p>
                 <p class="designation">
@@ -17,9 +20,9 @@
           <ul class="sidebar-menu">
             <li class="{% if 'dashboard' in request.path %} active {% endif %} hvr-grow"><a href="{% url 'dashboard' %}"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
             <li class="hvr-pulse"><a href="#" class="hvr-bob"><i class="fa fa-reorder"></i><span>Orders</span></a></li>
-            <li class="{% if 'my-quotes' in request.path %} active {% endif %} hvr-grow"><a href="{% url 'my-quotes'%}" class="hvr-bob"><i class="fa fa-reorder"></i><span>Quotes</span></a></li>
-            <li class="{% if 'my-products' in request.path %} active {% endif %} hvr-grow"><a href="{% url 'my-products'%}" class="hvr-bob"><i class="fa fa-reorder"></i><span>Products</span></a></li>
-            <li class="hvr-float-shadow"><a href="#"><i class="fa fa-user"></i><span>Account</span></a></li>
+            <li class="{% if 'my-quotes' in request.path %} active {% endif %} hvr-grow"><a href="{% url 'my-quotes' %}" class="hvr-bob"><i class="fa fa-reorder"></i><span>Quotes</span></a></li>
+            <li class="{% if 'my-products' in request.path %} active {% endif %} hvr-grow"><a href="{% url 'my-products' %}" class="hvr-bob"><i class="fa fa-reorder"></i><span>Products</span></a></li>
+            <li class="{% if 'my-account' in request.path %} active {% endif %}"><a href="{% url 'my-account' %}"><i class="fa fa-user"></i><span>Account</span></a></li>
           </ul>
         </section>
       </aside>
