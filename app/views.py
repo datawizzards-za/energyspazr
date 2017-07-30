@@ -2,7 +2,7 @@
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
-from django.db.models import Q, Count
+from django.db.models import Q, Count, Min
 from django.shortcuts import render, reverse, redirect, HttpResponse
 from django.views import View
 from django.core import serializers
@@ -640,3 +640,15 @@ class SendEmail(View):
 
         tv.send_verification_mail()
         return redirect('/app/order-quotes/'+order+'/')
+
+class QuotationCharges:
+    def __init__(self, product):
+        self.product = product
+
+    def get_prices(self):
+        data = models.SellingProduct.objects.filter(product_id =
+        self.product).aggregate(Min('price'))
+        values = models.SellingProduct.objects.filter(product_id
+                                                      =self.product,
+                                                      price=data['price__min'])
+        return data, values[0]
