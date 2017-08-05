@@ -401,7 +401,7 @@ class OrderGeyser(View):
             suppliers = self.supplier_model_class.objects.all()
             for supplier in suppliers:
                 order = models.Order.objects.create(
-                    client=client[0],
+                    client=client,
                     supplier=supplier,
                     order_number=order_number
                 )
