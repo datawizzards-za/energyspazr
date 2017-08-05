@@ -8,24 +8,52 @@ class ProductBrandSerializer(serializers.ModelSerializer):
         model = models.ProductBrand
         fields = ['id', 'name', 'product']
 
-class OrderDetailsSerializer(serializers.ModelSerializer):
-    
+
+class OrderSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = models.Order
         fields = ['client', 'date', 'order_number']
 
-class SystemOrderDetailsSerializer(serializers.ModelSerializer):
-    
+
+class GeyserSystemSerializer(serializers.ModelSerializer):
+    #system = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+
+    class Meta:
+        model = models.GeyserSystemOrder
+        fields = ['property_type', 'roof_inclination',
+                  'users_number', 'required_geyser_size', 'water_collector']
+
+
+class PVTSystemSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.PVTSystem
+        fields = ['property_type', 'roof_inclination',
+                  'intended_use', 'site_visit']
+
+
+class SystemOrderSerializer(serializers.ModelSerializer):
+    geyser = GeyserSystemSerializer(many=True, read_only=True)
+    pvt = PVTSystemSerializer(many=True, read_only=True)
+
     class Meta:
         model = models.SystemOrder
-        fields = ['need_finance', 'include_installation', 'order_number']
+        fields = ['need_finance', 'include_installation',
+                  'order_number', 'geyser', 'pvt']
+
+
+class AddressSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.PhysicalAddress
+        fields = ['building_name', 'street_name', 'suburb',
+                  'city', 'zip_code', 'province_id']
+
 
 class ClientSerializer(serializers.ModelSerializer):
-    #physical_address = serializers.StringRelatedField(many=False);
-    
+
     class Meta:
         model = models.Client
-        fields = ['id','username', 'lastname', 'firstname', 
-        'contact_number'] #, 'building_name', 'street_name']
-    
-
+        fields = ['username', 'lastname', 'firstname',
+                  'contact_number', 'physical_address_id']

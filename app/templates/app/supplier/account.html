@@ -39,8 +39,8 @@
 <script type="text/javascript">
     $('#id_province').select2();
     
-    $("#id_company_reg").prop("disabled", true);
-    $("#id_username").prop("disabled", true);
+    $("#id_company_reg").prop("readonly", true);
+    $("#id_username").prop("readonly", true);
     
     var username = "{{user.user|safe}}";
     var email = "{{user.user.email|safe}}";
@@ -54,10 +54,10 @@
     var suburb  = "{{address.suburb|safe}}";
     var zip  = "{{address.zip_code|safe}}";
     //console.log("Address " + zip);
-    $("#id_username").prop("placeholder", username);
+    $("#id_username").prop("value", username);
     $("#id_email").prop("value", email);
     $("#id_company_name").prop("value", company_name);
-    $("#id_company_reg").prop("placeholder", company_reg);
+    $("#id_company_reg").prop("value", company_reg);
     $("#id_contact_number").prop("value", contact_number);
     $("#id_web_address").prop("value", web_address);
     $("#id_building_name").prop("value", building);
