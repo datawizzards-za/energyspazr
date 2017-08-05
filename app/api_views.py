@@ -6,6 +6,7 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.response import Response
 
+
 class GetProductBrand(generics.ListAPIView):
     serializer_class = serializers.ProductBrandSerializer
     permissions = (IsAuthenticated,)
@@ -14,21 +15,24 @@ class GetProductBrand(generics.ListAPIView):
         brand_id = self.kwargs['brand_id']
         return models.ProductBrand.objects.filter(id=brand_id)
 
+
+class GetOrderDetails(generics.ListAPIView):
+    serializer_class = serializers.OrderSerializer
+    permissions = (IsAuthenticated,)
+
+    def get_queryset(self):
+        order_number = self.kwargs['order_number']
+        return models.Order.objects.filter(order_number=order_number)
+
+
 class GetSystemOrderDetails(generics.ListAPIView):
-    serializer_class = serializers.SystemOrderDetailsSerializer
+    serializer_class = serializers.SystemOrderSerializer
     permissions = (IsAuthenticated,)
 
     def get_queryset(self):
         order_number = self.kwargs['order_number']
         return models.SystemOrder.objects.filter(order_number=order_number)
 
-class GetOrderDetails(generics.ListAPIView):
-    serializer_class = serializers.OrderDetailsSerializer
-    permissions = (IsAuthenticated,)
-
-    def get_queryset(self):
-        order_number = self.kwargs['order_number']
-        return models.Order.objects.filter(order_number=order_number)
 
 class GetClientDetails(generics.ListAPIView):
     serializer_class = serializers.ClientSerializer
@@ -37,6 +41,15 @@ class GetClientDetails(generics.ListAPIView):
     def get_queryset(self):
         client_id = self.kwargs['id']
         return models.Client.objects.filter(id=client_id)
+
+
+class GetClientAddress(generics.ListAPIView):
+    serializer_class = serializers.AddressSerializer
+    permissions = (IsAuthenticated,)
+
+    def get_queryset(self):
+        address_id = self.kwargs['id']
+        return models.PhysicalAddress.objects.filter(id=address_id)
 
 
 """

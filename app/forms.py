@@ -24,7 +24,7 @@ class SigninForm(auth_forms.AuthenticationForm):
     helper.form_class = 'login-form'
     helper.form_show_labels = False
     helper.layout = Layout(
-        HTML('<h3 class="login-head"><i class="fa fa-lg fa-fw fa-user">' \
+        HTML('<h3 class="login-head"><i class="fa fa-lg fa-fw fa-user">'
              '</i>SIGN IN</h3>'),
         Div(
             Field('username', css_class='form-control text-center',
@@ -39,11 +39,11 @@ class SigninForm(auth_forms.AuthenticationForm):
         Div(
             Div(
                 Div(
-                    HTML('<label class="semibold-text">' \
+                    HTML('<label class="semibold-text">'
                          '<input type="checkbox"></label>'),
                     css_class='animated-checkbox'
                 ),
-                HTML('<p class="semibold-text mb-0">' \
+                HTML('<p class="semibold-text mb-0">'
                      '<a data-toggle="flip">Forgot Password ?</a></p>'),
                 css_class='utility'
             ),
@@ -56,7 +56,7 @@ class SigninForm(auth_forms.AuthenticationForm):
         ),
         Div(
             Div(
-                HTML('<br /><p class="semibold-text mb-0">' \
+                HTML('<br /><p class="semibold-text mb-0">'
                      "<a href='{% url 'signup' %}'>Not Registered?</a></p>")
             ),
             css_class='form-group text-center'
@@ -81,7 +81,7 @@ class SignupForm(auth_forms.UserCreationForm):
     helper.form_show_labels = False
 
     helper.layout = Layout(
-        HTML('<h3 class="login-head"><i class="fa fa-lg fa-fw fa-user">' \
+        HTML('<h3 class="login-head"><i class="fa fa-lg fa-fw fa-user">'
              '</i>SIGN UP</h3>'),
         Div(
             Div(
@@ -122,7 +122,7 @@ class SignupForm(auth_forms.UserCreationForm):
         ),
         Div(
             Div(
-                HTML('<br /><p class="semibold-text mb-0 text-center">' \
+                HTML('<br /><p class="semibold-text mb-0 text-center">'
                      "<a href='{% url 'signin' %}'>Already Registered?</a></p>")
             ),
             css_class='form-group'
@@ -162,7 +162,7 @@ class UserAccountUpdateForm(ModelForm):
             ),
             Div(
                 Field('roles', css_class='form-control text-center ',
-                      placeholder='Role(s)'), 
+                      placeholder='Role(s)'),
                 css_class='col-md-6 text-center'
             ),
             css_class='row mb-20'
@@ -237,15 +237,18 @@ class UserAccountUpdateForm(ModelForm):
         ),
     )
 
+
 """
 Forms for the three different products start here
 """
+
+
 class PVTOrderForm(ModelForm):
-    
+
     def __init__(self, p_choices, *args, **kwargs):
         super(PVTOrderForm, self).__init__(*args, **kwargs)
         self.fields['province'].choices = p_choices
-    
+
     property_type = forms.ChoiceField(choices=(['flat', 'FLAT'],
                                                ['house', 'HOUSE']))
     roof_inclination = forms.ChoiceField(choices=(['tilted', 'TILTED'],
@@ -256,9 +259,9 @@ class PVTOrderForm(ModelForm):
 
     intended_use = forms.ChoiceField(choices=(['main_power', 'MAIN POWER'],
                                               ['backup_power', 'BACK UP']))
-    
+
     site_visit = forms.ChoiceField(choices=((True, 'YES'), (False, 'NO')))
-    
+
     OPTIONS = ((p.name, p.name) for p in models.Appliance.objects.all())
     name = forms.ChoiceField(choices=OPTIONS, required=True)
 
@@ -392,8 +395,7 @@ class PVTOrderForm(ModelForm):
                     Div(
                         Div(
                             Field('first_name',
-                                  css_class='form-control text-center form-control'
-                                  , placeholder='First Name',
+                                  css_class='form-control text-center form-control', placeholder='First Name',
                                   type='text',
                                   maxlength='30'
                                   ),
@@ -406,8 +408,7 @@ class PVTOrderForm(ModelForm):
                     Div(
                         Div(
                             Field('last_name',
-                                  css_class='form-control text-center form-control'
-                                  , placeholder='Last Name',
+                                  css_class='form-control text-center form-control', placeholder='Last Name',
                                   type='text',
                                   maxlength='30'
                                   ),
@@ -423,8 +424,7 @@ class PVTOrderForm(ModelForm):
                     Div(
                         Div(
                             Field('username',
-                                  css_class='form-control emailinput text-center form-control'
-                                  , placeholder='Email Address',
+                                  css_class='form-control emailinput text-center form-control', placeholder='Email Address',
                                   type='text',
                                   maxlength='30'
                                   ),
@@ -437,8 +437,7 @@ class PVTOrderForm(ModelForm):
                     Div(
                         Div(
                             Field('contact_number',
-                                  css_class='form-control text-center form-control'
-                                  , placeholder='Contact Number',
+                                  css_class='form-control text-center form-control', placeholder='Contact Number',
                                   type='text',
                                   maxlength='30'
                                   ),
@@ -483,8 +482,7 @@ class PVTOrderForm(ModelForm):
                           placeholder='ZIP Code'), css_class='col-md-6'
                 ),
                 css_class='row mb-20'
-            )
-            ,
+            ),
             Div(
                 Div(
                     css_class='form-group col-md-3'
@@ -506,6 +504,7 @@ class PVTOrderForm(ModelForm):
             css_class='card login-box long finish_order animated zoomIn'
         ),
     )
+
 
 class GeyserOrderForm(forms.Form):
 
@@ -531,13 +530,13 @@ class GeyserOrderForm(forms.Form):
 
     users_number = forms.IntegerField()
     required_geyser_size = forms.ChoiceField(
-        choices=((50, "50Lt"),(100, "100Lt"), (150, '150Lt'),
+        choices=((50, "50Lt"), (100, "100Lt"), (150, '150Lt'),
                  (200, '150Lt'), (250, '250Lt'))
-        )
+    )
 
-    need_finance = forms.ChoiceField(choices=((True, "Yes"),(False, "No")))
+    need_finance = forms.ChoiceField(choices=((True, "Yes"), (False, "No")))
     include_installation = forms.ChoiceField(
-        choices=((True, "Yes"),(False, "No")))
+        choices=((True, "Yes"), (False, "No")))
 
     username = forms.CharField(max_length=30)
     contact_number = forms.CharField(max_length=40)
@@ -585,7 +584,7 @@ class GeyserOrderForm(forms.Form):
                 Div(
                     Field('water_collector',
                           css_class='form-control text-center'),
-                          css_class='col-md-5 text-center'
+                    css_class='col-md-5 text-center'
                 ),
                 css_class='form-group form-horizontal'
             ),
@@ -594,7 +593,7 @@ class GeyserOrderForm(forms.Form):
                 The number of people using geyser is required. \
                 </h4>"),
                 css_class='form-horizontal col-md-12 text-center',
-                css_id = "users_number_error"
+                css_id="users_number_error"
             ),
             Div(
                 HTML("<label class='control-label col-md-7'> \
@@ -660,8 +659,8 @@ class GeyserOrderForm(forms.Form):
                 css_class='card-footer'
             ),
 
-            css_id = 'targetElement',
-            css_class = 'card login-box long'
+            css_id='targetElement',
+            css_class='card login-box long'
         ),
         Div(
             HTML(
@@ -671,8 +670,7 @@ class GeyserOrderForm(forms.Form):
                     Div(
                         Div(
                             Field('first_name',
-                                  css_class='form-control text-center form-control'
-                                  , placeholder='First Name',
+                                  css_class='form-control text-center form-control', placeholder='First Name',
                                   type='text',
                                   maxlength='30'
                                   ),
@@ -685,8 +683,7 @@ class GeyserOrderForm(forms.Form):
                     Div(
                         Div(
                             Field('last_name',
-                                  css_class='form-control text-center form-control'
-                                  , placeholder='Last Name',
+                                  css_class='form-control text-center form-control', placeholder='Last Name',
                                   type='text',
                                   maxlength='30'
                                   ),
@@ -702,8 +699,7 @@ class GeyserOrderForm(forms.Form):
                     Div(
                         Div(
                             Field('username',
-                                  css_class='form-control emailinput text-center form-control'
-                                  , placeholder='Email Address',
+                                  css_class='form-control emailinput text-center form-control', placeholder='Email Address',
                                   type='text',
                                   maxlength='30'
                                   ),
@@ -716,8 +712,7 @@ class GeyserOrderForm(forms.Form):
                     Div(
                         Div(
                             Field('contact_number',
-                                  css_class='form-control text-center form-control'
-                                  , placeholder='Contact Number',
+                                  css_class='form-control text-center form-control', placeholder='Contact Number',
                                   type='text',
                                   maxlength='30'
                                   ),
@@ -762,8 +757,7 @@ class GeyserOrderForm(forms.Form):
                           placeholder='ZIP Code'), css_class='col-md-6'
                 ),
                 css_class='row mb-20'
-            )
-            ,
+            ),
             Div(
                 Div(
                     css_class='form-group col-md-3'
@@ -786,9 +780,7 @@ class GeyserOrderForm(forms.Form):
         ),
     )
 
-"""
-Product order forms end here
-"""
+
 class ResendForm(forms.Form):
     email = forms.CharField(max_length=1000)
 
@@ -843,7 +835,7 @@ class EditPanelForm(forms.Form):
         'edit_prod_id',
         Div(
             Div(
-                Field('edit_panel_name', 
+                Field('edit_panel_name',
                       id='edit_panel_name',
                       placeholder='Product name',
                       css_class='form-control text-center'),
@@ -853,7 +845,7 @@ class EditPanelForm(forms.Form):
         ),
         Div(
             Div(
-                Field('edit_panel_size', 
+                Field('edit_panel_size',
                       id='edit_panel_size',
                       placeholder='Product name',
                       css_class='form-control text-center'),
@@ -932,6 +924,7 @@ class NewProductForm(forms.Form):
         ),
     )
 
+
 class UserAccountForm(ModelForm):
     username = forms.CharField(max_length=30)
     email = forms.CharField(max_length=30)
@@ -958,79 +951,78 @@ class UserAccountForm(ModelForm):
     helper.layout = Layout(
         Div(
             Div(
-                Field('username', 
-                    css_class='form-control text-center'), 
+                Field('username',
+                      css_class='form-control text-center'),
                 css_class='col-md-6'
             ),
             Div(
-                Field('email', 
-                    css_class='form-control text-center'), 
-                css_class='col-md-6'
-            ),
-            css_class='row mb-20'
-        ),
-        Div(
-            Div(
-                Field('company_name', 
-                    css_class='form-control text-center'),
-                css_class='col-md-6'
-            ),
-            Div(
-                Field('company_reg', 
-                    css_class='form-control text-center '), 
+                Field('email',
+                      css_class='form-control text-center'),
                 css_class='col-md-6'
             ),
             css_class='row mb-20'
         ),
         Div(
             Div(
-                Field('contact_number', 
-                    css_class='form-control text-center'), 
+                Field('company_name',
+                      css_class='form-control text-center'),
                 css_class='col-md-6'
             ),
             Div(
-                Field('web_address', 
-                    css_class='form-control text-center'), 
-                css_class='col-md-6'
-            ),
-            css_class='row mb-20'
-        ),
-        HTML('<h5 class="text-center">Physical Address</h5><hr>'),
-        Div(
-            Div(
-                Field('building_name', 
-                    css_class='form-control text-center'), 
-                css_class='col-md-6'
-            ),
-            Div(
-                Field('street_name', 
-                    css_class='form-control text-center'), 
+                Field('company_reg',
+                      css_class='form-control text-center '),
                 css_class='col-md-6'
             ),
             css_class='row mb-20'
         ),
         Div(
             Div(
-                Field('province', 
-                    css_class='form-control text-center'), 
+                Field('contact_number',
+                      css_class='form-control text-center'),
+                css_class='col-md-6'
+            ),
+            Div(
+                Field('web_address',
+                      css_class='form-control text-center'),
+                css_class='col-md-6'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                Field('building_name',
+                      css_class='form-control text-center'),
+                css_class='col-md-6'
+            ),
+            Div(
+                Field('street_name',
+                      css_class='form-control text-center'),
+                css_class='col-md-6'
+            ),
+            css_class='row mb-20'
+        ),
+        Div(
+            Div(
+                Field('province',
+                      css_class='form-control text-center'),
                 css_class='col-md-6 text-center'
             ),
             Div(
-                Field('city', 
-                    css_class='form-control text-center'), 
+                Field('city',
+                      css_class='form-control text-center'),
                 css_class='col-md-6 '
             ),
             css_class='row mb-20'
         ),
         Div(
             Div(
-                Field('suburb', 
-                    css_class='form-control text-center'), 
+                Field('suburb',
+                      css_class='form-control text-center'),
                 css_class='col-md-6'
             ),
             Div(
                 Field('zip_code',
-                    css_class='form-control text-center'), 
+                      css_class='form-control text-center'),
                 css_class='col-md-6'
             ),
             css_class='row mb-20'

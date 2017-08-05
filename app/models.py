@@ -1,9 +1,8 @@
 from __future__ import unicode_literals
 
+import uuid
 from django.db import models
 from django.contrib.auth.models import User, Group
-
-import uuid
 
 
 class Province(models.Model):
@@ -24,14 +23,14 @@ class Client(models.Model):
     lastname = models.CharField(max_length=30)
     firstname = models.CharField(max_length=30)
     contact_number = models.CharField(max_length=40)
-    physical_address = models.OneToOneField(PhysicalAddress, \
-                                            on_delete=models.CASCADE)
+    physical_address = models.ForeignKey(
+        PhysicalAddress, on_delete=models.CASCADE)
 
 
 class SpazrUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     contact_number = models.CharField(max_length=40)
-    physical_address = models.OneToOneField(PhysicalAddress, \
+    physical_address = models.OneToOneField(PhysicalAddress,
                                             on_delete=models.CASCADE)
     company_name = models.CharField(max_length=30)
     company_reg = models.CharField(max_length=40)
@@ -104,43 +103,6 @@ class GeneralProduct(models.Model):
     dimensions = models.ManyToManyField(Dimension)
 
 
-'''
-class InverterSize(models.Model):
-    value = models.CharField(max_length=20)
-
-
-class Inverter(models.Model):
-    size = models.ForeignKey(InverterSize, on_delete=models.CASCADE)
-    brand = models.ForeignKey(ProductBrand, on_delete=models.CASCADE)
-
-
-class BatterySize(models.Model):
-    value = models.IntegerField()
-
-
-class Battery(models.Model):
-    size = models.ForeignKey(BatterySize, on_delete=models.CASCADE)
-    brand = models.ForeignKey(ProductBrand, on_delete=models.CASCADE)
-
-
-class DCCable(models.Model):
-    size = models.FloatField()
-    length = models.FloatField()
-    brand = models.ForeignKey(ProductBrand, on_delete=models.CASCADE)
-
-
-class Connector(models.Model):
-    size = models.FloatField()
-    length = models.FloatField()
-    brand = models.ForeignKey(ProductBrand, on_delete=models.CASCADE)
-
-
-class Combiner(models.Model):
-    size = models.FloatField()
-    length = models.FloatField()
-    brand = models.ForeignKey(ProductBrand, on_delete=models.CASCADE)
-'''
-
 class SellingProduct(models.Model):
     user = models.ForeignKey(SpazrUser, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -167,7 +129,9 @@ class Appliance(models.Model):
 class SystemOrder(models.Model):
     need_finance = models.BooleanField(default=False)
     include_installation = models.BooleanField(default=False)
-    order_number = models.CharField(max_length=100, primary_key=True, default=uuid.uuid4)
+    order_number = models.CharField(
+        max_length=100, primary_key=True, default=uuid.uuid4)
+
 
 class GeyserSystemOrder(models.Model):
     property_type = models.CharField(max_length=10)
@@ -175,7 +139,9 @@ class GeyserSystemOrder(models.Model):
     users_number = models.PositiveSmallIntegerField(null=True)
     required_geyser_size = models.PositiveSmallIntegerField(null=True)
     water_collector = models.CharField(max_length=15)
-    order_number = models.ForeignKey(SystemOrder, on_delete=models.CASCADE)
+    order_number = models.ForeignKey(
+        SystemOrder, related_name='geyser', on_delete=models.CASCADE)
+
 
 class PVTSystem(models.Model):
     intended_use = models.CharField(max_length=50)
@@ -183,13 +149,14 @@ class PVTSystem(models.Model):
     site_visit = models.BooleanField()
     property_type = models.CharField(max_length=10)
     roof_inclination = models.CharField(max_length=10)
-    order_number = models.ForeignKey(SystemOrder, on_delete=models.CASCADE)
+    order_number = models.ForeignKey(
+        SystemOrder, related_name='pvt', on_delete=models.CASCADE)
 
 
 class SolarComponentOrder(SystemOrder):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
-    
+
 class Order(models.Model):
     order_number = models.ForeignKey(SystemOrder, on_delete=models.CASCADE)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
