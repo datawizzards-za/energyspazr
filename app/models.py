@@ -104,46 +104,9 @@ class GeneralProduct(models.Model):
     dimensions = models.ManyToManyField(Dimension)
 
 
-'''
-class InverterSize(models.Model):
-    value = models.CharField(max_length=20)
-
-
-class Inverter(models.Model):
-    size = models.ForeignKey(InverterSize, on_delete=models.CASCADE)
-    brand = models.ForeignKey(ProductBrand, on_delete=models.CASCADE)
-
-
-class BatterySize(models.Model):
-    value = models.IntegerField()
-
-
-class Battery(models.Model):
-    size = models.ForeignKey(BatterySize, on_delete=models.CASCADE)
-    brand = models.ForeignKey(ProductBrand, on_delete=models.CASCADE)
-
-
-class DCCable(models.Model):
-    size = models.FloatField()
-    length = models.FloatField()
-    brand = models.ForeignKey(ProductBrand, on_delete=models.CASCADE)
-
-
-class Connector(models.Model):
-    size = models.FloatField()
-    length = models.FloatField()
-    brand = models.ForeignKey(ProductBrand, on_delete=models.CASCADE)
-
-
-class Combiner(models.Model):
-    size = models.FloatField()
-    length = models.FloatField()
-    brand = models.ForeignKey(ProductBrand, on_delete=models.CASCADE)
-'''
-
 class SellingProduct(models.Model):
     user = models.ForeignKey(SpazrUser, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(GeneralProduct, on_delete=models.CASCADE)
     price = models.FloatField()
 
 

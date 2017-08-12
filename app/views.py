@@ -1,3 +1,5 @@
+import json
+
 # Django
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -16,6 +18,7 @@ from app import forms
 from app import models
 from app.utils import quotation_pdf
 from app.utils.send_pdf import TransactionVerification
+
 
 class Dashboard(LoginRequiredMixin, View):
     template_name = 'app/supplier/dashboard.html'
@@ -468,104 +471,115 @@ class MyProducts(LoginRequiredMixin, View):
         new_form = self.new_form_class()
         averages = []
         
-        """
-        product = lambda name, model: {
-            'name': name,
-            'count': model.objects.count(),
-            'data': model.objects.all()
-        }
-
-        all_prods = [
-            product('Solar Panels', models.SolarPanel),
-            product('Inverters', models.Inverter),
-            product('Batteries', models.Battery),
-            product('Connectors', models.Connector),
-            product('DC Cables', models.DCCable),
-            product('Combiners', models.Combiner),
-        ]
-        """
-
+        # All products with count of different brands for each product
         prods = models.GeneralProduct.objects.values(
             'brand__product'
         ).annotate(
             pcount=Count('brand__product'),
         )
 
-        #print "Type: ", type(all_prods[0]['dimensions'])
         dims = map(
             lambda prod: self._prepare_dimensions(
-                            models.GeneralProduct.objects.filter(
-                                brand__product=prod['brand__product']
-                             ).values(
-                                 'brand__name', 
-                                 'dimensions__name', 
-                                 'dimensions__value'
-                               )
-                         ),
+                models.GeneralProduct.objects.filter(
+                    brand__product=prod['brand__product']
+                ).values(
+                    'brand__name', 
+                    'dimensions__name', 
+                    'dimensions__value'
+                )
+            ),
             prods
         )
-
 
         all_prods = map(
             lambda prod: dict(prod[0], dimensions=prod[1]),
             zip(prods, dims)
         )
 
-        print all_prods
-
+        all_prods_json = json.dumps(all_prods)
 
         user = self.user_model_class.objects.filter(user=req_user)[0]
-        my_prods = self.products_model_class.objects\
-            .filter(sellingproduct__user=user).annotate(
-                count=Count('name')
+        my_prods = self.userproduct_model_class.objects\
+            .filter(user=user).annotate(
+                count=Count('product__brand__name__name')
         )
 
         context = {'user': user, 'averages': averages, 'my_products': my_prods,
-                   'all_products': all_prods, 'edit_form': edit_panel_form,
-                   'new_form': new_form}
+                'all_products': all_prods, 'json_all_prods': all_prods_json,
+                'edit_form': edit_panel_form, 'new_form': new_form}
 
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        edit_form = self.edit_panel_form_class(request.POST)
-        new_form = self.new_form_class(request.POST)
+        product = self.products_model_class.objects.filter(
+            name=request.POST.get('product')
+        )[0]
+        user = self.user_model_class.objects.filter(user=request.user)[0]
+        userproduct_model_class = models.SellingProduct
+        str_dimensions = request.POST.getlist('dimensions')
+        product_brandname = models.ProductBrandName.objects.filter(
+            name=request.POST.get('brand_name')
+        )
+        product_brand = models.ProductBrand.objects.filter(
+            name=product_brandname,
+            product=product
+        )
+        dimensions = map(lambda dim: dim.split(','), str_dimensions)
+        dimensions = map(lambda dim: models.Dimension.objects.filter(
+                                name=models.DimensionName.objects.filter(
+                                    name=dim[0].capitalize()
+                                ),
+                                value=dim[1],
+                                product=product
+                            )[0],
+                        dimensions
+                    )
+        list_dimensions = []
+        for dim in dimensions:
+            list_dimensions.append(dim)
 
-        if edit_form.is_valid():
-            prod_id = edit_form.cleaned_data['edit_prod_id']
-            prod = self.products_model_class.objects.filter(pk=prod_id)[0]
-            user = self.user_model_class.objects.filter(user=request.user)[0]
-            price = edit_form.cleaned_data['edit_price']
-            user_prod = self.userproduct_model_class.objects.filter(
-                Q(user=user),
-                Q(product=prod)
-            )
-            if len(user_prod):
-                my_prod = user_prod[0]
-                my_prod.price = price
-                my_prod.save()
-            else:
-                self.userproduct_model_class.objects.create(
-                    user=user,
-                    product=prod,
-                    price=price
-                )
-        elif new_form.is_valid():
-            name = new_form.cleaned_data['new_name']
-            price = new_form.cleaned_data['new_price']
-            product = self.products_model_class.objects.create(name=name)
-            user = self.user_model_class.objects.filter(user=request.user)[0]
-            user_product = self.userproduct_model_class.objects.create(
+        general_product = models.GeneralProduct.objects.filter(
+            brand=product_brand,
+            dimensions__in=list_dimensions
+        )[0]
+
+        # Check if product already exists
+        selling = self.userproduct_model_class.objects.filter(
+            user=user,
+            product=general_product,
+        )
+
+        price = float(request.POST.get('price'))
+
+        if len(selling):
+            update = selling[0]
+            update.price = price
+            update.save()
+        else:
+            self.userproduct_model_class.objects.update_or_create(
                 user=user,
-                product=product,
-                price=price
+                product=general_product,
+                price=float(request.POST.get('price')),
             )
-
+        
         return redirect(reverse('my-products'))
 
-    def _prepare_dimensions(self, queryset):
+    def _prepare_dimensions(self, dimensions):
+        """
+        Compile the list of dimensions for the product in the
+        formart needed by front-end.
+
+        Args:
+            dimensions (Queryset): list of all dimensions for the
+                product.
+
+        Returns:
+            Formated output of the dimensions.
+        
+        """
         result = {'brand':[]}
 
-        for item in queryset:
+        for item in dimensions:
             key = item['dimensions__name'].lower().replace(' ','_')
             value = item['dimensions__value']
             if key in result:
