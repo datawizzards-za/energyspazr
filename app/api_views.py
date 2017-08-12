@@ -52,6 +52,15 @@ class GetClientAddress(generics.ListAPIView):
         return models.PhysicalAddress.objects.filter(id=address_id)
 
 
+class GetProvinceName(generics.ListAPIView):
+    serializer_class = serializers.ProvinceSerializer
+    permissions = (IsAuthenticated,)
+
+    def get_queryset(self):
+        prov_id = self.kwargs['id']
+        return models.Province.objects.filter(id=prov_id)
+
+
 """
 @api_view(['GET', 'POST'])
 def system_order_details(request, order_num):

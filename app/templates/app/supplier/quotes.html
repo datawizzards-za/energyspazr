@@ -20,7 +20,7 @@
                 <table class="table table-hover table-bordered" id="table_all_quotes">
                   <thead>
                     <tr>
-                      <th data-field="quote_num" class='col-md-3 text-center'>Quote No.</th>
+                      <th data-field="quote_num" class='col-md-3 text-center'>Quote Number</th>
                       <th data-field="quote_client" class='col-md-3 text-center'>Client</th>
                       <th data-field="quote_date" class='col-md-3 text-center'>Date</th>
                     </tr>
@@ -28,7 +28,7 @@
                   <tbody>
                     {% for o,c in data %}
                     <tr value={{ product.pk }}>
-                      <td class="text-center">{{ o.order_number_id }}</td>
+                      <td class="text-center text-uppercase">{{ o.order_number_id }}</td>
                       <td class="text-center">{{ c.firstname }} {{ c.lastname }}</td>
                       <td class="text-center">{{ o.date }}</td>
                     </tr>
