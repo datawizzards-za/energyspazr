@@ -26,6 +26,9 @@ from app import views
 urlpatterns = [
     url(r'^\Z', include('app.urls')),
     url(r'^app/', include('app.urls')),
+    url(r'^accounts/', include('registration.backends.hmac.urls')),
+    url('^accounts/', include('django.contrib.auth.urls')),
+    url(r'^admin/', admin.site.urls),
 
     url(r'^accounts/signin/$', auth_views.login,
         {'template_name': 'registration/signin.html',
@@ -42,27 +45,22 @@ urlpatterns = [
 
     url(r'^accounts/forgot-password/$',
         auth_views.PasswordResetView.as_view(
-            template_name='registration/forgot_pass.html',
-            email_template_name='registration/password_reset_email.html',
-            subject_template_name='registration/password_reset_subject.txt',
+            template_name='reset/forgot_pass.html',
+            email_template_name='reset/password_reset_email.html',
             success_url=reverse_lazy('pass-reset-send'),
             form_class=forms.ForgotPassForm), name='forgot-pass'),
     url(r'^accounts/password-reset-send/$',
         auth_views.PasswordResetDoneView.as_view(
-            template_name='registration/pass_reset_send.html'), name='pass-reset-send'),
-    url(r'^accounts/set-password/$',
+            template_name='reset/pass_reset_send.html'), name='pass-reset-send'),
+    url(r'^accounts/set-password/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         auth_views.PasswordResetConfirmView.as_view(
-            template_name='registration/set_pass.html',
-            success_url=reverse_lazy('reset-pass-done'),
-            form_class=forms.SetPasswordForm), name='set-pass'),
+            form_class=forms.SetPasswordForm,
+            template_name='reset/set_pass.html',
+            success_url=reverse_lazy('reset-pass-done')), name='set-password'),
     url(r'^accounts/reset-password-complete/$',
         auth_views.PasswordResetCompleteView.as_view(
-            template_name='registration/reset_pass_done.html'), name='reset-pass-done'),
+            template_name='reset/reset_pass_done.html'), name='reset-pass-done'),
 
     url(r'^accounts/activate/(?P<activation_key>[-:\w]+)/$',
         views.ActivateUser.as_view(), name='registration_activate'),
-
-    url(r'^accounts/', include('registration.backends.hmac.urls')),
-    url('^accounts/', include('django.contrib.auth.urls')),
-    url(r'^admin/', admin.site.urls),
 ]

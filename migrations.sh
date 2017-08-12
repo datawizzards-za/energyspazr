@@ -16,7 +16,7 @@ echo "Loading fixtures..."
 python manage.py loaddata app/fixtures/initial_brands.yaml
 python manage.py loaddata app/fixtures/initial_products.yaml
 python manage.py loaddata app/fixtures/initial_batteries.yaml
-python manage.py loaddata app/fixtures/initial_panels.yaml
 python manage.py loaddata app/fixtures/initial_dimension_names.yaml
+python manage.py loaddata app/fixtures/initial_panels.yaml
 python manage.py loaddata app/fixtures/initial_appliances.yaml
 python manage.py loaddata app/fixtures/*.yaml
