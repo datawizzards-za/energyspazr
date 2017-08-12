@@ -499,7 +499,7 @@ class MyProducts(LoginRequiredMixin, View):
         all_prods_json = json.dumps(all_prods)
 
         user = self.user_model_class.objects.filter(user=req_user)[0]
-        my_prods = self.userproduct_model_class.objects.values(
+        my_prods = self.userproduct_model_class.objects.filter(user=user).values(
             'product__brand__product__name',
             'product__brand__name__name',
             'product__dimensions',
