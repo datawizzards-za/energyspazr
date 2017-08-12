@@ -386,7 +386,7 @@ class OrderGeyser(View):
             )
 
             order_number = models.SystemOrder.objects.filter(
-                order_number=system_order.order_number)[0]
+                order_number=system_order.order_number)
 
             geyser_order = models.GeyserSystemOrder.objects.create(
                 property_type=property_type,
@@ -394,7 +394,8 @@ class OrderGeyser(View):
                 water_collector=water_collector,
                 users_number=users_number,
                 required_geyser_size=required_geyser_size,
-                order_number=order_number
+                order_number=models.SystemOrder.objects.filter(
+                order_number=order_number)
             )
 
             # .filter(user=request.user)[0]

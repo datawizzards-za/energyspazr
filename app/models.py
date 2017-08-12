@@ -140,7 +140,8 @@ class GeyserSystemOrder(models.Model):
     required_geyser_size = models.PositiveSmallIntegerField(null=True)
     water_collector = models.CharField(max_length=15)
     order_number = models.ForeignKey(
-        SystemOrder, related_name='geyser', on_delete=models.CASCADE)
+        SystemOrder, related_name='geyser', blank=True, null=True,
+        on_delete=models.CASCADE)
 
 
 class PVTSystem(models.Model):
@@ -150,7 +151,8 @@ class PVTSystem(models.Model):
     property_type = models.CharField(max_length=10)
     roof_inclination = models.CharField(max_length=10)
     order_number = models.ForeignKey(
-        SystemOrder, related_name='pvt', on_delete=models.CASCADE)
+        SystemOrder, related_name='pvt', blank=True, null=True,
+        on_delete=models.CASCADE)
 
 
 class SolarComponentOrder(SystemOrder):
