@@ -499,10 +499,18 @@ class MyProducts(LoginRequiredMixin, View):
         all_prods_json = json.dumps(all_prods)
 
         user = self.user_model_class.objects.filter(user=req_user)[0]
-        my_prods = self.userproduct_model_class.objects\
-            .filter(user=user).annotate(
-                count=Count('product__brand__name__name')
+        my_prods = self.userproduct_model_class.objects.values(
+            'product__brand__product__name',
+            'product__brand__name__name',
+            'product__dimensions',
+            'price',
         )
+
+        for prod in my_prods:
+            id = prod['product__dimensions']
+            dimension = models.Dimension.objects.get(id=id)
+            value = dimension.name.name + " = " + dimension.value
+            prod['product__dimensions'] = value
 
         context = {'user': user, 'averages': averages, 'my_products': my_prods,
                 'all_products': all_prods, 'json_all_prods': all_prods_json,

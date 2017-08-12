@@ -31,15 +31,19 @@
         <table class="table table-hover table-bordered" id="table_my_products">
           <thead>
             <tr>
-              <th data-field="product_name" class='col-md-6 text-center'>Product Name</th>
-              <th data-field="product_price" class='col-md-6 text-center'>Product Count</th>
+              <th data-field="product_name" class='col-md-3 text-center'>Name</th>
+              <th data-field="product_brand" class='col-md-3 text-center'>Brand</th>
+              <th data-field="product_dimensions" class='col-md-3 text-center'>Dimensions</th>
+              <th data-field="product_price" class='col-md-3 text-center'>Price</th>
             </tr>
           </thead>
           <tbody>
             {% for product in my_products %}
             <tr value={{ product.pk }}>
-              <td class="text-center">{{ product.name }}</td>
-              <td class="text-center">{{ product.count }}</td>
+              <td class="text-center">{{ product.product__brand__product__name }}</td>
+              <td class="text-center">{{ product.product__brand__name__name }}</td>
+              <td class="text-center">{{ product.product__dimensions }}</td>
+              <td class="text-center">{{ product.price }}</td>
             </tr>
             {% endfor %}
           </tbody>
