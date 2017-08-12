@@ -495,8 +495,6 @@ class MyProducts(LoginRequiredMixin, View):
                 pcount=Count('brand__product'),
             )
 
-        print prods
-
         dims = map(
             lambda prod: self._prepare_dimensions(
                 models.GeneralProduct.objects.filter(
@@ -517,8 +515,6 @@ class MyProducts(LoginRequiredMixin, View):
             lambda prod: dict(prod[0], dimensions=prod[1]),
             zip(prods, dims)
         )
-
-        print all_prods
 
         all_prods_json = json.dumps(all_prods)
 
