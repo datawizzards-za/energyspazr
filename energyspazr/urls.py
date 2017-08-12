@@ -26,9 +26,6 @@ from app import views
 urlpatterns = [
     url(r'^\Z', include('app.urls')),
     url(r'^app/', include('app.urls')),
-    url(r'^accounts/', include('registration.backends.hmac.urls')),
-    url('^accounts/', include('django.contrib.auth.urls')),
-    url(r'^admin/', admin.site.urls),
 
     url(r'^accounts/signin/$', auth_views.login,
         {'template_name': 'registration/signin.html',
@@ -63,4 +60,8 @@ urlpatterns = [
 
     url(r'^accounts/activate/(?P<activation_key>[-:\w]+)/$',
         views.ActivateUser.as_view(), name='registration_activate'),
+
+    url(r'^accounts/', include('registration.backends.hmac.urls')),
+    url('^accounts/', include('django.contrib.auth.urls')),
+    url(r'^admin/', admin.site.urls),
 ]

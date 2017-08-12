@@ -1,0 +1,11 @@
+app/fixtures/initial_brands.yaml
+app/fixtures/initial_products.yaml
+app/fixtures/initial_dimension_names.yaml 
+app/fixtures/initial_batteries.yaml
+app/fixtures/initial_panels.yaml
+app/fixtures/initial_appliances.yaml
+app/fixtures/initial_inverters.yaml 
+app/fixtures/initial_roles.yaml
+app/fixtures/initial_sites.yaml
+app/fixtures/initial_systems.yaml
+app/fixtures/initial_provinces.yaml
