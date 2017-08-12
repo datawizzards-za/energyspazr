@@ -1,10 +1,12 @@
+import json
+
 # Django
 from django.contrib.auth import login
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
-from django.db.models import Q, Count
+from django.db.models import Q, Count, Min
 from django.shortcuts import render, reverse, redirect, HttpResponse
 from django.views import View
 from django.core import serializers
@@ -468,30 +470,6 @@ class AddComponent(View):
         context = {'form': form}
         return render(request, self.template_name, context)
 
-    """ 
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(self.appliance_choices(), request.POST)
-        if form.is_valid():
-            user = request.user
-            intended_use = form.cleaned_data['intended_use']
-            site_visit = form.cleaned_data['site_visit']
-            property_type = form.cleaned_data['property_type']
-            roof_inclination = form.cleaned_data['roof_inclination']
-            
-            pvt_system = PVTSystem.objects.create(
-                roof_inclination=roof_inclination,
-                property_type=property_type,
-                site_visit=site_visit,
-                intended_use=intended_use)
-            
-            possible_appliances = form.cleaned_data['possible_appliances']
-            for appliance in possible_appliances:
-                this_appliance = appliance.objects.filter(pk=appliance)[0]
-                pvt_system.possible_appliances.add(this_appliance)
-                pvt_system.save()
-
-        return render(request , self.template_name) """
-
 
 class MyProducts(LoginRequiredMixin, View):
     template_name = 'app/supplier/products.html'
@@ -509,35 +487,20 @@ class MyProducts(LoginRequiredMixin, View):
         new_form = self.new_form_class()
         averages = []
 
-        """
-        product = lambda name, model: {
-            'name': name,
-            'count': model.objects.count(),
-            'data': model.objects.all()
-        }
-
-        all_prods = [
-            product('Solar Panels', models.SolarPanel),
-            product('Inverters', models.Inverter),
-            product('Batteries', models.Battery),
-            product('Connectors', models.Connector),
-            product('DC Cables', models.DCCable),
-            product('Combiners', models.Combiner),
-        ]
-        """
-
+        # All products with count of different brands for each product
         prods = models.GeneralProduct.objects.values(
             'brand__product'
         ).annotate(
             pcount=Count('brand__product'),
         )
 
-        # print "Type: ", type(all_prods[0]['dimensions'])
         dims = map(
             lambda prod: self._prepare_dimensions(
                 models.GeneralProduct.objects.filter(
                     brand__product=prod['brand__product']
                 ).values(
+                    'brand__name',
+                    'dimensions__name',
                     'brand__name',
                     'dimensions__name',
                     'dimensions__value'
@@ -551,60 +514,98 @@ class MyProducts(LoginRequiredMixin, View):
             zip(prods, dims)
         )
 
-        print all_prods
+        all_prods_json = json.dumps(all_prods)
 
         user = self.user_model_class.objects.filter(user=req_user)[0]
-        my_prods = self.products_model_class.objects\
-            .filter(sellingproduct__user=user).annotate(
-                count=Count('name')
-            )
+        my_prods = self.userproduct_model_class.objects.values(
+            'product__brand__product__name',
+            'product__brand__name__name',
+            'product__dimensions',
+            'price',
+        )
+
+        for prod in my_prods:
+            id = prod['product__dimensions']
+            dimension = models.Dimension.objects.get(id=id)
+            value = dimension.name.name + " = " + dimension.value
+            prod['product__dimensions'] = value
 
         context = {'user': user, 'averages': averages, 'my_products': my_prods,
-                   'all_products': all_prods, 'edit_form': edit_panel_form,
-                   'new_form': new_form}
+                   'all_products': all_prods, 'json_all_prods': all_prods_json,
+                   'edit_form': edit_panel_form, 'new_form': new_form}
 
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        edit_form = self.edit_panel_form_class(request.POST)
-        new_form = self.new_form_class(request.POST)
+        product = self.products_model_class.objects.filter(
+            name=request.POST.get('product')
+        )[0]
+        user = self.user_model_class.objects.filter(user=request.user)[0]
+        userproduct_model_class = models.SellingProduct
+        str_dimensions = request.POST.getlist('dimensions')
+        product_brandname = models.ProductBrandName.objects.filter(
+            name=request.POST.get('brand_name')
+        )
+        product_brand = models.ProductBrand.objects.filter(
+            name=product_brandname,
+            product=product
+        )
+        dimensions = map(lambda dim: dim.split(','), str_dimensions)
+        dimensions = map(lambda dim: models.Dimension.objects.filter(
+            name=models.DimensionName.objects.filter(
+                name=dim[0].capitalize()
+            ),
+            value=dim[1],
+            product=product
+        )[0],
+            dimensions
+        )
+        list_dimensions = []
+        for dim in dimensions:
+            list_dimensions.append(dim)
 
-        if edit_form.is_valid():
-            prod_id = edit_form.cleaned_data['edit_prod_id']
-            prod = self.products_model_class.objects.filter(pk=prod_id)[0]
-            user = self.user_model_class.objects.filter(user=request.user)[0]
-            price = edit_form.cleaned_data['edit_price']
-            user_prod = self.userproduct_model_class.objects.filter(
-                Q(user=user),
-                Q(product=prod)
-            )
-            if len(user_prod):
-                my_prod = user_prod[0]
-                my_prod.price = price
-                my_prod.save()
-            else:
-                self.userproduct_model_class.objects.create(
-                    user=user,
-                    product=prod,
-                    price=price
-                )
-        elif new_form.is_valid():
-            name = new_form.cleaned_data['new_name']
-            price = new_form.cleaned_data['new_price']
-            product = self.products_model_class.objects.create(name=name)
-            user = self.user_model_class.objects.filter(user=request.user)[0]
-            user_product = self.userproduct_model_class.objects.create(
+        general_product = models.GeneralProduct.objects.filter(
+            brand=product_brand,
+            dimensions__in=list_dimensions
+        )[0]
+
+        # Check if product already exists
+        selling = self.userproduct_model_class.objects.filter(
+            user=user,
+            product=general_product,
+        )
+
+        price = float(request.POST.get('price'))
+
+        if len(selling):
+            update = selling[0]
+            update.price = price
+            update.save()
+        else:
+            self.userproduct_model_class.objects.update_or_create(
                 user=user,
-                product=product,
-                price=price
+                product=general_product,
+                price=float(request.POST.get('price')),
             )
 
         return redirect(reverse('my-products'))
 
-    def _prepare_dimensions(self, queryset):
+    def _prepare_dimensions(self, dimensions):
+        """
+        Compile the list of dimensions for the product in the
+        formart needed by front-end.
+
+        Args:
+            dimensions (Queryset): list of all dimensions for the
+                product.
+
+        Returns:
+            Formated output of the dimensions.
+
+        """
         result = {'brand': []}
 
-        for item in queryset:
+        for item in dimensions:
             key = item['dimensions__name'].lower().replace(' ', '_')
             value = item['dimensions__value']
             if key in result:
@@ -760,87 +761,17 @@ class SendEmail(View):
         tv.send_verification_mail()
         return redirect('/app/order-quotes/' + order + '/')
 
-    template_name = 'registration/financier_update_account.html'
-    form_class = forms.UserAccountUpdateForm
-    address_model_class = models.PhysicalAddress
-    user_model_class = models.SpazrUser
-    province_model_class = models.Province
 
-    def get(self, request, *args, **kwargs):
-        """
-        """
-        p_choices = self.provinces_choices
-        r_choices = self.roles_choices
-        form = self.form_class(p_choices, r_choices)
-        context = {'form': form}
+class QuotationCharges:
+    def __init__(self, product):
+        self.product = product
 
-        return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        """
-        """
-        p_choices = self.provinces_choices
-        r_choices = self.roles_choices
-        form = self.form_class(p_choices, r_choices, request.POST)
-
-        if form.is_valid():
-            address_model = self.address_model_class(request)
-
-            user = request.user
-            group_id = int(form.cleaned_data['roles'])
-            group = Group.objects.filter(pk=group_id)[0]
-            user.groups.add(group)
-
-            company_name = form.cleaned_data['company_name']
-            company_reg = form.cleaned_data['company_reg']
-            contact_number = form.cleaned_data['contact_number']
-            web_address = form.cleaned_data['web_address']
-            province_id = form.cleaned_data['province']
-            province = \
-                self.province_model_class.objects.filter(pk=province_id)[0]
-
-            physical_address = self.address_model_class.objects.create(
-                building_name=form.cleaned_data['contact_number'],
-                street_name=form.cleaned_data['street_name'],
-                suburb=form.cleaned_data['suburb'],
-                province=province,
-                city=form.cleaned_data['city'],
-                zip_code=form.cleaned_data['zip_code']
-            )
-
-            self.user_model_class.objects.create(
-                user=user,
-                company_name=company_name,
-                company_reg=company_reg,
-                contact_number=contact_number,
-                web_address=web_address,
-                physical_address=physical_address
-            )
-
-            return redirect(reverse('dashboard'))
-
-        form = self.form_class(self.provinces_choices())
-        context = {'form': form}
-
-        return render(request, self.template_name, context)
-
-    def provinces_choices(self):
-        provinces = self.province_model_class.objects.all()
-        return tuple([[p.pk, p.name] for p in provinces])
-
-    def roles_choices(self):
-        roles = Group.objects.all()
-        return tuple([[r.pk, r.name] for r in roles])
-
-
-class ForgotPassword(View):
-    template_name = 'registration/forgot_pass.html'
-    form_class = forms.ForgotPassForm
-
-    def get(self, request, *args, **kwargs):
-        """
-        """
-        form = self.form_class
-        context = {'form': form}
-
-        return render(request, self.template_name, context)
+    def get_prices(self):
+        data = models.SellingProduct.objects.filter(
+            product_id=self.product).aggregate(Min('price'))
+        product_name = models.SellingProduct.objects.filter(
+            product_id=self.product,
+            price=data['price__min'])
+        company = models.SpazrUser.objects.filter(
+            user_id=product_name[0].user_id)[0].company_name
+        return data, self.product, company
