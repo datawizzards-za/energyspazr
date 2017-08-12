@@ -1,6 +1,6 @@
 {% load i18n %}
 {% blocktrans with site_name=site.name %}
-Dear User, thank you for signing up on {{ site_name }}.
+Dear {{ user }}, thank you for signing up on {{ site_name }}.
 
 Please click the link below and follow the instructions to activate your account.
 {% endblocktrans %}
