@@ -2,8 +2,6 @@
 {% load i18n %}
 {% load crispy_forms_tags %}
 
-{% block title %}{% trans "Resend Activation Email" %}{% endblock %}
-
 {% block content %}
 
     <div class="login-box wide card text-center animated zoomIn" style="min-height: 200px;">
@@ -17,12 +15,6 @@
             </div>
         </div>
     </div>
-<!--
-<form method="post" action="">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="{% trans 'Submit' %}" />
-</form>
 -->
 {% endblock %}
 

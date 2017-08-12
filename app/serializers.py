@@ -17,7 +17,6 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
 class GeyserSystemSerializer(serializers.ModelSerializer):
-    #system = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = models.GeyserSystemOrder
@@ -41,6 +40,13 @@ class SystemOrderSerializer(serializers.ModelSerializer):
         model = models.SystemOrder
         fields = ['need_finance', 'include_installation',
                   'order_number', 'geyser', 'pvt']
+
+
+class ProvinceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Province
+        fields = ['name']
 
 
 class AddressSerializer(serializers.ModelSerializer):

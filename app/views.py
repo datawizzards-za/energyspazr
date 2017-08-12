@@ -2,6 +2,7 @@ import json
 
 # Django
 from django.contrib.auth import login
+from django.contrib.auth import views as auth_views
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
@@ -231,7 +232,6 @@ class OrderPVTSystem(View):
         form = self.form_class(p_choices, request.POST)
 
         if form.is_valid():
-
             intended_use = form.cleaned_data['intended_use']
             site_visit = form.cleaned_data['site_visit']
             property_type = form.cleaned_data['property_type']
@@ -253,7 +253,6 @@ class OrderPVTSystem(View):
             physical_address = ''
 
             if len(client) == 0:
-
                 physical_address = self.address_model_class.objects.create(
                     building_name=form.cleaned_data['building_name'],
                     street_name=form.cleaned_data['street_name'],
@@ -263,7 +262,7 @@ class OrderPVTSystem(View):
                     zip_code=form.cleaned_data['zip_code']
                 )
 
-                client = models.Client.objects.create(
+                models.Client.objects.create(
                     username=username,
                     lastname=last_name,
                     firstname=first_name,
@@ -273,8 +272,26 @@ class OrderPVTSystem(View):
 
                 client = models.Client.objects.filter(username=username)
             else:
-                physical_address = models.PhysicalAddress.objects.filter(
+                self.address_model_class.objects.filter(
+                    id=client[0].physical_address_id).update(
+                        building_name=form.cleaned_data['building_name'],
+                        street_name=form.cleaned_data['street_name'],
+                        suburb=form.cleaned_data['suburb'],
+                        province=province,
+                        city=form.cleaned_data['city'],
+                        zip_code=form.cleaned_data['zip_code']
+                )
+                physical_address = self.address_model_class.objects.filter(
                     id=client[0].physical_address_id)[0]
+
+                models.Client.objects.filter(username=username).update(
+                    username=username,
+                    lastname=last_name,
+                    firstname=first_name,
+                    contact_number=contact_number,
+                    physical_address=physical_address
+                )
+                client = models.Client.objects.filter(username=username)
 
             system_order = models.SystemOrder.objects.create(
                 need_finance=need_finance,
@@ -359,7 +376,6 @@ class OrderGeyser(View):
             physical_address = ''
 
             if len(client) == 0:
-
                 physical_address = self.address_model_class.objects.create(
                     building_name=form.cleaned_data['building_name'],
                     street_name=form.cleaned_data['street_name'],
@@ -369,7 +385,7 @@ class OrderGeyser(View):
                     zip_code=form.cleaned_data['zip_code']
                 )
 
-                client = models.Client.objects.create(
+                models.Client.objects.create(
                     username=username,
                     lastname=last_name,
                     firstname=first_name,
@@ -379,8 +395,26 @@ class OrderGeyser(View):
 
                 client = models.Client.objects.filter(username=username)
             else:
-                physical_address = models.PhysicalAddress.objects.filter(
+                self.address_model_class.objects.filter(
+                    id=client[0].physical_address_id).update(
+                        building_name=form.cleaned_data['building_name'],
+                        street_name=form.cleaned_data['street_name'],
+                        suburb=form.cleaned_data['suburb'],
+                        province=province,
+                        city=form.cleaned_data['city'],
+                        zip_code=form.cleaned_data['zip_code']
+                )
+                physical_address = self.address_model_class.objects.filter(
                     id=client[0].physical_address_id)[0]
+
+                models.Client.objects.filter(username=username).update(
+                    username=username,
+                    lastname=last_name,
+                    firstname=first_name,
+                    contact_number=contact_number,
+                    physical_address=physical_address
+                )
+                client = models.Client.objects.filter(username=username)
 
             system_order = models.SystemOrder.objects.create(
                 need_finance=need_finance,
@@ -400,11 +434,10 @@ class OrderGeyser(View):
                 order_number=order_number)
             )
 
-            # .filter(user=request.user)[0]
             suppliers = self.supplier_model_class.objects.all()
             for supplier in suppliers:
                 order = models.Order.objects.create(
-                    client=client,
+                    client=client[0],
                     supplier=supplier,
                     order_number=order_number
                 )
@@ -454,7 +487,7 @@ class MyProducts(LoginRequiredMixin, View):
         edit_panel_form = self.edit_panel_form_class
         new_form = self.new_form_class()
         averages = []
-        
+
         # All products with count of different brands for each product
         prods = models.GeneralProduct.objects.values(
             'brand__product'
@@ -469,8 +502,8 @@ class MyProducts(LoginRequiredMixin, View):
                 ).values(
                     'brand__name',
                     'dimensions__name',
-                    'brand__name', 
-                    'dimensions__name', 
+                    'brand__name',
+                    'dimensions__name',
                     'dimensions__value'
                 )
             ),
@@ -499,8 +532,8 @@ class MyProducts(LoginRequiredMixin, View):
             prod['product__dimensions'] = value
 
         context = {'user': user, 'averages': averages, 'my_products': my_prods,
-                'all_products': all_prods, 'json_all_prods': all_prods_json,
-                'edit_form': edit_panel_form, 'new_form': new_form}
+                   'all_products': all_prods, 'json_all_prods': all_prods_json,
+                   'edit_form': edit_panel_form, 'new_form': new_form}
 
         return render(request, self.template_name, context)
 
@@ -520,14 +553,14 @@ class MyProducts(LoginRequiredMixin, View):
         )
         dimensions = map(lambda dim: dim.split(','), str_dimensions)
         dimensions = map(lambda dim: models.Dimension.objects.filter(
-                                name=models.DimensionName.objects.filter(
-                                    name=dim[0].capitalize()
-                                ),
-                                value=dim[1],
-                                product=product
-                            )[0],
-                        dimensions
-                    )
+            name=models.DimensionName.objects.filter(
+                name=dim[0].capitalize()
+            ),
+            value=dim[1],
+            product=product
+        )[0],
+            dimensions
+        )
         list_dimensions = []
         for dim in dimensions:
             list_dimensions.append(dim)
@@ -555,7 +588,7 @@ class MyProducts(LoginRequiredMixin, View):
                 product=general_product,
                 price=float(request.POST.get('price')),
             )
-        
+
         return redirect(reverse('my-products'))
 
     def _prepare_dimensions(self, dimensions):
@@ -569,12 +602,12 @@ class MyProducts(LoginRequiredMixin, View):
 
         Returns:
             Formated output of the dimensions.
-        
+
         """
-        result = {'brand':[]}
+        result = {'brand': []}
 
         for item in dimensions:
-            key = item['dimensions__name'].lower().replace(' ','_')
+            key = item['dimensions__name'].lower().replace(' ', '_')
             value = item['dimensions__value']
             if key in result:
                 result[key].append(value)
@@ -617,15 +650,16 @@ class MyQuotes(LoginRequiredMixin, View):
         """
         """
         req_user = request.user
+        spazar_user = self.user_model_class.objects.filter(user=req_user)[0]
 
-        orders = models.Order.objects.filter(supplier__user=req_user)
+        orders = models.Order.objects.filter(
+            supplier_id=spazar_user.user_id)
 
-        client_ids = [c.client_id for c in orders]
-        clients = models.Client.objects.filter(id__in=client_ids)
+        clients = []
+        for order in orders:
+            clients.append(models.Client.objects.filter(id=order.client_id)[0])
 
         data = zip(orders, clients)
-
-        spazar_user = models.SpazrUser.objects.filter(user=req_user)[0]
 
         context = {'user': spazar_user, 'data': data}
 
@@ -689,7 +723,7 @@ class UserAccount(LoginRequiredMixin, View):
             this_user = models.SpazrUser.objects.filter(
                 user_id=auth_user)[0]
 
-            addrr = self.address_model_class.objects.filter(
+            self.address_model_class.objects.filter(
                 id=this_user.physical_address_id).update(
                 building_name=form.cleaned_data['building_name'],
                 street_name=form.cleaned_data['street_name'],
@@ -728,16 +762,17 @@ class SendEmail(View):
         tv.send_verification_mail()
         return redirect('/app/order-quotes/' + order + '/')
 
+
 class QuotationCharges:
     def __init__(self, product):
         self.product = product
 
     def get_prices(self):
-        data = models.SellingProduct.objects.filter(product_id =
-        self.product).aggregate(Min('price'))
+        data = models.SellingProduct.objects.filter(
+            product_id=self.product).aggregate(Min('price'))
         product_name = models.SellingProduct.objects.filter(
-                                        product_id=self.product,
-                                        price=data['price__min'])
+            product_id=self.product,
+            price=data['price__min'])
         company = models.SpazrUser.objects.filter(
-            user_id = product_name[0].user_id)[0].company_name
+            user_id=product_name[0].user_id)[0].company_name
         return data, self.product, company

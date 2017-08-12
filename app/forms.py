@@ -13,6 +13,81 @@ from crispy_forms.layout import Submit, HTML, Div, Field, Button
 from app import models
 
 
+class SetPasswordForm(auth_forms.SetPasswordForm):
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.form_class = 'login-form'
+    helper.form_show_labels = False
+    helper.layout = Layout(
+        HTML('<h3 class="login-head">'
+             'Set New Password</h3> <br />'),
+        Div(
+            Field('password1', css_class='form-control text-center',
+                  placeholder='Enter Password', autofocus=True),
+            css_class='form-group'
+        ),
+        Div(
+            Field('password2', css_class='form-control text-center',
+                  placeholder='Confirm Password'),
+            css_class='form-group'
+        ),
+        Div(
+            HTML('<br />'),
+            FormActions(
+                Submit('send', 'SUBMIT', css_class='btn btn-primary btn-block')),
+            css_class='form-group'
+        ),
+        Div(
+            Div(
+                HTML('<br />\
+                <p class="semibold-text mb-0">'
+                     "<a href='{% url 'signin' %}'>\
+                     <i class='fa fa-angle-left fa-fw'></i>\
+                     Back to Login\
+                     </a>\
+                </p>")
+            ),
+            css_class='form-group text-center mt-20'
+        )
+    )
+
+
+class ForgotPassForm(auth_forms.PasswordResetForm):
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.form_class = 'login-form'
+    helper.form_show_labels = False
+    helper.layout = Layout(
+        HTML('<h3 class="login-head">'
+             'Forgot Password?</h3> <br />'),
+        Div(
+            Field('email', css_class='form-control text-center',
+                  placeholder='Email Address', autofocus=True),
+            css_class='form-group'
+        ),
+        Div(
+            HTML('<br />'),
+            FormActions(
+                Submit('send', 'RESET', css_class='btn btn-primary btn-block')),
+            css_class='form-group'
+        ),
+        Div(
+            Div(
+                HTML('<br />\
+                <p class="semibold-text mb-0">'
+                     "<a href='{% url 'signin' %}'>\
+                     <i class='fa fa-angle-left fa-fw'></i>\
+                     Back to Login\
+                     </a>\
+                </p>")
+            ),
+            css_class='form-group text-center mt-20'
+        )
+    )
+
+
 class SigninForm(auth_forms.AuthenticationForm):
 
     class Meta(auth_forms.AuthenticationForm):
@@ -44,7 +119,7 @@ class SigninForm(auth_forms.AuthenticationForm):
                     css_class='animated-checkbox'
                 ),
                 HTML('<p class="semibold-text mb-0">'
-                     '<a data-toggle="flip">Forgot Password ?</a></p>'),
+                     "<a href='{% url 'forgot-pass' %}'>Forgot Password?</a></p>"),
                 css_class='utility'
             ),
             css_class='form-group'
@@ -236,11 +311,6 @@ class UserAccountUpdateForm(ModelForm):
             css_class='card-footer'
         ),
     )
-
-
-"""
-Forms for the three different products start here
-"""
 
 
 class PVTOrderForm(ModelForm):
