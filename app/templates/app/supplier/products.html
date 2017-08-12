@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load humanize %}
 {% load crispy_forms_tags %}
+{% load staticfiles %}
 
 {% block content %}
 <div class="content-wrapper">
@@ -30,15 +31,19 @@
         <table class="table table-hover table-bordered" id="table_my_products">
           <thead>
             <tr>
-              <th data-field="product_name" class='col-md-6 text-center'>Product Name</th>
-              <th data-field="product_price" class='col-md-6 text-center'>Product Count</th>
+              <th data-field="product_name" class='col-md-3 text-center'>Name</th>
+              <th data-field="product_brand" class='col-md-3 text-center'>Brand</th>
+              <th data-field="product_dimensions" class='col-md-3 text-center'>Dimensions</th>
+              <th data-field="product_price" class='col-md-3 text-center'>Price</th>
             </tr>
           </thead>
           <tbody>
             {% for product in my_products %}
             <tr value={{ product.pk }}>
-              <td class="text-center">{{ product.name }}</td>
-              <td class="text-center">{{ product.count }}</td>
+              <td class="text-center">{{ product.product__brand__product__name }}</td>
+              <td class="text-center">{{ product.product__brand__name__name }}</td>
+              <td class="text-center">{{ product.product__dimensions }}</td>
+              <td class="text-center">{{ product.price }}</td>
             </tr>
             {% endfor %}
           </tbody>
@@ -67,7 +72,7 @@
           </thead>
           <tbody>
             {% for product in all_products %}
-            <tr value={{ product.brand__product }}>
+            <tr value={{ forloop.counter }}>
               <td class="text-center">{{ product.brand__product }}</td>
               <td class="text-center">{{ product.pcount }}</td>
             </tr>
@@ -113,7 +118,7 @@
     </div>
     <div class="col-md-12 zoomIn animated card" id='all_panels'>
       <div class="card-title-w-btn">
-        <h3 class="title">Available Solar Panels</h3>
+        <h3 class="title" id="product-head">Solar Panels</h3>
         <p>
           <a class="btn btn-warning icon-btn" id="btn_panels_back">
             <i class="fa fa-backward"></i>Back
@@ -186,3 +191,10 @@
   </div>
 </div>
 {% endblock content %}
+{% block extrajs %}
+{{ block.super }}
+<script>
+var all_products = {{ json_all_prods|safe }};
+</script>
+<script type="text/javascript" src="{% static 'app/js/products.js' %}"></script>
+{% endblock %}
