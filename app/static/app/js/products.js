@@ -10,7 +10,12 @@ $(document).ready(function(){
     $('#edit_panel').hide();
     $('#all_products').hide();
 
-    $('#table_my_products tbody').on( 'click', 'tr', function (e) {
+    $('#table_my_products tbody').on( 'dblclick', 'tr', function (e) {
+        console.log("Double clicked");
+
+        var tr = $(this).closest('tr');
+        console.log(tr.children());
+        /*
         var row = $('tr', this);
         var id = row.context.attributes[0].value;
         var name = $('td', this).eq(0).text();
@@ -22,26 +27,8 @@ $(document).ready(function(){
 
         $('#my_products').hide();
         $('#all_panels').show();
+       */
     });
-
-    $('#table_all_panels tbody').on( 'click', 'tr', function (e) {
-        //$(this).toggleClass('selected');
-        var row = $('tr', this);
-        var id = row.context.attributes[0].value;
-        var name = $('td', this).eq(0).text();
-        var price_text = $('td', this).eq(1).text();
-        /**
-        //TODO: Replace 'R' with '' instead
-        var price = price_text.substring(1, price_text.length).replace(',','');
-
-        $('#edit_prod_name').val(name);
-        $('#edit_prod_price').val(price);
-        $('#id_edit_prod_id').val(id);
-
-        $('#all_panels').hide();
-        $('#edit_panel').show();*/
-    });
-
 
     $('#table_all_products tbody').on( 'click', 'tr', function (e) {
         var selected = parseInt($(this).attr('value'));
@@ -92,9 +79,10 @@ $(document).ready(function(){
                     method: 'POST',
                     data: data,
                     dataType: 'json',
-                    traditional: true
+                    traditional: true,
                 });
             });
+            location.reload();
         });
     });
 
