@@ -488,16 +488,20 @@ class MyProducts(LoginRequiredMixin, View):
         averages = []
 
         # All products with count of different brands for each product
-        prods = models.GeneralProduct.objects.values(
-            'brand__product'
-        ).annotate(
-            pcount=Count('brand__product'),
-        )
+        prods = models.GeneralProduct.objects.filter(
+            sellingproduct__product__isnull=True).values(
+                'brand__product'
+            ).annotate(
+                pcount=Count('brand__product'),
+            )
+
+        print prods
 
         dims = map(
             lambda prod: self._prepare_dimensions(
                 models.GeneralProduct.objects.filter(
-                    brand__product=prod['brand__product']
+                    brand__product=prod['brand__product'],
+                    sellingproduct__product__isnull=True
                 ).values(
                     'brand__name',
                     'dimensions__name',
@@ -513,6 +517,8 @@ class MyProducts(LoginRequiredMixin, View):
             lambda prod: dict(prod[0], dimensions=prod[1]),
             zip(prods, dims)
         )
+
+        print all_prods
 
         all_prods_json = json.dumps(all_prods)
 
