@@ -855,7 +855,7 @@ class EditPanelForm(forms.Form):
         ),
         Div(
             Div(
-                Field('edit_price',
+                Field('edit_panel_price',
                       id='edit_prod_price',
                       placeholder='Product price, e.g., R100.50',
                       css_class='form-control text-center'),

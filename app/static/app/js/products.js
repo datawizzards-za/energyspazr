@@ -1,14 +1,14 @@
 $(document).ready(function(){
     var table_my_prods = $('#table_my_products').DataTable();
-    var table_all_panels = $('#table_all_panels').DataTable();
     var table_all_prods = $('#table_all_products').DataTable();
-    
+    var table_all_panels = $('#table_all_panels').DataTable();
+    window.product_name = null; 
+
     $('#add_new_product').hide();
     $('#add_products').hide();
     $('#all_panels').hide();
     $('#edit_panel').hide();
     $('#all_products').hide();
-    $('.panel-checked').hide();
 
     $('#table_my_products tbody').on( 'click', 'tr', function (e) {
         var row = $('tr', this);
@@ -42,31 +42,60 @@ $(document).ready(function(){
         $('#edit_panel').show();*/
     });
 
-    $('.panel-price').keyup(function(){
-        var tr = $(this).closest('tr');
-        var value = $(this).val(); 
-        if (value == '') {
-            tr.find('.panel-checked').hide();
-            tr.find('.panel-unchecked').show();
-            tr.removeClass('selected');
-        }else{
-            tr.find('.panel-unchecked').hide();
-            tr.find('.panel-checked').show();
-            tr.addClass('selected');
-        }
-    });
 
     $('#table_all_products tbody').on( 'click', 'tr', function (e) {
-        var selected = $(this).attr('value');
+        var selected = parseInt($(this).attr('value'));
+        setProductTable(selected-1);
 
-        switch(selected) {
-            case 'Batteries':
-                break;
-            case 'Solar':
-                $('#all_products').hide();
-                $('#all_panels').show();
-                break;
-        }
+        $('#all_products').hide();
+        $('#all_panels').show();
+        $('.panel-checked').hide();
+
+        $('.panel-price').keyup(function(){
+            var tr = $(this).closest('tr');
+            var value = $(this).val(); 
+            if (value == '') {
+                tr.find('.panel-checked').hide();
+                tr.find('.panel-unchecked').show();
+                tr.removeClass('selected');
+            }else{
+                tr.find('.panel-unchecked').hide();
+                tr.find('.panel-checked').show();
+                tr.addClass('selected');
+            }
+        });
+
+
+        $('#btn_submit_panels').click(function(){
+            var selected = $('#table_all_panels tbody').find('tr.selected');
+            var length = selected.length;
+
+            $.each(selected, function(i, elem){
+                var length = elem.children.length;
+                var name = $('td', elem).eq(0).text();
+                var csrftoken = getCookie('csrftoken');
+                var dimensions = [];
+                for (var i = 1; i < length-2; i++) {
+                    var value = $('td', elem).eq(i).text();
+                    var key = elem.closest('table').children[0].children[0].children[i].innerHTML;
+                    key = key.toLowerCase();
+                    dimensions.push([key, value]);
+                }
+
+                var price = $('td', elem).eq(length-2).find('input').val();
+                var data = {'brand_name': name, 'dimensions': dimensions,
+                            'price': price, 'csrfmiddlewaretoken': csrftoken,
+                            'product': window.product_name};
+
+                $.ajax({
+                    url:'/app/my-products/',
+                    method: 'POST',
+                    data: data,
+                    dataType: 'json',
+                    traditional: true
+                });
+            });
+        });
     });
 
     function getCookie(name) {
@@ -84,24 +113,6 @@ $(document).ready(function(){
         }
         return cookieValue;
     }
-    var csrftoken = getCookie('csrftoken');
-
-    $('#btn_submit_panels').click(function(){
-        var selected = $('#table_all_panels tbody').find('tr.selected');
-
-        $.each(selected, function(i, elem){
-            var name = $('td', elem).eq(0).text();
-            var size = $('td', elem).eq(1).text().split(' ')[0];
-            var price = $('td', elem).eq(2).find('input').val();
-            
-            var data = {'brand_name': name, 'size': size, 'price': price,
-                        'csrftoken': csrftoken}
-
-            var url = '';
-            $.post();
-
-        });
-    });
 
     $('#button').click( function () {
         alert( table.rows('.selected').data().length +' row(s) selected' );
@@ -159,4 +170,103 @@ $(document).ready(function(){
             $('#my_products').show();
         }
     );
+
+    function setProductTable(selected) {
+        var table = $('#table_all_panels');
+        table.empty();
+
+        // Create table head
+        var product = all_products[selected];
+        window.product_name = product.brand__product;
+        document.getElementById("product-head").innerHTML = 'Available ' + product.brand__product + 's';  
+        var keys = Object.keys(product.dimensions);
+
+        // Compile headers
+        var thead = document.createElement('thead');
+        var tr = document.createElement('tr');
+        var product_name = product.brand__product.replace(" ","_").toLowerCase();
+
+        $.each(keys, function(index, value) {
+            data_field = product_name + "_" + value;
+            var th = document.createElement('th');
+            th.setAttribute('data-field', data_field);
+            $(th).addClass("col-md-4 text-center");
+            th.innerHTML = value.charAt(0).toUpperCase() + value.slice(1);
+            tr.appendChild(th);
+        });
+
+        // Add Price column
+        data_field = product_name + "_price";
+        th = document.createElement('th');
+        th.setAttribute('data-field', data_field);
+        $(th).addClass("col-md-4 text-center");
+        th.innerHTML = "Price";
+        tr.appendChild(th);
+
+        // Add Add column
+        data_field = product_name + "_add";
+        th = document.createElement('th');
+        th.setAttribute('data-field', data_field);
+        $(th).addClass("col-md-4 text-center");
+        th.innerHTML = "Add";
+        tr.appendChild(th);
+        
+        thead.appendChild(tr);
+
+        var tbody = document.createElement('tbody');
+        var values = [];
+        for (var i = 0; i < product.pcount; i++) {
+            values.push([]);
+        }
+        $.each(product.dimensions, function(key, value) {
+            $.each(value, function(index, value) {
+                values[index].push(value);
+            });
+        });
+
+        for (var i = 0; i < values.length; i++) {
+            tr = document.createElement('tr');
+            for (var j = 0; j < values[i].length; j++) {
+                var td = document.createElement('td');
+                $(td).addClass("text-center");
+                td.innerHTML = values[i][j];
+                tr.append(td);
+            }
+
+            // Price Data
+            td = document.createElement('td');
+            $(td).addClass("text-center");
+            var out_div = document.createElement('div');
+            $(out_div).addClass("input-group form-group mb-2 mr-sm-2 mb-sm-0 has-danger")
+            var inner_div = document.createElement('div');
+            $(inner_div).addClass("input-group-addon");
+            inner_div.innerHTML = "R";
+            out_div.append(inner_div);
+            var input = document.createElement('input');
+            $(input).addClass("form-control panel-price");
+            input.setAttribute("type", "number");
+            input.setAttribute("step", 0.1);
+            input.setAttribute("min", 0);
+            input.setAttribute("placeholder", "Enter price e.g. 150.56");
+            out_div.append(input);
+            td.append(out_div);
+            tr.append(td);
+
+            // Add Data
+            td = document.createElement('td');
+            $(td).addClass("text-center");
+            var icon1 = document.createElement('i'); 
+            $(icon1).addClass("fa fa-close fa-2x panel-unchecked");
+            td.append(icon1);
+            var icon2 = document.createElement('i'); 
+            $(icon2).addClass("fa fa-check fa-2x panel-checked");
+            td.append(icon2);
+            tr.append(td);
+
+            tbody.append(tr);
+        }
+
+        table.append(thead);
+        table.append(tbody);
+    }
 }); 
