@@ -86,7 +86,18 @@ $(document).ready(function(){
         $('#a_street_name').text(address.street_name);
         $('#a_suburb').text(address.suburb);
         $('#a_city').text(address.city + ', ' + address.zip_code);
-        $('#a_province').text(address.province_id);
+        
+        var province_url = 'app/api/get_prov_name/' + address.province_id + '/';
+        $.ajax({
+           url: province_url,
+           type: 'GET',
+           async: false,
+           success: function (data){
+               province = data[0];
+           }
+        });
+        
+        $('#a_province').text(province.name);
         
         $('#all_quotes').hide();
         

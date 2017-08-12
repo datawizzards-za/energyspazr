@@ -58,4 +58,6 @@ urlpatterns = [
         api_views.GetClientDetails.as_view(), name='get_client_details'),
     url(r'api/get_client_address/(?P<id>\d+)/$',
         api_views.GetClientAddress.as_view(), name='get_client_address'),
+    url(r'api/get_prov_name/(?P<id>\d+)/$',
+        api_views.GetProvinceName.as_view(), name='get_prov_name'),
 ]

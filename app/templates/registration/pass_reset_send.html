@@ -1,0 +1,34 @@
+{% extends "app/auth_layout.html" %}
+{% load i18n %}
+
+{% block content %}
+    <div class="login-box wide card text-center animated zoomIn" style="min-height: 200px;">
+        <div class="col-md-12">
+            <h3 class="card-title">Reset Password Link Send</h3>
+            
+            <div class="card-body">
+                {% blocktrans %}
+                <h4> We've send a password reset link to your {{ user.email }}.</h4>
+                <h4> Please check your inbox to reset your password.</h4>
+                {% endblocktrans %}
+                <br />
+            </div>
+            
+            <div class="card-footer">
+                <a class="btn btn-primary" href="{% url 'signin' %}">
+                    Okay
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% comment %}
+**registration/registration_complete.html**
+
+Used after successful completion of the registration form. This
+template has no context variables of its own, and should simply inform
+the user that an email containing account-activation information has
+been sent.
+{% endcomment %}

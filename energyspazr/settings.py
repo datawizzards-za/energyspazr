@@ -28,7 +28,6 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -124,7 +123,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-#Registration settings
+# Registration settings
 EMAIL_USE_TLS = True
 ACCOUNT_ACTIVATION_DAYS = 1
 REGISTRATION_FORM_PATH = 'app.forms.RegistrationForm'
@@ -140,7 +139,6 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 REGISTRATION_DEFAULT_FROM_EMAIL = 'simobackoff@gmail.com'
 INCLUDE_REGISTER_URL = True
 INCLUDE_AUTH_URLS = True
-
 
 
 # Crispy Forms Settings

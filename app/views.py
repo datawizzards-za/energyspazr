@@ -1,5 +1,6 @@
 # Django
 from django.contrib.auth import login
+from django.contrib.auth import views as auth_views
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
@@ -229,7 +230,6 @@ class OrderPVTSystem(View):
         form = self.form_class(p_choices, request.POST)
 
         if form.is_valid():
-
             intended_use = form.cleaned_data['intended_use']
             site_visit = form.cleaned_data['site_visit']
             property_type = form.cleaned_data['property_type']
@@ -251,7 +251,6 @@ class OrderPVTSystem(View):
             physical_address = ''
 
             if len(client) == 0:
-
                 physical_address = self.address_model_class.objects.create(
                     building_name=form.cleaned_data['building_name'],
                     street_name=form.cleaned_data['street_name'],
@@ -261,7 +260,7 @@ class OrderPVTSystem(View):
                     zip_code=form.cleaned_data['zip_code']
                 )
 
-                client = models.Client.objects.create(
+                models.Client.objects.create(
                     username=username,
                     lastname=last_name,
                     firstname=first_name,
@@ -271,8 +270,26 @@ class OrderPVTSystem(View):
 
                 client = models.Client.objects.filter(username=username)
             else:
-                physical_address = models.PhysicalAddress.objects.filter(
+                self.address_model_class.objects.filter(
+                    id=client[0].physical_address_id).update(
+                        building_name=form.cleaned_data['building_name'],
+                        street_name=form.cleaned_data['street_name'],
+                        suburb=form.cleaned_data['suburb'],
+                        province=province,
+                        city=form.cleaned_data['city'],
+                        zip_code=form.cleaned_data['zip_code']
+                )
+                physical_address = self.address_model_class.objects.filter(
                     id=client[0].physical_address_id)[0]
+
+                models.Client.objects.filter(username=username).update(
+                    username=username,
+                    lastname=last_name,
+                    firstname=first_name,
+                    contact_number=contact_number,
+                    physical_address=physical_address
+                )
+                client = models.Client.objects.filter(username=username)
 
             system_order = models.SystemOrder.objects.create(
                 need_finance=need_finance,
@@ -357,7 +374,6 @@ class OrderGeyser(View):
             physical_address = ''
 
             if len(client) == 0:
-
                 physical_address = self.address_model_class.objects.create(
                     building_name=form.cleaned_data['building_name'],
                     street_name=form.cleaned_data['street_name'],
@@ -367,7 +383,7 @@ class OrderGeyser(View):
                     zip_code=form.cleaned_data['zip_code']
                 )
 
-                client = models.Client.objects.create(
+                models.Client.objects.create(
                     username=username,
                     lastname=last_name,
                     firstname=first_name,
@@ -377,8 +393,26 @@ class OrderGeyser(View):
 
                 client = models.Client.objects.filter(username=username)
             else:
-                physical_address = models.PhysicalAddress.objects.filter(
+                self.address_model_class.objects.filter(
+                    id=client[0].physical_address_id).update(
+                        building_name=form.cleaned_data['building_name'],
+                        street_name=form.cleaned_data['street_name'],
+                        suburb=form.cleaned_data['suburb'],
+                        province=province,
+                        city=form.cleaned_data['city'],
+                        zip_code=form.cleaned_data['zip_code']
+                )
+                physical_address = self.address_model_class.objects.filter(
                     id=client[0].physical_address_id)[0]
+
+                models.Client.objects.filter(username=username).update(
+                    username=username,
+                    lastname=last_name,
+                    firstname=first_name,
+                    contact_number=contact_number,
+                    physical_address=physical_address
+                )
+                client = models.Client.objects.filter(username=username)
 
             system_order = models.SystemOrder.objects.create(
                 need_finance=need_finance,
@@ -397,11 +431,10 @@ class OrderGeyser(View):
                 order_number=order_number
             )
 
-            # .filter(user=request.user)[0]
             suppliers = self.supplier_model_class.objects.all()
             for supplier in suppliers:
                 order = models.Order.objects.create(
-                    client=client,
+                    client=client[0],
                     supplier=supplier,
                     order_number=order_number
                 )
@@ -615,15 +648,16 @@ class MyQuotes(LoginRequiredMixin, View):
         """
         """
         req_user = request.user
+        spazar_user = self.user_model_class.objects.filter(user=req_user)[0]
 
-        orders = models.Order.objects.filter(supplier__user=req_user)
+        orders = models.Order.objects.filter(
+            supplier_id=spazar_user.user_id)
 
-        client_ids = [c.client_id for c in orders]
-        clients = models.Client.objects.filter(id__in=client_ids)
+        clients = []
+        for order in orders:
+            clients.append(models.Client.objects.filter(id=order.client_id)[0])
 
         data = zip(orders, clients)
-
-        spazar_user = models.SpazrUser.objects.filter(user=req_user)[0]
 
         context = {'user': spazar_user, 'data': data}
 
@@ -687,7 +721,7 @@ class UserAccount(LoginRequiredMixin, View):
             this_user = models.SpazrUser.objects.filter(
                 user_id=auth_user)[0]
 
-            addrr = self.address_model_class.objects.filter(
+            self.address_model_class.objects.filter(
                 id=this_user.physical_address_id).update(
                 building_name=form.cleaned_data['building_name'],
                 street_name=form.cleaned_data['street_name'],
@@ -725,3 +759,88 @@ class SendEmail(View):
 
         tv.send_verification_mail()
         return redirect('/app/order-quotes/' + order + '/')
+
+    template_name = 'registration/financier_update_account.html'
+    form_class = forms.UserAccountUpdateForm
+    address_model_class = models.PhysicalAddress
+    user_model_class = models.SpazrUser
+    province_model_class = models.Province
+
+    def get(self, request, *args, **kwargs):
+        """
+        """
+        p_choices = self.provinces_choices
+        r_choices = self.roles_choices
+        form = self.form_class(p_choices, r_choices)
+        context = {'form': form}
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        """
+        """
+        p_choices = self.provinces_choices
+        r_choices = self.roles_choices
+        form = self.form_class(p_choices, r_choices, request.POST)
+
+        if form.is_valid():
+            address_model = self.address_model_class(request)
+
+            user = request.user
+            group_id = int(form.cleaned_data['roles'])
+            group = Group.objects.filter(pk=group_id)[0]
+            user.groups.add(group)
+
+            company_name = form.cleaned_data['company_name']
+            company_reg = form.cleaned_data['company_reg']
+            contact_number = form.cleaned_data['contact_number']
+            web_address = form.cleaned_data['web_address']
+            province_id = form.cleaned_data['province']
+            province = \
+                self.province_model_class.objects.filter(pk=province_id)[0]
+
+            physical_address = self.address_model_class.objects.create(
+                building_name=form.cleaned_data['contact_number'],
+                street_name=form.cleaned_data['street_name'],
+                suburb=form.cleaned_data['suburb'],
+                province=province,
+                city=form.cleaned_data['city'],
+                zip_code=form.cleaned_data['zip_code']
+            )
+
+            self.user_model_class.objects.create(
+                user=user,
+                company_name=company_name,
+                company_reg=company_reg,
+                contact_number=contact_number,
+                web_address=web_address,
+                physical_address=physical_address
+            )
+
+            return redirect(reverse('dashboard'))
+
+        form = self.form_class(self.provinces_choices())
+        context = {'form': form}
+
+        return render(request, self.template_name, context)
+
+    def provinces_choices(self):
+        provinces = self.province_model_class.objects.all()
+        return tuple([[p.pk, p.name] for p in provinces])
+
+    def roles_choices(self):
+        roles = Group.objects.all()
+        return tuple([[r.pk, r.name] for r in roles])
+
+
+class ForgotPassword(View):
+    template_name = 'registration/forgot_pass.html'
+    form_class = forms.ForgotPassForm
+
+    def get(self, request, *args, **kwargs):
+        """
+        """
+        form = self.form_class
+        context = {'form': form}
+
+        return render(request, self.template_name, context)
