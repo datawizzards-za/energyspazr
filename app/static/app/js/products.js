@@ -179,7 +179,7 @@ $(document).ready(function(){
             data_field = product_name + "_" + value;
             var th = document.createElement('th');
             th.setAttribute('data-field', data_field);
-            $(th).addClass("col-md-4 text-center");
+            $(th).addClass("text-center");
             th.innerHTML = value.charAt(0).toUpperCase() + value.slice(1);
             tr.appendChild(th);
         });
@@ -188,7 +188,7 @@ $(document).ready(function(){
         data_field = product_name + "_price";
         th = document.createElement('th');
         th.setAttribute('data-field', data_field);
-        $(th).addClass("col-md-4 text-center");
+        $(th).addClass("col-md-3 text-center");
         th.innerHTML = "Price";
         tr.appendChild(th);
 
@@ -196,7 +196,7 @@ $(document).ready(function(){
         data_field = product_name + "_add";
         th = document.createElement('th');
         th.setAttribute('data-field', data_field);
-        $(th).addClass("col-md-4 text-center");
+        $(th).addClass("col-md-2 text-center");
         th.innerHTML = "Add";
         tr.appendChild(th);
         
@@ -213,12 +213,12 @@ $(document).ready(function(){
             });
         });
 
-        for (var i = 0; i < values.length; i++) {
+        for (var i = 0; i < product.pcount; i++) {
             tr = document.createElement('tr');
-            for (var j = 0; j < values[i].length; j++) {
+            for (var j = 0; j < keys.length; j++) {
                 var td = document.createElement('td');
                 $(td).addClass("text-center");
-                td.innerHTML = values[i][j];
+                td.innerHTML = product.dimensions[keys[j]][i];
                 tr.append(td);
             }
 
