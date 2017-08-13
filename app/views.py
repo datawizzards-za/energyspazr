@@ -561,8 +561,10 @@ class MyProducts(LoginRequiredMixin, View):
         for prod in my_prods:
             id = prod['product__dimensions']
             dimension = models.Dimension.objects.get(id=id)
-            value = dimension.name.name + " = " + dimension.value
-            prod['product__dimensions'] = value
+            #value = dimension.name.name + ": " + dimension.value
+            prod['product__dimensions'] = [
+                {'name': dimension.name.name, 'value': dimension.value}
+            ]
 
         context = {'user': user, 'averages': averages, 'my_products': my_prods,
                    'all_products': all_prods, 'json_all_prods': all_prods_json,

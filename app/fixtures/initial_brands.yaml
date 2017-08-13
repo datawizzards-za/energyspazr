@@ -27,3 +27,13 @@
   pk: null
   fields:
     name: Vision 
+
+- model: app.productbrandname
+  pk: null
+  fields:
+    name: Lumeno 
+
+- model: app.productbrandname
+  pk: null
+  fields:
+    name: Kabalo 

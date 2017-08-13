@@ -35,7 +35,7 @@
               <th data-field="product_brand" class='col-md-3 text-center'>Brand</th>
               <th data-field="product_dimensions" class='col-md-3 text-center'>Dimensions</th>
               <th data-field="product_price" class='col-md-2 text-center'>Price</th>
-              <th data-field="product_price" class='col-md-1 text-center'>Delete</th>
+              <th data-field="product_delete" class='col-md-1 text-center'>Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -43,7 +43,13 @@
             <tr value={{ product.pk }}>
               <td class="text-center">{{ product.product__brand__product__name }}</td>
               <td class="text-center">{{ product.product__brand__name__name }}</td>
-              <td class="text-center">{{ product.product__dimensions }}</td>
+              <td>
+                <ul>
+                {% for dimension in product.product__dimensions %}
+                <li>{{ dimension.name }}: {{ dimension.value }}</li>
+                {% endfor %}
+                </ul>
+              </td>
               <td class="text-center">R{{ product.price }}</td>
               <td class="text-center"><i class="fa fa-trash-o fa-6"></i></td>
             </tr>
