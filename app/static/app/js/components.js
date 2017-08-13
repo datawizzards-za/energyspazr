@@ -45,41 +45,57 @@ $(document).ready(function () {
 
     $('#table_all_products tbody').on('click', 'tr', function (e) {
         var selected = parseInt($(this).attr('value'));
+        
         setProductTable(selected - 1);
 
         $('#all_products').hide();
         $('#all_panels').show();
+        
+        $('.prod_quantity').keyup(function(){
+            var tr = $(this).closest('tr');
+            var value = $(this).val(); 
+            if (value == '') {
+                tr.removeClass('selected');
+            }else{
+                tr.addClass('selected');
+            }
+        });
+
 
         $('#btn_submit_panels').click(function () {
             var selected = $('#table_all_panels tbody').find('tr.selected');
             var length = selected.length;
+            
 
             $.each(selected, function (i, elem) {
                 var length = elem.children.length;
                 var name = $('td', elem).eq(0).text();
                 var csrftoken = getCookie('csrftoken');
                 var dimensions = [];
-                for (var i = 1; i < length - 2; i++) {
+                for (var i = 1; i < length - 1; i++) {
                     var value = $('td', elem).eq(i).text();
                     var key = elem.closest('table').children[0].children[0].children[i].innerHTML;
                     key = key.toLowerCase();
                     dimensions.push([key, value]);
                 }
-
-                var quantity = $('td', elem).eq(length - 2).find('input').val();
+                
+                var quantity = $('td', elem).eq(length - 1).find('input').val();
+                console.log("Q: " + quantity);
                 var data = {
                     'brand_name': name, 'dimensions': dimensions,
                     'quantity': quantity, 'csrfmiddlewaretoken': csrftoken,
                     'product': window.product_name
                 };
+                
+                console.log(data);
 
-                $.ajax({
-                    url: '/app/user-products/',
+                /*$.ajax({
+                    url: '/app/user-cart/',
                     method: 'POST',
                     data: data,
                     dataType: 'json',
                     traditional: true,
-                });
+                });*/
             });
             //location.reload();
         });
@@ -174,8 +190,9 @@ $(document).ready(function () {
             tr.appendChild(th);
         });
 
-        // Add Price column
+        // Add Quantity column
         data_field = product_name + "_quantity";
+        console.log(data_field);
         th = document.createElement('th');
         th.setAttribute('data-field', data_field);
         $(th).addClass("col-md-3 text-center");
@@ -209,9 +226,8 @@ $(document).ready(function () {
             $(td).addClass("text-center");
             var out_div = document.createElement('div');
             var input = document.createElement('input');
-            $(input).addClass("form-control text-center");
+            $(input).addClass("form-control text-center prod_quantity");
             input.setAttribute("type", "number");
-            input.setAttribute("step", 0.1);
             input.setAttribute("min", 0);
             input.setAttribute("placeholder", "How many do you want?");
             out_div.append(input);

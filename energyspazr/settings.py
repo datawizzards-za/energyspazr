@@ -155,3 +155,6 @@ LOGIN_URL = 'signin'
 LOGOUT_NEXT = '/accounts/signin/'
 
 SITE_ID = 2
+
+# Session Settings
+SESSION_SAVE_EVERY_REQUEST = True

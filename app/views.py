@@ -6,6 +6,7 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
+from django.contrib.sessions.models import Session
 from django.db.models import Q, Count, Min
 from django.shortcuts import render, reverse, redirect, HttpResponse
 from django.views import View
@@ -154,6 +155,15 @@ class SolarComponent(View):
     def get(self, request, *args, **kwargs):
         """
         """
+        if not request.session.session_key:
+            request.session.create()
+
+        # print "User: ", request.user
+        session_key = request.session.session_key
+
+        session_user = Session.objects.get(pk=session_key)
+        print "########: ", session_user
+
         prods = models.GeneralProduct.objects.filter(
             sellingproduct__product__isnull=True).values(
                 'brand__product'
