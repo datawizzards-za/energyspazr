@@ -2,6 +2,7 @@ app/fixtures/initial_brands.yaml
 app/fixtures/initial_products.yaml
 app/fixtures/initial_dimension_names.yaml 
 app/fixtures/initial_batteries.yaml
+app/fixtures/initial_dc_cables.yaml
 app/fixtures/initial_panels.yaml
 app/fixtures/initial_appliances.yaml
 app/fixtures/initial_inverters.yaml 

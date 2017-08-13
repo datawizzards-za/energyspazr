@@ -1,12 +1,12 @@
 - model: app.Province
   pk: 1
   fields:
-    name: The Eastern Cape
+    name: Eastern Cape
 
 - model: app.Province
   pk: 2
   fields:
-    name: The Free State
+    name: Free State
 
 - model: app.Province
   pk: 3
@@ -31,7 +31,7 @@
 - model: app.Province
   pk: 7
   fields:
-    name: The Northern Cape
+    name: Northern Cape
 
 - model: app.Province
   pk: 8
@@ -41,4 +41,4 @@
 - model: app.Province
   pk: 9
   fields:
-    name: The Western Cape
+    name: Western Cape
