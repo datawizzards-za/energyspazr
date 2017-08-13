@@ -42,13 +42,6 @@ class SystemOrderSerializer(serializers.ModelSerializer):
                   'order_number', 'geyser', 'pvt']
 
 
-class ProvinceSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.Province
-        fields = ['name']
-
-
 class AddressSerializer(serializers.ModelSerializer):
 
     class Meta:

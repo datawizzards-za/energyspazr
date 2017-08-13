@@ -25,15 +25,15 @@ urlpatterns = [
         name='user_account_update'),
     url(r'^our-products/$', views.OurProducts.as_view(), name='our-products'),
     url(r'^my-products/$', views.MyProducts.as_view(), name='my-products'),
+
     url(r'^user-cart/$', views.SolarComponent.as_view(), name='user-cart'),
+
     url(r'^my-quotes/$', views.MyQuotes.as_view(), name='my-quotes'),
     url(r'^my-account/$', views.UserAccount.as_view(), name='my-account'),
     url(r'^pvt-order/$', views.OrderPVTSystem.as_view(), name='pvt-order'),
     url(r'^geyser-order/$', views.OrderGeyser.as_view(), name='geyser-order'),
     url(r'^order-quotes/(?P<order_number>[0-9A-Fa-f-]+)/$', views.OrderQuotes.as_view(),
         name='order-quotes'),
-    url(r'^component-order/$', views.SolarComponent.as_view(),
-        name='component-order'),
     url(r'^add-component/$', views.AddComponent.as_view(),
         name='add-component'),
     url(r'^register/$', views.Register.as_view(), name='register'),
@@ -59,6 +59,4 @@ urlpatterns = [
         api_views.GetClientDetails.as_view(), name='get_client_details'),
     url(r'api/get_client_address/(?P<id>\d+)/$',
         api_views.GetClientAddress.as_view(), name='get_client_address'),
-    url(r'api/get_prov_name/(?P<id>\d+)/$',
-        api_views.GetProvinceName.as_view(), name='get_prov_name'),
 ]

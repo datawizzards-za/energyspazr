@@ -14,7 +14,7 @@ $(document).ready(function(){
     $('#table_all_quotes tbody').on( 'click', 'tr', function (e) {
         var row = $('tr', this);
         
-        order_num = $('td', this).eq(0).text();
+        order_num = $('td', this).eq(0).text().toString().toLowerCase();
         
         var system_order_url = 'app/api/get_systemorder_details/' + order_num + '/';
         $.ajax({
@@ -86,18 +86,7 @@ $(document).ready(function(){
         $('#a_street_name').text(address.street_name);
         $('#a_suburb').text(address.suburb);
         $('#a_city').text(address.city + ', ' + address.zip_code);
-        
-        var province_url = 'app/api/get_prov_name/' + address.province_id + '/';
-        $.ajax({
-           url: province_url,
-           type: 'GET',
-           async: false,
-           success: function (data){
-               province = data[0];
-           }
-        });
-        
-        $('#a_province').text(province.name);
+        $('#a_province').text(address.province_id);
         
         $('#all_quotes').hide();
         
