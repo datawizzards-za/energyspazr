@@ -109,6 +109,11 @@ class SellingProduct(models.Model):
     price = models.FloatField()
 
 
+class Cart(models.Model):
+    product = models.ForeignKey(GeneralProduct, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+
+
 class System(models.Model):
     name = models.CharField(max_length=100)
 

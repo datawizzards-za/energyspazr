@@ -154,7 +154,38 @@ class SolarComponent(View):
     def get(self, request, *args, **kwargs):
         """
         """
-        return render(request, self.template_name)
+        prods = models.GeneralProduct.objects.filter(
+            sellingproduct__product__isnull=True).values(
+                'brand__product'
+        ).annotate(
+                pcount=Count('brand__product'),
+        )
+
+        dims = map(
+            lambda prod: MyProducts()._prepare_dimensions(
+                models.GeneralProduct.objects.filter(
+                    brand__product=prod['brand__product'],
+                    sellingproduct__product__isnull=True
+                ).values(
+                    'brand__name',
+                    'dimensions__name',
+                    'brand__name',
+                    'dimensions__name',
+                    'dimensions__value'
+                )
+            ),
+            prods
+        )
+
+        all_prods = map(
+            lambda prod: dict(prod[0], dimensions=prod[1]),
+            zip(prods, dims)
+        )
+        all_prods_json = json.dumps(all_prods)
+
+        context = {'all_products': all_prods, 'json_all_prods': all_prods_json}
+
+        return render(request, self.template_name, context)
 
 
 class Register(View):
@@ -491,9 +522,9 @@ class MyProducts(LoginRequiredMixin, View):
         prods = models.GeneralProduct.objects.filter(
             sellingproduct__product__isnull=True).values(
                 'brand__product'
-            ).annotate(
+        ).annotate(
                 pcount=Count('brand__product'),
-            )
+        )
 
         dims = map(
             lambda prod: self._prepare_dimensions(
@@ -664,18 +695,6 @@ class MyQuotes(LoginRequiredMixin, View):
 
         context = {'user': spazar_user, 'data': data}
 
-        return render(request, self.template_name, context)
-
-
-class MyQuotesQuote(View):
-    template_name = 'app/supplier/quotes.html'
-
-    def get(self, request, *args, **kwargs):
-        """
-        """
-        div = 'div'
-
-        context = {'div': div}
         return render(request, self.template_name, context)
 
 

@@ -25,6 +25,7 @@ urlpatterns = [
         name='user_account_update'),
     url(r'^our-products/$', views.OurProducts.as_view(), name='our-products'),
     url(r'^my-products/$', views.MyProducts.as_view(), name='my-products'),
+    url(r'^user-products/$', views.SolarComponent.as_view(), name='user-products'),
     url(r'^my-quotes/$', views.MyQuotes.as_view(), name='my-quotes'),
     url(r'^my-account/$', views.UserAccount.as_view(), name='my-account'),
     url(r'^pvt-order/$', views.OrderPVTSystem.as_view(), name='pvt-order'),
