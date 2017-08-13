@@ -216,7 +216,7 @@ class UserAccountUpdateForm(ModelForm):
     roles = forms.ChoiceField(choices=(), required=True)
     city = forms.CharField(max_length=30)
     suburb = forms.CharField(max_length=30)
-    zip_code = forms.IntegerField()
+    zip_code = forms.CharField(max_length=10)
 
     def __init__(self, p_choices, r_choices, *args, **kwargs):
         super(UserAccountUpdateForm, self).__init__(*args, **kwargs)
@@ -344,7 +344,7 @@ class PVTOrderForm(ModelForm):
     province = forms.ChoiceField(choices=(), required=True)
     city = forms.CharField(max_length=30)
     suburb = forms.CharField(max_length=30)
-    zip_code = forms.IntegerField()
+    zip_code = forms.CharField(max_length=10)
 
     username = forms.CharField(max_length=30)
     contact_number = forms.CharField(max_length=40)
@@ -587,7 +587,7 @@ class GeyserOrderForm(forms.Form):
     province = forms.ChoiceField(choices=(), required=True)
     city = forms.CharField(max_length=30)
     suburb = forms.CharField(max_length=30)
-    zip_code = forms.IntegerField()
+    zip_code = forms.CharField(max_length=10)
 
     def __init__(self, p_choices, *args, **kwargs):
         super(GeyserOrderForm, self).__init__(*args, **kwargs)
@@ -1007,7 +1007,7 @@ class UserAccountForm(ModelForm):
     province = forms.ChoiceField(choices=(), required=True)
     city = forms.CharField(max_length=30)
     suburb = forms.CharField(max_length=30)
-    zip_code = forms.IntegerField()
+    zip_code = forms.CharField(max_length=10)
 
     def __init__(self, p_choices, *args, **kwargs):
         super(UserAccountForm, self).__init__(*args, **kwargs)

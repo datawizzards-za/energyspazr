@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import uuid
 from django.db import models
+from django.contrib.sessions.models import Session
 from django.contrib.auth.models import User, Group
 
 
@@ -24,7 +25,7 @@ class PhysicalAddress(models.Model):
     suburb = models.CharField(max_length=30)
     province = models.ForeignKey(Province, on_delete=models.CASCADE)
     city = models.CharField(max_length=30)
-    zip_code = models.IntegerField()
+    zip_code = models.CharField(max_length=10)
 
 
 class Client(models.Model):
@@ -49,7 +50,7 @@ class SpazrUser(models.Model):
 
 class ProductManager(models.Manager):
     def get_by_natural_key(self, name):
-        return  self.get(name=name)
+        return self.get(name=name)
 
 
 class Product(models.Model):
@@ -139,6 +140,7 @@ class SellingProduct(models.Model):
 
 
 class Cart(models.Model):
+    session_user = models.ForeignKey(Session, on_delete=models.CASCADE)
     product = models.ForeignKey(GeneralProduct, on_delete=models.CASCADE)
     quantity = models.IntegerField()
 

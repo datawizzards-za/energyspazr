@@ -161,17 +161,17 @@ class SolarComponent(View):
         if not request.session.session_key:
             request.session.create()
 
-        # print "User: ", request.user
         session_key = request.session.session_key
-
         session_user = Session.objects.get(pk=session_key)
-        print "########: ", session_user
 
-        prods = models.GeneralProduct.objects.filter(
-            sellingproduct__product__isnull=True).values(
-                'brand__product'
+        cart_model_class = models.Cart
+
+        prods = models.GeneralProduct.objects.exclude(
+            cart__session_user=session_user
+        ).values(
+            'brand__product'
         ).annotate(
-                pcount=Count('brand__product'),
+            pcount=Count('brand__product'),
         )
 
         dims = map(
@@ -194,11 +194,87 @@ class SolarComponent(View):
             lambda prod: dict(prod[0], dimensions=prod[1]),
             zip(prods, dims)
         )
+
         all_prods_json = json.dumps(all_prods)
 
-        context = {'all_products': all_prods, 'json_all_prods': all_prods_json}
+        my_prods = cart_model_class.objects.filter(session_user=session_user).values(
+            'product__brand__product__name',
+            'product__brand__name__name',
+            'product__dimensions',
+            'quantity',
+        )
+
+        for prod in my_prods:
+            id = prod['product__dimensions']
+            dimension = models.Dimension.objects.get(id=id)
+            #value = dimension.name.name + ": " + dimension.value
+            prod['product__dimensions'] = [
+                {'name': dimension.name.name, 'value': dimension.value}
+            ]
+
+        context = {'my_products': my_prods,
+                   'all_products': all_prods, 'json_all_prods': all_prods_json}
 
         return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        products_model_class = models.Product
+        user_model_class = Session
+        cart_model_class = models.Cart
+
+        user = user_model_class.objects.get(pk=request.session.session_key)
+
+        product = products_model_class.objects.filter(
+            name=request.POST.get('product')
+        )[0]
+
+        str_dimensions = request.POST.getlist('dimensions')
+        product_brandname = models.ProductBrandName.objects.filter(
+            name=request.POST.get('brand_name')
+        )
+        product_brand = models.ProductBrand.objects.filter(
+            name=product_brandname,
+            product=product
+        )
+        dimensions = map(lambda dim: dim.split(','), str_dimensions)
+        dimensions = map(lambda dim: models.Dimension.objects.filter(
+            name=models.DimensionName.objects.filter(
+                name=dim[0].capitalize()
+            ),
+            value=dim[1],
+            product=product
+        )[0],
+            dimensions
+        )
+        list_dimensions = []
+        for dim in dimensions:
+            list_dimensions.append(dim)
+
+        general_product = models.GeneralProduct.objects.filter(
+            brand=product_brand,
+            dimensions__in=list_dimensions
+        )[0]
+
+        # Check if product already exists
+        cart = cart_model_class.objects.filter(
+            session_user=user,
+            product=general_product,
+        )
+
+        quantity = request.POST.get('quantity')
+
+        if len(cart):
+            update = cart[0]
+            update.quantity = quantity
+            update.save()
+        else:
+            cart_model_class.objects.update_or_create(
+                session_user=user,
+                product=general_product,
+                quantity=quantity,
+            )
+
+        return redirect(reverse('user-cart'))
 
 
 class Register(View):
@@ -532,11 +608,11 @@ class MyProducts(LoginRequiredMixin, View):
 
         # All products with count of different brands for each product
         prods = models.GeneralProduct.objects.exclude(
-                sellingproduct__user=user
-            ).values(
-                'brand__product'
+            sellingproduct__user=user
+        ).values(
+            'brand__product'
         ).annotate(
-                pcount=Count('brand__product'),
+            pcount=Count('brand__product'),
         )
 
         dims = map(
@@ -703,7 +779,8 @@ class MyQuotes(LoginRequiredMixin, View):
 
         clients = []
         for order in orders:
-            clients.append(models.Client.objects.filter(id=order.client_id)[0])
+            clients.append(models.Client.objects.filter(
+                client_id=order.client_id)[0])
 
         data = zip(orders, clients)
 
@@ -727,7 +804,7 @@ class UserAccount(LoginRequiredMixin, View):
         spazar_user = models.SpazrUser.objects.filter(user=req_user)[0]
 
         address = models.PhysicalAddress.objects.filter(
-            id=spazar_user.physical_address_id)[0]
+            address_id=spazar_user.physical_address_id)[0]
 
         p_choices = self.provinces_choices
         form = self.form_class(p_choices)

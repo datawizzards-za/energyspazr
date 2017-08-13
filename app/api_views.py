@@ -40,7 +40,7 @@ class GetClientDetails(generics.ListAPIView):
 
     def get_queryset(self):
         client_id = self.kwargs['id']
-        return models.Client.objects.filter(id=client_id)
+        return models.Client.objects.filter(client_id=client_id)
 
 
 class GetClientAddress(generics.ListAPIView):
@@ -49,16 +49,7 @@ class GetClientAddress(generics.ListAPIView):
 
     def get_queryset(self):
         address_id = self.kwargs['id']
-        return models.PhysicalAddress.objects.filter(id=address_id)
-
-
-class GetProvinceName(generics.ListAPIView):
-    serializer_class = serializers.ProvinceSerializer
-    permissions = (IsAuthenticated,)
-
-    def get_queryset(self):
-        prov_id = self.kwargs['id']
-        return models.Province.objects.filter(id=prov_id)
+        return models.PhysicalAddress.objects.filter(address_id=address_id)
 
 
 """
