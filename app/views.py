@@ -525,7 +525,7 @@ class MyProducts(LoginRequiredMixin, View):
             ).values(
                 'brand__product'
         ).annotate(
-                pcount=Count('brand__product'),
+            pcount=Count('brand__product'),
         )
 
         dims = map(
@@ -534,8 +534,7 @@ class MyProducts(LoginRequiredMixin, View):
                     sellingproduct__user=user).filter(
                         brand__product=prod['brand__product'],
                 ).values(
-                    'brand__name',
-                    'dimensions__name',
+                    'id',
                     'brand__name',
                     'dimensions__name',
                     'dimensions__value'
@@ -640,6 +639,7 @@ class MyProducts(LoginRequiredMixin, View):
 
         """
         result = {'brand': []}
+        ids = []
 
         for item in dimensions:
             key = item['dimensions__name'].lower().replace(' ', '_')
@@ -648,7 +648,9 @@ class MyProducts(LoginRequiredMixin, View):
                 result[key].append(value)
             else:
                 result[key] = [value]
-            result['brand'].append(item['brand__name'])
+            if item['id'] not in ids:
+                result['brand'].append(item['brand__name'])
+                ids.append(item['id'])
 
         return result
 
