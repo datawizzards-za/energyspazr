@@ -43,9 +43,6 @@ class Home(View):
     def get(self, request, *args, **kwargs):
         """
         """
-        client = models.Client.objects.get()
-        system = models.SystemOrder.objects.get()
-        quotation_pdf.generate_pdf(client, system)
         return render(request, self.template_name)
 
 
@@ -550,7 +547,7 @@ class OrderGeyser(View):
                 users_number=users_number,
                 required_geyser_size=required_geyser_size,
                 order_number=models.SystemOrder.objects.filter(
-                order_number=order_number)
+                    order_number=order_number)
             )
 
             suppliers = self.supplier_model_class.objects.all()
@@ -574,7 +571,7 @@ class DisplayPDF(View):
         response = HttpResponse(FileWrapper(image_data),
                                 content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename=' + str(
-            kwargs['generate']) +  '_' + str(kwargs['pdf']) + '.pdf'
+            kwargs['generate']) + '_' + str(kwargs['pdf']) + '.pdf'
         image_data.close()
         return response
 
