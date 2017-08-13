@@ -1,29 +1,29 @@
 - model: app.productbrandname
-  pk: 1
+  pk: null
   fields:
     name: Sunrise
 
 - model: app.productbrandname
-  pk: 2
+  pk: null
   fields:
     name: IBC
 
 - model: app.productbrandname
-  pk: 3
+  pk: null
   fields:
     name: Axpert
 
 - model: app.productbrandname
-  pk: 4
+  pk: null
   fields:
     name: SolarEdge 
 
 - model: app.productbrandname
-  pk: 5
+  pk: null
   fields:
     name: SMA 
 
 - model: app.productbrandname
-  pk: 6
+  pk: null
   fields:
     name: Vision 

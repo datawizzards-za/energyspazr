@@ -517,10 +517,12 @@ class MyProducts(LoginRequiredMixin, View):
         edit_panel_form = self.edit_panel_form_class
         new_form = self.new_form_class()
         averages = []
+        user = self.user_model_class.objects.filter(user=req_user)[0]
 
         # All products with count of different brands for each product
-        prods = models.GeneralProduct.objects.filter(
-            sellingproduct__product__isnull=True).values(
+        prods = models.GeneralProduct.objects.exclude(
+                sellingproduct__user=user
+            ).values(
                 'brand__product'
         ).annotate(
                 pcount=Count('brand__product'),
@@ -528,9 +530,9 @@ class MyProducts(LoginRequiredMixin, View):
 
         dims = map(
             lambda prod: self._prepare_dimensions(
-                models.GeneralProduct.objects.filter(
-                    brand__product=prod['brand__product'],
-                    sellingproduct__product__isnull=True
+                models.GeneralProduct.objects.exclude(
+                    sellingproduct__user=user).filter(
+                        brand__product=prod['brand__product'],
                 ).values(
                     'brand__name',
                     'dimensions__name',
@@ -549,7 +551,6 @@ class MyProducts(LoginRequiredMixin, View):
 
         all_prods_json = json.dumps(all_prods)
 
-        user = self.user_model_class.objects.filter(user=req_user)[0]
         my_prods = self.userproduct_model_class.objects.filter(user=user).values(
             'product__brand__product__name',
             'product__brand__name__name',
