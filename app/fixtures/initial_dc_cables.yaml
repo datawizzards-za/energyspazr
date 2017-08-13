@@ -1,0 +1,51 @@
+- model: app.dimension
+  pk: null
+  fields:
+    name: Size  
+    product: DC Cable
+    value: 10 
+
+- model: app.dimension
+  pk: null
+  fields:
+    name: Length  
+    product: DC Cable
+    value: 105
+
+- model: app.dimension
+  pk: null
+  fields:
+    name: Size  
+    product: DC Cable
+    value: 20 
+
+- model: app.dimension
+  pk: null
+  fields:
+    name: Length  
+    product: DC Cable
+    value: 150
+
+- model: app.productbrand
+  pk: null
+  fields:
+    name: Lumeno
+    product: DC Cable
+
+- model: app.productbrand
+  pk: null
+  fields:
+    name: Kabalo
+    product: DC Cable
+
+- model: app.generalproduct
+  pk: null
+  fields:
+    brand: [Lumeno, DC Cable]
+    dimensions: [[DC Cable, Size, 10], [DC Cable, Length, 105]]
+
+- model: app.generalproduct
+  pk: null
+  fields:
+    brand: [Kabalo, DC Cable]
+    dimensions: [[DC Cable, Size, 20], [DC Cable, Length, 150]]
