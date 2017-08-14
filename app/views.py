@@ -42,6 +42,8 @@ class Home(View):
     def get(self, request, *args, **kwargs):
         """
         """
+        client = models.Client.objects.get()
+        quotation_pdf.generate_pdf(client)
         return render(request, self.template_name)
 
 
@@ -370,9 +372,9 @@ class OrderGeyser(View):
 
             province_id = form.cleaned_data['province']
             province = \
-                self.province_model_class.objects.filter(pk=province_id)[0]
+                self.province_model_class.objects.get(pk=province_id)
 
-            client = models.Client.objects.filter(username=username)
+            client = models.Client.objects.get(username=username)
             physical_address = ''
 
             if len(client) == 0:
@@ -393,10 +395,10 @@ class OrderGeyser(View):
                     physical_address=physical_address
                 )
 
-                client = models.Client.objects.filter(username=username)
+                client = models.Client.objects.get(username=username)
             else:
                 self.address_model_class.objects.filter(
-                    id=client[0].physical_address_id).update(
+                    id=client.physical_address_id).update(
                         building_name=form.cleaned_data['building_name'],
                         street_name=form.cleaned_data['street_name'],
                         suburb=form.cleaned_data['suburb'],
@@ -404,8 +406,8 @@ class OrderGeyser(View):
                         city=form.cleaned_data['city'],
                         zip_code=form.cleaned_data['zip_code']
                 )
-                physical_address = self.address_model_class.objects.filter(
-                    id=client[0].physical_address_id)[0]
+                physical_address = self.address_model_class.objects.get(
+                    id=client.physical_address_id)
 
                 models.Client.objects.filter(username=username).update(
                     username=username,
@@ -421,8 +423,8 @@ class OrderGeyser(View):
                 include_installation=include_installation
             )
 
-            order_number = models.SystemOrder.objects.filter(
-                order_number=system_order.order_number)[0]
+            order_number = models.SystemOrder.objects.get(
+                order_number=system_order.order_number)
 
             geyser_order = models.GeyserSystemOrder.objects.create(
                 property_type=property_type,
@@ -436,11 +438,11 @@ class OrderGeyser(View):
             suppliers = self.supplier_model_class.objects.all()
             for supplier in suppliers:
                 order = models.Order.objects.create(
-                    client=client[0],
+                    client=client,
                     supplier=supplier,
                     order_number=order_number
                 )
-                pdf_name = quotation_pdf.generate_pdf(client[0], order,
+                pdf_name = quotation_pdf.generate_pdf(client, order,
                                                       physical_address,
                                                       system_order, supplier)
 
@@ -754,24 +756,10 @@ class UserAccount(LoginRequiredMixin, View):
 class SendEmail(View):
     def get(self, request, *args, **kwargs):
         order = kwargs['uuid']
-        data = {'email': 'ofentswel@gmail.com', 'domain':
+        email = ''
+        data = {'email': email, 'domain':
                 '127.0.0.1:8000'}
         tv = TransactionVerification(data, order)
 
         tv.send_verification_mail()
         return redirect('/app/order-quotes/' + order + '/')
-
-
-class QuotationCharges:
-    def __init__(self, product):
-        self.product = product
-
-    def get_prices(self):
-        data = models.SellingProduct.objects.filter(
-            product_id=self.product).aggregate(Min('price'))
-        product_name = models.SellingProduct.objects.filter(
-            product_id=self.product,
-            price=data['price__min'])
-        company = models.SpazrUser.objects.filter(
-            user_id=product_name[0].user_id)[0].company_name
-        return data, self.product, company
