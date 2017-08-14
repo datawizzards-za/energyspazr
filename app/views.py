@@ -43,9 +43,6 @@ class Home(View):
     def get(self, request, *args, **kwargs):
         """
         """
-        client = models.Client.objects.get()
-        system = models.SystemOrder.objects.get()
-        quotation_pdf.generate_pdf(client, system)
         return render(request, self.template_name)
 
 
