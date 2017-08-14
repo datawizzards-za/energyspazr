@@ -43,11 +43,11 @@ urlpatterns = [
         name='component'),
     url(r'^register/$', views.Register.as_view(), name='register'),
 
-    url(r'^view-slip/(?P<generate>[0-9A-Fa-f-]+)/$',
+    url(r'^view-slip/(?P<generate>[0-9A-Fa-f-]+)/(?P<pdf>[0-9])/$',
         views.DisplayPDF.as_view(), name='slips'),
     url(r'api/get_brand/(?P<brand_id>\d+)/$',
         api_views.GetProductBrand.as_view(), name='get_brand'),
-    url(r'^email/(?P<uuid>[0-9A-Fa-f-]+)/$',
+    url(r'^email/(?P<uuid>[0-9A-Fa-f-]+)/(?P<order>[0-9])/$',
         views.SendEmail.as_view(), name='email'),
 
     url(r'api/get_order_details/(?P<order_number>[0-9A-Fa-f-]+)/$',

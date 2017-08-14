@@ -26,42 +26,42 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {% for item in products %}
+                 <!--  {% for item in products %}
                   <tr>
                     <td class='text-center'>{{item.name}}</td>
                     <td class='text-center'>Mark</td>
                     <td class='text-center'>Otto</td>
                     <td class='text-center'>@mdo</td>
                   </tr>
-                  {% endfor %}
+                  {% endfor %} -->
                   <tr>
                       <td class="text-center">Actions</td>
                     <td class='text-center'>
                         <div class="btn-group">
-                            <a class="btn btn-sm btn-primary" href="{% url 'email' user_id %}">
+                            <a class="btn btn-sm btn-primary" href="{% url 'email' user_id 1 %}">
                                 <i class="fa fa-lg fa-mail-forward"></i>
                             </a>
-                            <a class="btn btn-sm btn-primary" href="{% url 'slips' user_id %}">
+                            <a class="btn btn-sm btn-primary" href="{% url 'slips' user_id 1 %}">
                                 <i class="fa fa-lg fa-download"></i>
                             </a>
                         </div>
                     </td>
                     <td class='text-center'>
                         <div class="btn-group">
-                            <a class="btn btn-sm btn-primary" href="#">
+                            <a class="btn btn-sm btn-primary" href="{% url 'email' user_id 2 %}">
                                 <i class="fa fa-lg fa-mail-forward"></i>
                             </a>
-                            <a class="btn btn-sm btn-primary" href="#">
+                            <a class="btn btn-sm btn-primary" href="{% url 'slips' user_id 2 %}">
                                 <i class="fa fa-lg fa-download"></i>
                             </a>
                         </div>
                     </td>
                     <td class='text-center'>
                         <div class="btn-group">
-                            <a class="btn btn-sm btn-primary" href="#">
+                            <a class="btn btn-sm btn-primary" href="{% url 'email' user_id 3 %}">
                                 <i class="fa fa-lg fa-mail-forward"></i>
                             </a>
-                            <a class="btn btn-sm btn-primary" href="#">
+                            <a class="btn btn-sm btn-primary" href="{% url 'slips' user_id 3 %}">
                                 <i class="fa fa-lg fa-download"></i>
                             </a>
                         </div>

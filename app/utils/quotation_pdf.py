@@ -11,17 +11,16 @@ from django.core.mail import EmailMultiAlternatives
 from app.utils import pricing
 from app import models
 
-def generate_pdf(client):
+def generate_pdf(client, system):
     best_three_prices, product, supplier = pricing.QuotationCharges(
         [1, 2]).get_prices()
-    # for prices in best_three_prices:
-    #     for i in range(len(product)):
-    #         print prices[i].price
+    quotations = []
     formatted_time = time.ctime()
     for i in range(3):
-        pdf_file_generate = str(i)
+        pdf_file_generate = str(system.order_number)
         slips_dir = 'app/static/app/slips/'
-        document = SimpleDocTemplate(slips_dir + pdf_file_generate+".pdf",
+        document = SimpleDocTemplate(slips_dir +
+                                     pdf_file_generate + "_" + str(i)+".pdf",
                                      pagesize=letter,
                                      rightMargin=72, leftMargin=72,
                                      topMargin=72, bottomMargin=18)
@@ -88,13 +87,13 @@ def generate_pdf(client):
                 'Details</font></center>'
         elements.append(Paragraph(ptext, styles["Center"]))
         elements.append(Spacer(1, 12))
-        data = [['Order number', '909090'],#str(system.order_number).upper()],
+        data = [['Order number', str(system.order_number).upper()],
                 #['Intended Use',
                 #order.intended_use.upper().replace('_', ' ')],
-                ['Need Finance', 'YES'],#str(system.need_finance).upper()],
+                ['Need Finance', str(system.need_finance).upper()],
                 #['Site Visit', str(order.site_visit).upper()],
-                ['Include Instalation','YES']
-                 #str(system.include_installation).upper()],
+                ['Include Instalation', str(
+                    system.include_installation).upper()],
                 #['Property Type', order.property_type.upper()],
                 #['Roof Inclination', order.roof_inclination.upper()],
                 ]
@@ -161,21 +160,4 @@ def generate_pdf(client):
 
         document.build(elements)
 
-    #return pdf_file_generate
-
-    if __name__ == '__main__':
-        # values = {'username': 'ofentswel@gmail.com',
-        #           'first_name': 'Ofentswe',
-        #           'last_name': 'Lebogo',
-        #           'intended_use': 'main_power',
-        #           'physical_address': '406 City Place, 111 WF Nkomo, Pretoria, 0002',
-        #           'roof_inclination': 'tilted',
-        #           'contact_number': '0715795960',
-        #           'site_visit': 'yes',
-        #           'need_finance': 'yes',
-        #           'property_type': 'flat',
-        #           'place_order': 'FINISH',
-        #           'include_installation': 'yes'}
-        # generate_pdf(values)
-        client = models.Client.objects.get()
-        generate_pdf(client)
+    return pdf_file_generate

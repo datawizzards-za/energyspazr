@@ -10,7 +10,7 @@ class TransactionVerification:
 
     """
 
-    def __init__(self, data, uuid):
+    def __init__(self, data, uuid, order_number):
         """Initialise transaction verification object with transaction
         data.
 
@@ -23,6 +23,7 @@ class TransactionVerification:
 
         self.data = data
         self.uuid = uuid
+        self.order_number = order_number
 
     def send_verification_mail(self):
         """Given transaction data, send the user verification email to
@@ -46,5 +47,6 @@ class TransactionVerification:
 
         msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
         msg.attach_alternative(html_content, "text/html")
-        msg.attach_file('app/static/app/slips/' + self.uuid + '.pdf')
+        msg.attach_file('app/static/app/slips/' + self.uuid + '_' +
+                        str(self.order_number) + '.pdf')
         msg.send()

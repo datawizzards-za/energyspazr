@@ -43,7 +43,8 @@ class Home(View):
         """
         """
         client = models.Client.objects.get()
-        quotation_pdf.generate_pdf(client)
+        system = models.SystemOrder.objects.get()
+        quotation_pdf.generate_pdf(client, system)
         return render(request, self.template_name)
 
 
@@ -319,9 +320,8 @@ class OrderPVTSystem(View):
                     supplier=supplier,
                     order_number=order_number
                 )
-                pdf_name = quotation_pdf.generate_pdf(client[0], order,
-                                                      physical_address,
-                                                      system_order, supplier)
+                pdf_name = quotation_pdf.generate_pdf(client[0],
+                                                      system_order)
 
         # pdf_name = quotation_pdf.generate_pdf(form.data)
         # return redirect('/app/view-slip/' + pdf_name)
@@ -442,9 +442,7 @@ class OrderGeyser(View):
                     supplier=supplier,
                     order_number=order_number
                 )
-                pdf_name = quotation_pdf.generate_pdf(client, order,
-                                                      physical_address,
-                                                      system_order, supplier)
+                pdf_name = quotation_pdf.generate_pdf(client, system_order)
 
         return redirect('/app/order-quotes/' +
                         str(system_order.order_number))
@@ -453,12 +451,12 @@ class OrderGeyser(View):
 class DisplayPDF(View):
     def get(self, request, *args, **kwargs):
         pdf_dir = 'app/static/app/slips/'
-        image_data = open(pdf_dir + str(kwargs['generate']) + '.pdf', "r")
-
+        image_data = open(pdf_dir + str(kwargs['generate']) + '_' +
+                          str(kwargs['pdf']) + '.pdf', "r")
         response = HttpResponse(FileWrapper(image_data),
                                 content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename=' + str(
-            kwargs['generate']) + '.pdf'
+            kwargs['generate']) +  '_' + str(kwargs['pdf']) + '.pdf'
         image_data.close()
         return response
 
@@ -756,10 +754,11 @@ class UserAccount(LoginRequiredMixin, View):
 class SendEmail(View):
     def get(self, request, *args, **kwargs):
         order = kwargs['uuid']
-        email = ''
+        quote = kwargs['order']
+        email = 'ofentswel@gmail.com'
         data = {'email': email, 'domain':
                 '127.0.0.1:8000'}
-        tv = TransactionVerification(data, order)
+        tv = TransactionVerification(data, order, quote)
 
         tv.send_verification_mail()
-        return redirect('/app/order-quotes/' + order + '/')
+        return redirect('/app/order-quotes/' + order + '/' + str(quote))
