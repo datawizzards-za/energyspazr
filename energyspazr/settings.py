@@ -125,7 +125,7 @@ USE_TZ = True
 
 # Registration settings
 EMAIL_USE_TLS = True
-ACCOUNT_ACTIVATION_DAYS = 1
+ACCOUNT_ACTIVATION_DAYS = 2
 REGISTRATION_FORM_PATH = 'app.forms.RegistrationForm'
 REGISTRATION_AUTO_LOGIN = False
 SEND_ACTIVATION_EMAIL = True
@@ -155,3 +155,6 @@ LOGIN_URL = 'signin'
 LOGOUT_NEXT = '/accounts/signin/'
 
 SITE_ID = 2
+
+# Session Settings
+SESSION_SAVE_EVERY_REQUEST = True

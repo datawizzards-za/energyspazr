@@ -10,7 +10,12 @@ $(document).ready(function(){
     $('#edit_panel').hide();
     $('#all_products').hide();
 
-    $('#table_my_products tbody').on( 'click', 'tr', function (e) {
+    $('#table_my_products tbody').on( 'dblclick', 'tr', function (e) {
+        console.log("Double clicked");
+
+        var tr = $(this).closest('tr');
+        console.log(tr.children());
+        /*
         var row = $('tr', this);
         var id = row.context.attributes[0].value;
         var name = $('td', this).eq(0).text();
@@ -22,26 +27,8 @@ $(document).ready(function(){
 
         $('#my_products').hide();
         $('#all_panels').show();
+       */
     });
-
-    $('#table_all_panels tbody').on( 'click', 'tr', function (e) {
-        //$(this).toggleClass('selected');
-        var row = $('tr', this);
-        var id = row.context.attributes[0].value;
-        var name = $('td', this).eq(0).text();
-        var price_text = $('td', this).eq(1).text();
-        /**
-        //TODO: Replace 'R' with '' instead
-        var price = price_text.substring(1, price_text.length).replace(',','');
-
-        $('#edit_prod_name').val(name);
-        $('#edit_prod_price').val(price);
-        $('#id_edit_prod_id').val(id);
-
-        $('#all_panels').hide();
-        $('#edit_panel').show();*/
-    });
-
 
     $('#table_all_products tbody').on( 'click', 'tr', function (e) {
         var selected = parseInt($(this).attr('value'));
@@ -64,38 +51,40 @@ $(document).ready(function(){
                 tr.addClass('selected');
             }
         });
+    });
 
 
-        $('#btn_submit_panels').click(function(){
-            var selected = $('#table_all_panels tbody').find('tr.selected');
-            var length = selected.length;
+    $('#btn_submit_panels').click(function(){
+        var selected = $('#table_all_panels tbody').find('tr.selected');
+        var length = selected.length;
+        
+        $.each(selected, function(i, elem){
+            console.log("Button Clicked");
+            var length = elem.children.length;
+            var name = $('td', elem).eq(0).text();
+            var csrftoken = getCookie('csrftoken');
+            var dimensions = [];
+            for (var i = 1; i < length-2; i++) {
+                var value = $('td', elem).eq(i).text();
+                var key = elem.closest('table').children[0].children[0].children[i].innerHTML;
+                key = key.toLowerCase();
+                dimensions.push([key, value]);
+            }
 
-            $.each(selected, function(i, elem){
-                var length = elem.children.length;
-                var name = $('td', elem).eq(0).text();
-                var csrftoken = getCookie('csrftoken');
-                var dimensions = [];
-                for (var i = 1; i < length-2; i++) {
-                    var value = $('td', elem).eq(i).text();
-                    var key = elem.closest('table').children[0].children[0].children[i].innerHTML;
-                    key = key.toLowerCase();
-                    dimensions.push([key, value]);
-                }
+            var price = $('td', elem).eq(length-2).find('input').val();
+            var data = {'brand_name': name, 'dimensions': dimensions,
+                        'price': price, 'csrfmiddlewaretoken': csrftoken,
+                        'product': window.product_name};
 
-                var price = $('td', elem).eq(length-2).find('input').val();
-                var data = {'brand_name': name, 'dimensions': dimensions,
-                            'price': price, 'csrfmiddlewaretoken': csrftoken,
-                            'product': window.product_name};
-
-                $.ajax({
-                    url:'/app/my-products/',
-                    method: 'POST',
-                    data: data,
-                    dataType: 'json',
-                    traditional: true
-                });
+            $.ajax({
+                url:'/app/my-products/',
+                method: 'POST',
+                data: data,
+                dataType: 'json',
+                traditional: true,
             });
         });
+        //location.reload();
     });
 
     function getCookie(name) {

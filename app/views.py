@@ -6,6 +6,7 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
+from django.contrib.sessions.models import Session
 from django.db.models import Q, Count, Min
 from django.shortcuts import render, reverse, redirect, HttpResponse
 from django.views import View
@@ -157,7 +158,47 @@ class SolarComponent(View):
     def get(self, request, *args, **kwargs):
         """
         """
-        return render(request, self.template_name)
+        if not request.session.session_key:
+            request.session.create()
+
+        # print "User: ", request.user
+        session_key = request.session.session_key
+
+        session_user = Session.objects.get(pk=session_key)
+        print "########: ", session_user
+
+        prods = models.GeneralProduct.objects.filter(
+            sellingproduct__product__isnull=True).values(
+                'brand__product'
+        ).annotate(
+                pcount=Count('brand__product'),
+        )
+
+        dims = map(
+            lambda prod: MyProducts()._prepare_dimensions(
+                models.GeneralProduct.objects.filter(
+                    brand__product=prod['brand__product'],
+                    sellingproduct__product__isnull=True
+                ).values(
+                    'brand__name',
+                    'dimensions__name',
+                    'brand__name',
+                    'dimensions__name',
+                    'dimensions__value'
+                )
+            ),
+            prods
+        )
+
+        all_prods = map(
+            lambda prod: dict(prod[0], dimensions=prod[1]),
+            zip(prods, dims)
+        )
+        all_prods_json = json.dumps(all_prods)
+
+        context = {'all_products': all_prods, 'json_all_prods': all_prods_json}
+
+        return render(request, self.template_name, context)
 
 
 class Register(View):
@@ -432,7 +473,8 @@ class OrderGeyser(View):
                 water_collector=water_collector,
                 users_number=users_number,
                 required_geyser_size=required_geyser_size,
-                order_number=order_number
+                order_number=models.SystemOrder.objects.filter(
+                order_number=order_number)
             )
 
             suppliers = self.supplier_model_class.objects.all()
@@ -486,18 +528,22 @@ class MyProducts(LoginRequiredMixin, View):
         edit_panel_form = self.edit_panel_form_class
         new_form = self.new_form_class()
         averages = []
+        user = self.user_model_class.objects.filter(user=req_user)[0]
 
         # All products with count of different brands for each product
-        prods = models.GeneralProduct.objects.values(
-            'brand__product'
+        prods = models.GeneralProduct.objects.exclude(
+                sellingproduct__user=user
+            ).values(
+                'brand__product'
         ).annotate(
-            pcount=Count('brand__product'),
+                pcount=Count('brand__product'),
         )
 
         dims = map(
             lambda prod: self._prepare_dimensions(
-                models.GeneralProduct.objects.filter(
-                    brand__product=prod['brand__product']
+                models.GeneralProduct.objects.exclude(
+                    sellingproduct__user=user).filter(
+                        brand__product=prod['brand__product'],
                 ).values(
                     'brand__name',
                     'dimensions__name',
@@ -516,7 +562,6 @@ class MyProducts(LoginRequiredMixin, View):
 
         all_prods_json = json.dumps(all_prods)
 
-        user = self.user_model_class.objects.filter(user=req_user)[0]
         my_prods = self.userproduct_model_class.objects.filter(user=user).values(
             'product__brand__product__name',
             'product__brand__name__name',
@@ -527,8 +572,10 @@ class MyProducts(LoginRequiredMixin, View):
         for prod in my_prods:
             id = prod['product__dimensions']
             dimension = models.Dimension.objects.get(id=id)
-            value = dimension.name.name + " = " + dimension.value
-            prod['product__dimensions'] = value
+            #value = dimension.name.name + ": " + dimension.value
+            prod['product__dimensions'] = [
+                {'name': dimension.name.name, 'value': dimension.value}
+            ]
 
         context = {'user': user, 'averages': averages, 'my_products': my_prods,
                    'all_products': all_prods, 'json_all_prods': all_prods_json,
@@ -662,18 +709,6 @@ class MyQuotes(LoginRequiredMixin, View):
 
         context = {'user': spazar_user, 'data': data}
 
-        return render(request, self.template_name, context)
-
-
-class MyQuotesQuote(View):
-    template_name = 'app/supplier/quotes.html'
-
-    def get(self, request, *args, **kwargs):
-        """
-        """
-        div = 'div'
-
-        context = {'div': div}
         return render(request, self.template_name, context)
 
 

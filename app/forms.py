@@ -14,6 +14,11 @@ from app import models
 
 
 class SetPasswordForm(auth_forms.SetPasswordForm):
+    def __init__(self, *args, **kwargs):
+        super(SetPasswordForm, self).__init__(*args, **kwargs)
+
+        for fieldname in ['new_password1', 'new_password2']:
+            self.fields[fieldname].help_text = None
 
     helper = FormHelper()
     helper.form_method = 'POST'
@@ -21,19 +26,18 @@ class SetPasswordForm(auth_forms.SetPasswordForm):
     helper.form_show_labels = False
     helper.layout = Layout(
         HTML('<h3 class="login-head">'
-             'Set New Password</h3> <br />'),
+             'Set New Password</h3> '),
         Div(
-            Field('password1', css_class='form-control text-center',
-                  placeholder='Enter Password', autofocus=True),
+            Field('new_password1', css_class='form-control text-center',
+                  placeholder='Enter New Password', autofocus=True),
             css_class='form-group'
         ),
         Div(
-            Field('password2', css_class='form-control text-center',
-                  placeholder='Confirm Password'),
+            Field('new_password2', css_class='form-control text-center',
+                  placeholder='Confirm New Password'),
             css_class='form-group'
         ),
         Div(
-            HTML('<br />'),
             FormActions(
                 Submit('send', 'SUBMIT', css_class='btn btn-primary btn-block')),
             css_class='form-group'
@@ -332,8 +336,8 @@ class PVTOrderForm(ModelForm):
 
     site_visit = forms.ChoiceField(choices=((True, 'YES'), (False, 'NO')))
 
-    OPTIONS = ((p.name, p.name) for p in models.Appliance.objects.all())
-    name = forms.ChoiceField(choices=OPTIONS, required=True)
+    #OPTIONS = ((p.name, p.name) for p in models.Appliance.objects.all())
+    #name = forms.ChoiceField(choices=OPTIONS, required=True)
 
     building_name = forms.CharField(max_length=30, required=True)
     street_name = forms.CharField(max_length=30)
