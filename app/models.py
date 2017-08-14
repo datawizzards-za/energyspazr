@@ -5,11 +5,20 @@ from django.db import models
 from django.contrib.auth.models import User, Group
 
 
+class ProvinceManager(models.Manager):
+    def get_by_natural_key(self, name):
+        return self.get(name=name)
+
+
 class Province(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30, primary_key=True)
+
+    def natural_key(self):
+        return (self.name)
 
 
 class PhysicalAddress(models.Model):
+    address_id = models.AutoField(primary_key=True)
     building_name = models.CharField(max_length=30)
     street_name = models.CharField(max_length=30)
     suburb = models.CharField(max_length=30)
@@ -19,6 +28,7 @@ class PhysicalAddress(models.Model):
 
 
 class Client(models.Model):
+    client_id = models.AutoField(primary_key=True)
     username = models.CharField(max_length=30)
     lastname = models.CharField(max_length=30)
     firstname = models.CharField(max_length=30)
@@ -37,11 +47,23 @@ class SpazrUser(models.Model):
     web_address = models.URLField(null=True)
 
 
+class ProductManager(models.Manager):
+    def get_by_natural_key(self, name):
+        return  self.get(name=name)
+
+
 class Product(models.Model):
+    objects = ProductManager()
+
     name = models.CharField(max_length=100, primary_key=True)
 
     def natural_key(self):
         return (self.name)
+
+
+class ProductBrandNameManager(models.Manager):
+    def get_by_natural_key(self, name):
+        return self.get(name=name)
 
 
 class ProductBrandName(models.Model):
@@ -69,7 +91,14 @@ class ProductBrand(models.Model):
         unique_together = (('name', 'product'),)
 
 
+class DimensionNameManager(models.Manager):
+    def get_by_natural_key(self, name):
+        return self.get(name=name)
+
+
 class DimensionName(models.Model):
+    objects = DimensionNameManager()
+
     name = models.CharField(max_length=100, primary_key=True)
 
     def natural_key(self):
@@ -107,6 +136,11 @@ class SellingProduct(models.Model):
     user = models.ForeignKey(SpazrUser, on_delete=models.CASCADE)
     product = models.ForeignKey(GeneralProduct, on_delete=models.CASCADE)
     price = models.FloatField()
+
+
+class Cart(models.Model):
+    product = models.ForeignKey(GeneralProduct, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
 
 
 class System(models.Model):

@@ -1,26 +1,42 @@
 {% extends "app/auth_layout.html" %}
 {% load i18n %}
 {% load crispy_forms_tags %}
+{% load staticfiles %}
 
 {% block content %}
-    <div class="col-md-5 animated card zoomIn">
+    <div class="col-md-10 animated card zoomIn" id='my_comps'>
         <div class="card-title-w-btn">
           <h3 class="title">Let's add the components</h3>
-          <p><a class="btn btn-primary icon-btn" href="{% url 'add-component' %}"><i class="fa fa-plus"></i>Add Item</a></p>
+          <p>
+              <a class="btn btn-primary icon-btn" id="btn_add_comp">
+                  <i class="fa fa-plus"></i>Add Item
+              </a>
+          </p>
         </div>
         <div class="card-body">
-            <div class="card-title-w-btn">
-              <h4 class="title">Item #1</h4>
-              <div class="btn-group">
-                  <a class="btn btn-info" href="#"><i class="fa fa-lg fa-edit"></i></a>
-                  <a class="btn btn-warning" href="#"><i class="fa fa-lg fa-trash"></i></a></div>
-            </div>
-            <div class="card-title-w-btn">
-              <h4 class="title">Item #2</h4>
-              <div class="btn-group">
-                  <a class="btn btn-info" href="#"><i class="fa fa-lg fa-edit"></i></a>
-                  <a class="btn btn-warning" href="#"><i class="fa fa-lg fa-trash"></i></a></div>
-            </div>
+          <table class="table table-hover table-bordered">
+            <thead>
+              <tr>
+                <th data-field="product_name" class='col-md-6 text-center'>Item</th>
+                <th data-field="product_size" class='col-md-3 text-center'>Quantity</th>
+                <th class='col-md-3 text-center'>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for product in my_products %}
+              <tr value={{ product.pk }}>
+                <td class="text-center">{{ product.product__brand__product__name }}</td>
+                <td class="text-center">{{ product.product__brand__name__name }}</td>
+                <td class="text-center">
+                    <div class="btn-group">
+                        <a class="btn btn-info" href="#"><i class="fa fa-lg fa-edit"></i></a>
+                        <a class="btn btn-warning" href="#"><i class="fa fa-lg fa-trash"></i></a>
+                    </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
         
         <div class="card-footer">
@@ -38,30 +54,76 @@
             </div>
         </div>
     </div>
-{% endblock %}
+
+    <div class="col-md-10 zoomIn animated card" id='all_products'>
+      <div class="card-title-w-btn">
+        <h3 class="title">Click on the product you want to add.</h3>
+        <p>
+          <a class="btn btn-warning icon-btn" id="btn_products_back">
+            <i class="fa fa-backward"></i>Back
+          </a>
+        </p>
+      </div>
+      <div class="card-body">
+        <table class="table table-hover table-bordered highlight" id="table_all_products">
+          <thead>
+            <tr>
+              <th data-field="product_name" class='col-md-6 text-center'>Product Name</th>
+              <th data-field="product_count" class='col-md-6 text-center'>Product Count</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for product in all_products %}
+            <tr value={{ forloop.counter }}>
+              <td class="text-center">{{ product.brand__product }}</td>
+              <td class="text-center">{{ product.pcount }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+    <div class="col-md-10 zoomIn animated card" id='all_panels'>
+      <div class="card-title-w-btn">
+        <h3 class="title" id="product-head">Solar Panels</h3>
+        <p>
+          <a class="btn btn-warning icon-btn" id="btn_panels_back">
+            <i class="fa fa-backward"></i>Back
+          </a>
+        </p>
+      </div>
+      <div class="card-body">
+        <table class="table table-hover table-bordered" id="table_all_panels">
+          <tbody>
+            {% for product in all_products %}
+            {% if product.brand__product == 'Solar Panels' %}
+            {% for brand in product.data %}
+            <tr>
+              <td class="text-center">{{ brand }}</td>
+              <td class="text-center">{{ product.dimensions.size.0 }} Watts</td>
+            </tr>
+            {% endfor %}
+            {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+        <p class="text-center">
+          <a class="btn btn-success icon-btn" id="btn_submit_panels">
+            <i class="fa fa-check"></i>Submit
+          </a>
+        </p>
+      </div>
+    </div>
+
+
+{% endblock content %}
 {% block extrajs %}
-{% load staticfiles %}
-<script type="text/javascript" src="{% static 'app/js/plugins/select2.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'app/js/plugins/bootstrap-datepicker.min.js' %}"></script>
-<script type="text/javascript">
-    $('#id_property_type').select2();
-    $('#id_roof_inclination').select2();
-    $('#id_existing_geyser').select2();
-    $('#id_water_collector').select2();
-    $('#id_required_geyser_size').select2();
-    $('#id_include_installation').select2();
-    $('#id_need_finance').select2();
+{{ block.super }}
+<script>
+var all_products = {{ json_all_prods|safe }};
+//console.log(all_products);
 </script>
+<script type="text/javascript" src="{% static 'app/js/components.js' %}"></script>
 {% endblock%}
-
-{% comment %}
-**registration/registration_form.html**
-Used to show the form users will fill out to register. By default, has
-the following context:
-
-``form``
-    The registration form. This will be an instance of some subclass
-    of ``django.forms.Form``; consult `Django's forms documentation
-    <http://docs.djangoproject.com/en/dev/topics/forms/>`_ for
-    information on how to display this in a template.
-{% endcomment %}
