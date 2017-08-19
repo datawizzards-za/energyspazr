@@ -257,10 +257,6 @@ class SolarComponent(View):
         )
 
         quantity = request.POST.get('quantity')
-        dimensions_value = str_dimensions[0].split(',')[1]
-        dimensions_id = models.Dimension.objects.filter(
-            value=dimensions_value, product_id=product.name)[0]
-        print "DIM ID: ", dimensions_id.id
 
         if len(cart):
             update = cart[0]
@@ -659,9 +655,10 @@ class MyProducts(LoginRequiredMixin, View):
         product = self.products_model_class.objects.filter(
             name=request.POST.get('product')
         )[0]
+
         user = self.user_model_class.objects.filter(user=request.user)[0]
-        userproduct_model_class = models.SellingProduct
         str_dimensions = request.POST.getlist('dimensions')
+
         product_brandname = models.ProductBrandName.objects.filter(
             name=request.POST.get('brand_name')
         )
@@ -695,6 +692,9 @@ class MyProducts(LoginRequiredMixin, View):
         )
 
         price = float(request.POST.get('price'))
+        dimensions_value = str_dimensions[0].split(',')[1]
+        dimensions_id = models.Dimension.objects.filter(
+            value=dimensions_value, product_id=product.name)[0]
 
         if len(selling):
             update = selling[0]
@@ -704,6 +704,7 @@ class MyProducts(LoginRequiredMixin, View):
             self.userproduct_model_class.objects.update_or_create(
                 user=user,
                 product=general_product,
+                dimension=dimensions_id,
                 price=price
             )
 
