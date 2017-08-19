@@ -25,7 +25,7 @@
             <tbody>
               {% for product in my_products %}
               <tr value={{ product.pk }}>
-                <td class="text-center">{{ product.product__brand__product__name }}, Size: {{product.product__dimensions}}, Brand: {{product.product__brand__name__name}}</td>
+                <td class="text-center">{{ product.product__brand__product__name }}, Size: {{product.product__dimensions.0.value}}, Brand: {{product.product__brand__name__name}}</td>
                 <td class="text-center">{{ product.quantity }}</td>
                 <td class="text-center">
                     <div class="btn-group">
