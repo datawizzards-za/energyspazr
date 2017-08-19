@@ -4,6 +4,7 @@
 
 {% block content %}
     <div class="col-md-8 animated card zoomIn">
+      {% if order_status %}
         <div class="card-title-w-btn">
           <h1 class="title">Your top three Quotes</h1>
           <p>
@@ -86,6 +87,23 @@
             </a>
             </div>
         </div>
+        {% else %}
+
+          <div class="card-footer">
+            <div class="col-md-12"></div>
+            <div class="col-md-12">
+                There are no Suppliers for the products you ordered. Please check Later 
+            </div>
+            <div class="col-md-12"><br /></div>
+            <div class="col-md-12">
+                
+            <a class="btn btn-primary btn-block" href="/">
+                FINISH
+            </a>
+            </div>
+        </div>
+
+        {% endif %}
     </div>
 {% endblock %}
 {% block extrajs %}
