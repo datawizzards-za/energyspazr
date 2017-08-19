@@ -207,7 +207,7 @@ class SolarComponent(View):
                 {'name': dimension.name.name, 'value': dimension.value}
             ]
         # .product__dimensions
-        print my_prods[0]['product__dimensions'][0]['value']
+        print my_prods
         context = {'my_products': my_prods,
                    'all_products': all_prods, 'json_all_prods': all_prods_json}
 
