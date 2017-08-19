@@ -12,7 +12,7 @@ from app.utils import pricing
 from app import models
 
 def generate_pdf(client, system):
-    best_three_prices, product, supplier = pricing.QuotationCharges(
+    best_three_prices, products, supplier = pricing.QuotationCharges(
         [1, 2]).get_prices()
     quotations = []
     formatted_time = time.ctime()
@@ -106,19 +106,20 @@ def generate_pdf(client, system):
 
         elements.append(table)
         elements.append(Spacer(1, 24))
-        ptext = '<font size=16 style="text-transform:uppercase">Supplier ' \
-                'Details</font></center>'
-        elements.append(Paragraph(ptext, styles["Center"]))
-        elements.append(Spacer(1, 12))
-        data = []
 
-        for products in  product:
-            data.append(['Company Name', str(supplier[products][
-                                                  i].company_name).upper()])
-            data.append(['Contact Number', str(supplier[products][
-                                               i].contact_number).upper()])
+        product_count = 0
+        for product in  products:
+            data = []
+            ptext = '<font size=16 style="text-transform:uppercase">Supplier ' \
+                    'Details</font></center>'
+            elements.append(Paragraph(ptext, styles["Center"]))
+            elements.append(Spacer(1, 12))
+            data.append(['Company Name', str(supplier[product][
+                                                 product_count].company_name).upper()])
+            data.append(['Contact Number', str(supplier[product][
+                                                   product_count].contact_number).upper()])
             data.append(['Web Address',
-                     str(supplier[products][i].web_address).upper()])
+                     str(supplier[product][product_count].web_address).upper()])
 
             table = Table(data, colWidths=190)
             table.setStyle(TableStyle([
@@ -134,16 +135,17 @@ def generate_pdf(client, system):
                     '</font></center>'
             elements.append(Paragraph(ptext, styles["Center"]))
             elements.append(Spacer(1, 12))
-            data = []
+            data_ = []
             try:
-                data.append(['Amount ', 'R' + str(best_three_prices[products][i]
+                data_.append(['Amount ', 'R' + str(best_three_prices[
+                                                       product][product_count]
                                                  .price).upper()])
-                data.append(['Items ', str(products).upper()])
+                data_.append(['Items ', str(product).upper()])
             except :
-                data.append(['Amount ', 'Not Available '])
-                data.append(['Items ', str(products).upper()])
-
-            table = Table(data, colWidths=190)
+                data_.append(['Amount ', 'Not Available '])
+                data_.append(['Items ', str(product).upper()])
+            product_count += 1
+            table = Table(data_, colWidths=190)
             table.setStyle(TableStyle([
                 ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
                 ('BOX', (0, 0), (-1, -1), 0.25, colors.black),

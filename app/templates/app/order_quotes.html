@@ -7,10 +7,10 @@
         <div class="card-title-w-btn">
           <h1 class="title">Your top three Quotes</h1>
           <p>
-              <a class="btn btn-primary icon-btn" href="">
+              <a class="btn btn-primary icon-btn" href="{% url 'email' user_id 4 %}">
                   <i class="fa fa-mail-forward"></i>Email
               </a>
-              <a class="btn btn-primary icon-btn" href="">
+              <a class="btn btn-primary icon-btn" href="{% url 'slips' user_id 4 %}">
                   <i class="fa fa-download"></i>PDF
               </a>
           </p>

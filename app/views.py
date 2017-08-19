@@ -43,9 +43,6 @@ class Home(View):
     def get(self, request, *args, **kwargs):
         """
         """
-        client = models.Client.objects.get()
-        system = models.SystemOrder.objects.get()
-        quotation_pdf.generate_pdf(client, system)
         return render(request, self.template_name)
 
 
@@ -491,7 +488,7 @@ class OrderGeyser(View):
             province = \
                 self.province_model_class.objects.get(pk=province_id)
 
-            client = models.Client.objects.get(username=username)
+            client = models.Client.objects.filter(username=username)
             physical_address = ''
 
             if len(client) == 0:
@@ -512,10 +509,10 @@ class OrderGeyser(View):
                     physical_address=physical_address
                 )
 
-                client = models.Client.objects.get(username=username)
+                client = models.Client.objects.filter(username=username)
             else:
                 self.address_model_class.objects.filter(
-                    id=client.physical_address_id).update(
+                    id=client[0].physical_address_id).update(
                         building_name=form.cleaned_data['building_name'],
                         street_name=form.cleaned_data['street_name'],
                         suburb=form.cleaned_data['suburb'],
@@ -524,7 +521,7 @@ class OrderGeyser(View):
                         zip_code=form.cleaned_data['zip_code']
                 )
                 physical_address = self.address_model_class.objects.get(
-                    id=client.physical_address_id)
+                    id=client[0].physical_address_id)
 
                 models.Client.objects.filter(username=username).update(
                     username=username,
@@ -549,18 +546,17 @@ class OrderGeyser(View):
                 water_collector=water_collector,
                 users_number=users_number,
                 required_geyser_size=required_geyser_size,
-                order_number=models.SystemOrder.objects.filter(
-                order_number=order_number)
+                order_number=order_number
             )
 
             suppliers = self.supplier_model_class.objects.all()
             for supplier in suppliers:
                 order = models.Order.objects.create(
-                    client=client,
+                    client=client[0],
                     supplier=supplier,
                     order_number=order_number
                 )
-                pdf_name = quotation_pdf.generate_pdf(client, system_order)
+                pdf_name = quotation_pdf.generate_pdf(client[0], system_order)
 
         return redirect('/app/order-quotes/' +
                         str(system_order.order_number))
@@ -752,14 +748,12 @@ class OrderQuotes(View):
             order_number=order_number)
         products = models.Product.objects.all()
         context = {'data': data, 'products': products, 'user_id': order_number}
-        return render(request, self.template_name, context)  # , context)
+        return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        pdf_dir = 'app/static/app/slips/'
-        image_data = open(pdf_dir + str(kwargs['generate']) + '.pdf',
-                          "rb")
-        response = HttpResponse(FileWrapper(image_data),
-                                content_type='application/pdf')
+        pdf_dir = 'app/static/app/slips/' + str(kwargs['generate']) + '.pdf'
+        fw = open(pdf_dir, "rb")
+        response = HttpResponse(FileWrapper(fw),content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename=quotation.pdf'
         return response
 
@@ -867,10 +861,12 @@ class SendEmail(View):
     def get(self, request, *args, **kwargs):
         order = kwargs['uuid']
         quote = kwargs['order']
-        email = 'ofentswel@gmail.com'
+        email = models.Client.objects.get(
+            client_id=models.Order.objects.filter(order_number_id =
+                                                  order)[0].client_id).username
         data = {'email': email, 'domain':
                 '127.0.0.1:8000'}
         tv = TransactionVerification(data, order, quote)
 
         tv.send_verification_mail()
-        return redirect('/app/order-quotes/' + order + '/' + str(quote))
+        return redirect('/app/order-quotes/' + order + '/')
