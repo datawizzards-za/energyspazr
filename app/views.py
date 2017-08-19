@@ -488,7 +488,7 @@ class OrderGeyser(View):
             province = \
                 self.province_model_class.objects.get(pk=province_id)
 
-            client = models.Client.objects.get(username=username)
+            client = models.Client.objects.filter(username=username)
             physical_address = ''
 
             if len(client) == 0:
@@ -509,10 +509,10 @@ class OrderGeyser(View):
                     physical_address=physical_address
                 )
 
-                client = models.Client.objects.get(username=username)
+                client = models.Client.objects.filter(username=username)
             else:
                 self.address_model_class.objects.filter(
-                    id=client.physical_address_id).update(
+                    address_id=client[0].physical_address_id).update(
                         building_name=form.cleaned_data['building_name'],
                         street_name=form.cleaned_data['street_name'],
                         suburb=form.cleaned_data['suburb'],
@@ -521,7 +521,7 @@ class OrderGeyser(View):
                         zip_code=form.cleaned_data['zip_code']
                 )
                 physical_address = self.address_model_class.objects.get(
-                    id=client.physical_address_id)
+                    address_id=client[0].physical_address_id)
 
                 models.Client.objects.filter(username=username).update(
                     username=username,
@@ -546,33 +546,33 @@ class OrderGeyser(View):
                 water_collector=water_collector,
                 users_number=users_number,
                 required_geyser_size=required_geyser_size,
-                order_number=models.SystemOrder.objects.filter(
-                    order_number=order_number)
+                order_number=order_number
             )
 
             suppliers = self.supplier_model_class.objects.all()
             for supplier in suppliers:
                 order = models.Order.objects.create(
-                    client=client,
+                    client=client[0],
                     supplier=supplier,
                     order_number=order_number
                 )
-                pdf_name = quotation_pdf.generate_pdf(client, system_order)
+                pdf_name, status = quotation_pdf.generate_pdf(client[0],
+                                                              system_order)
 
         return redirect('/app/order-quotes/' +
-                        str(system_order.order_number))
+                        str(system_order.order_number) + '/' + str(status))
 
 
 class DisplayPDF(View):
     def get(self, request, *args, **kwargs):
-        pdf_dir = 'app/static/app/slips/'
-        image_data = open(pdf_dir + str(kwargs['generate']) + '_' +
-                          str(kwargs['pdf']) + '.pdf', "r")
-        response = HttpResponse(FileWrapper(image_data),
-                                content_type='application/pdf')
+        pdf_dir = 'app/static/app/slips/' + str(kwargs['generate']) + '_' + \
+                  str(kwargs['pdf']) + '.pdf'
+        fw = open(pdf_dir, "r")
+        response = HttpResponse(FileWrapper(
+            fw), content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename=' + str(
             kwargs['generate']) + '_' + str(kwargs['pdf']) + '.pdf'
-        image_data.close()
+        fw.close()
         return response
 
 
@@ -747,18 +747,23 @@ class OrderQuotes(View):
         """
         # systemorder_ptr_id
         order_number = kwargs['order_number']
+        order_status = kwargs['status']
+        if order_status == 1:
+            order_status = True
+        else:
+            order_status = False
         data = models.GeyserSystemOrder.objects.filter(
             order_number=order_number)
         products = models.Product.objects.all()
-        context = {'data': data, 'products': products, 'user_id': order_number}
-        return render(request, self.template_name, context)  # , context)
+        context = {'data': data, 'products': products, 'user_id': order_number,
+                   'order_status': order_status}
+        return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        pdf_dir = 'app/static/app/slips/'
-        image_data = open(pdf_dir + str(kwargs['generate']) + '.pdf',
-                          "rb")
-        response = HttpResponse(FileWrapper(image_data),
-                                content_type='application/pdf')
+        pdf_dir = 'app/static/app/slips/' + str(kwargs['generate']) + '.pdf'
+        fw = open(pdf_dir, "rb")
+        response = HttpResponse(FileWrapper(
+            fw), content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename=quotation.pdf'
         return response
 
@@ -866,10 +871,11 @@ class SendEmail(View):
     def get(self, request, *args, **kwargs):
         order = kwargs['uuid']
         quote = kwargs['order']
-        email = 'ofentswel@gmail.com'
+        email = models.Client.objects.get(
+            client_id=models.Order.objects.filter(order_number_id=order)[0].client_id).username
         data = {'email': email, 'domain':
                 '127.0.0.1:8000'}
         tv = TransactionVerification(data, order, quote)
-
         tv.send_verification_mail()
-        return redirect('/app/order-quotes/' + order + '/' + str(quote))
+        status = str(1)
+        return redirect('/app/order-quotes/' + order + '/' + status)
