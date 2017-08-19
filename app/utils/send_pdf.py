@@ -47,6 +47,15 @@ class TransactionVerification:
 
         msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
         msg.attach_alternative(html_content, "text/html")
-        msg.attach_file('app/static/app/slips/' + self.uuid + '_' +
+        print(self.order_number)
+        if self.order_number == 4:
+            msg.attach_file('app/static/app/slips/' + self.uuid + '_' +
+                            str(2) + '.pdf')
+            msg.attach_file('app/static/app/slips/' + self.uuid + '_' +
+                            str(2) + '.pdf')
+            msg.attach_file('app/static/app/slips/' + self.uuid + '_' +
+                            str(3) + '.pdf')
+        else:
+            msg.attach_file('app/static/app/slips/' + self.uuid + '_' +
                         str(self.order_number) + '.pdf')
         msg.send()
