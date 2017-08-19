@@ -206,8 +206,7 @@ class SolarComponent(View):
             prod['product__dimensions'] = [
                 {'name': dimension.name.name, 'value': dimension.value}
             ]
-        # .product__dimensions
-        print my_prods[0]['product__dimensions'][0]['value']
+
         context = {'my_products': my_prods,
                    'all_products': all_prods, 'json_all_prods': all_prods_json}
 
@@ -224,6 +223,7 @@ class SolarComponent(View):
         )[0]
 
         str_dimensions = request.POST.getlist('dimensions')
+
         product_brandname = models.ProductBrandName.objects.filter(
             name=request.POST.get('brand_name')
         )
@@ -257,6 +257,10 @@ class SolarComponent(View):
         )
 
         quantity = request.POST.get('quantity')
+        dimensions_value = str_dimensions[0].split(',')[1]
+        dimensions_id = models.Dimension.objects.filter(
+            value=dimensions_value, product_id=product.name)[0]
+        print "DIM ID: ", dimensions_id.id
 
         if len(cart):
             update = cart[0]
@@ -432,13 +436,11 @@ class OrderPVTSystem(View):
                     supplier=supplier,
                     order_number=order_number
                 )
-                pdf_name = quotation_pdf.generate_pdf(client[0],
-                                                      system_order)
+                pdf_name, status = quotation_pdf.generate_pdf(client[0],
+                                                              system_order)
 
-        # pdf_name = quotation_pdf.generate_pdf(form.data)
-        # return redirect('/app/view-slip/' + pdf_name)
         return redirect('/app/order-quotes/' +
-                        str(system_order.order_number))
+                        str(system_order.order_number) + '/' + str(status))
 
     def appliances_choices(self):
         appliance = models.Appliance.objects.all()
@@ -528,7 +530,7 @@ class OrderGeyser(View):
                     contact_number=contact_number,
                     physical_address=physical_address
                 )
-                client = models.Client.objects.filter(username=username)[0]
+                client = models.Client.objects.filter(username=username)
 
             system_order = models.SystemOrder.objects.create(
                 need_finance=need_finance,
@@ -702,7 +704,7 @@ class MyProducts(LoginRequiredMixin, View):
             self.userproduct_model_class.objects.update_or_create(
                 user=user,
                 product=general_product,
-                price=float(request.POST.get('price')),
+                price=price
             )
 
         return redirect(reverse('my-products'))

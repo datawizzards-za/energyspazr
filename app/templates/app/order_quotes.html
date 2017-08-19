@@ -27,14 +27,6 @@
                   </tr>
                 </thead>
                 <tbody>
-                 <!--  {% for item in products %}
-                  <tr>
-                    <td class='text-center'>{{item.name}}</td>
-                    <td class='text-center'>Mark</td>
-                    <td class='text-center'>Otto</td>
-                    <td class='text-center'>@mdo</td>
-                  </tr>
-                  {% endfor %} -->
                   <tr>
                       <td class="text-center">Actions</td>
                     <td class='text-center'>
@@ -90,18 +82,21 @@
         {% else %}
 
           <div class="card-footer">
-            <div class="col-md-12"></div>
-            <div class="col-md-12">
-                There are no Suppliers for the products you ordered. Please check Later 
+            <div class="col-md-12 text-center">
+                <h3>
+                    Oops!! We couldn't find any suppliers for the products you requested. <br /> <br />
+                    Please try again some time later.
+                </h3>
+                <br />
             </div>
-            <div class="col-md-12"><br /></div>
-            <div class="col-md-12">
-                
-            <a class="btn btn-primary btn-block" href="/">
-                FINISH
-            </a>
+              <hr /> <hr /> <hr />
+            <div class="col-md-4"><br /></div>
+            <div class="col-md-4">
+                <a class="btn btn-primary btn-block" href="/">
+                    FINISH
+                </a>
             </div>
-        </div>
+          </div>
 
         {% endif %}
     </div>
