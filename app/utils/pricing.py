@@ -1,14 +1,14 @@
 from app import models
 
 class QuotationCharges:
-    def __init__(self, product):
-        self.product = product
+    def __init__(self, products):
+        self.products = products
 
     def get_prices(self):
         best_three_prices = {}
         products = []
         companies = {}
-        for product in self.product:
+        for product in self.products:
             best_three_prices[models.Dimension.objects.get(
                 id=product).product_id] = models.SellingProduct.objects.filter(
                 product_id=product).order_by('price')[:3]

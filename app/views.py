@@ -207,7 +207,18 @@ class SolarComponent(View):
                 {'name': dimension.name.name, 'value': dimension.value}
             ]
         # .product__dimensions
-        print my_prods[0]['product__dimensions'][0]['value']
+        for item in my_prods:
+            try:
+                print(models.SellingProduct.objects.filter(product_id =
+                models.Dimension.objects.get(
+                    value =item['product__dimensions'][0]['value'],
+                product_id =item['product__brand__product__name']
+                ).id).order_by('price')[0].price * item['quantity'])
+                print (item['quantity'])
+                print ("________________")
+            except:
+                print('No Prices Available')
+
         context = {'my_products': my_prods,
                    'all_products': all_prods, 'json_all_prods': all_prods_json}
 
@@ -283,6 +294,7 @@ class Register(View):
 
 class ClientOrder(View):
     template_name = 'app/client_order.html'
+
     """
     address_model_class = PhysicalAddress
 
@@ -319,6 +331,7 @@ class ClientOrder(View):
     def get(self, request, *args, **kwargs):
         """
         """
+        print request.session.session_key
         return render(request, self.template_name)
 
 
