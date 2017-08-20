@@ -64,18 +64,16 @@ $(document).ready(function () {
                     'quantity': quantity, 'csrfmiddlewaretoken': csrftoken,
                     'product': window.product_name
                 };
-                
-                console.log(data);
 
                 $.ajax({
                     url: '/app/user-cart/',
                     method: 'POST',
                     data: data,
                     dataType: 'json',
-                    traditional: true,
+                    traditional: true
                 });
             });
-            //location.reload();
+            location.reload();
         });
     });
 

@@ -107,7 +107,7 @@ class SigninForm(auth_forms.AuthenticationForm):
              '</i>SIGN IN</h3>'),
         Div(
             Field('username', css_class='form-control text-center',
-                  placeholder='Email Address', autofocus=True),
+                  placeholder='Username', autofocus=True),
             css_class='form-group'
         ),
         Div(
