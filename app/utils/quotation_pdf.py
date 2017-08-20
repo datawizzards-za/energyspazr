@@ -6,8 +6,6 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 from reportlab.platypus.tables import Table, TableStyle
 from reportlab.lib import colors
-from django.core.mail import send_mail
-from django.core.mail import EmailMultiAlternatives
 from app.utils import pricing
 from app import models
 
@@ -170,21 +168,18 @@ def generate_pdf(client, system):
 
     return pdf_file_generate, status_response
 
-def generate_pdf_pvt():
-    client = models.Client.objects.get(client_id=1)
-    system = models.SystemOrder.objects.get(order_number='43a957c1-a733-4062-880f-a8e0e2b9a556')
-    order = models.GeyserSystemOrder.objects.get(order_number_id='ba2e31a3-5166-4af8-9d68-43bee5c9336e')
-    best_three_prices, products, supplier = pricing.QuotationCharges(
-        [5, 6]).get_prices()
+def generate_pdf_pvt(client, system, order):
+    best_three_prices, product, supplier = pricing.QuotationChargesGeyser(
+        5).get_prices()
     status_response = 2
     formatted_time = time.ctime()
     try:
-
         for i in range(3):
             pdf_file_generate = str(system.order_number)
             slips_dir = 'app/static/app/slips/'
             document = SimpleDocTemplate(slips_dir +
-                                         pdf_file_generate + "_" + str(i)+".pdf",
+                                         pdf_file_generate + "_" + str(
+                i + 1) + ".pdf",
                                          pagesize=letter,
                                          rightMargin=72, leftMargin=72,
                                          topMargin=72, bottomMargin=18)
@@ -251,9 +246,8 @@ def generate_pdf_pvt():
                     'Details</font></center>'
             elements.append(Paragraph(ptext, styles["Center"]))
             elements.append(Spacer(1, 12))
-            data = [['Order number', str(system.order_number).upper()],
-                    ['Intended Use',
-                    order.intended_use.upper().replace('_', ' ')],
+            data = [['Order number', str(system.order_number).upper()[:10]],
+                    ['Intended Use', str(order.intended_use).upper().replace('_', ' ')],
                     ['Need Finance', str(system.need_finance).upper()],
                     ['Site Visit', str(order.site_visit).upper()],
                     ['Include Instalation', str(
@@ -271,20 +265,18 @@ def generate_pdf_pvt():
             elements.append(table)
             elements.append(Spacer(1, 24))
 
-            product_count = 0
-            for product in  products:
+            try:
                 data = []
                 ptext = '<font size=16 style="text-transform:uppercase">Supplier ' \
                         'Details</font></center>'
                 elements.append(Paragraph(ptext, styles["Center"]))
                 elements.append(Spacer(1, 12))
-                data.append(['Company Name', str(supplier[product][
-                                                     product_count].company_name).upper()])
-                data.append(['Contact Number', str(supplier[product][
-                                                       product_count].contact_number).upper()])
+                data.append(
+                    ['Company Name', str(supplier[i].company_name).upper()])
+                data.append(['Contact Number',
+                             str(supplier[i].contact_number).upper()])
                 data.append(['Web Address',
-                         str(supplier[product][product_count].web_address).upper()])
-
+                             str(supplier[i].web_address).upper()])
                 table = Table(data, colWidths=190)
                 table.setStyle(TableStyle([
                     ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
@@ -292,38 +284,42 @@ def generate_pdf_pvt():
                 ]))
 
                 elements.append(table)
-                elements.append(Spacer(1, 24))
+            except:
+                ptext = '<font size=12 style="text-transform:uppercase">' \
+                        'We have fewer suppliers for this Item ' \
+                        'We are trying to provide you with ' \
+                        'best prices. Thank you for your ' \
+                        'understanding</font></center>'
+                elements.append(Paragraph(ptext, styles["Center"]))
 
-                elements.append(Spacer(1, 24))
+            elements.append(Spacer(1, 24))
+
+            elements.append(Spacer(1, 24))
+            try:
                 ptext = '<font size=16 style="text-transform:uppercase">Charges ' \
                         '</font></center>'
                 elements.append(Paragraph(ptext, styles["Center"]))
                 elements.append(Spacer(1, 12))
                 data_ = []
-                try:
-                    data_.append(['Amount ', 'R' + str(best_three_prices[
-                                                           product][product_count]
-                                                     .price).upper()])
-                    data_.append(['Items ', str(product).upper()])
-                except :
-                    data_.append(['Amount ', 'Not Available '])
-                    data_.append(['Items ', str(product).upper()])
-                product_count += 1
+                data_.append(
+                    ['Amount ', 'R' + str(best_three_prices[i].price).upper()])
+                data_.append(['Items ', str(product).upper()])
                 table = Table(data_, colWidths=190)
                 table.setStyle(TableStyle([
                     ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
                     ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
                 ]))
 
-            elements.append(table)
+                elements.append(table)
+            except:
+                print(" Amount UnAvailable")
             elements.append(Spacer(1, 24))
 
             ptext = '<font size=12> Powered by \
-                     <a href="http://www.itechhub.co.za" color="blue">iTechHub</a>\
-                     </font>'
+                         <a href="http://www.itechhub.co.za" color="blue">iTechHub</a>\
+                         </font>'
 
             elements.append(Paragraph(ptext, styles["Center"]))
-
             document.build(elements)
             status_response = 1
     except:
@@ -404,11 +400,11 @@ def generate_pdf_geyser(client, system, order):
 
             elements.append(table)
             elements.append(Spacer(1, 24))
-            ptext = '<font size=12 style="text-transform:uppercase">System ' \
+            ptext = '<font size=16 style="text-transform:uppercase">System ' \
                     'Details</font></center>'
             elements.append(Paragraph(ptext, styles["Center"]))
             elements.append(Spacer(1, 12))
-            data = [['Order number', str(system.order_number).upper()],
+            data = [['Order number', str(system.order_number).upper()[:10]],
                     ['Number of Users', order.users_number],
                     ['Need Finance', str(system.need_finance).upper()],
                     ['Required Geyser Size',
@@ -429,8 +425,6 @@ def generate_pdf_geyser(client, system, order):
             elements.append(table)
             elements.append(Spacer(1, 24))
 
-
-            print ("Product name %d ", product)
             try:
                 data = []
                 ptext = '<font size=16 style="text-transform:uppercase">Supplier ' \
@@ -449,7 +443,7 @@ def generate_pdf_geyser(client, system, order):
 
                 elements.append(table)
             except:
-                ptext = '<font size=16 style="text-transform:uppercase">' \
+                ptext = '<font size=12 style="text-transform:uppercase">' \
                         'We have fewer suppliers for this Item ' \
                         'We are trying to provide you with ' \
                         'best prices. Thank you for your ' \

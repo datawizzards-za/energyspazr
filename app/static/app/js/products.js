@@ -69,19 +69,16 @@ $(document).ready(function(){
         $.getJSON('app/my_products_data/', function(data){
             var formated_data = [];
             $.each(data, function(index, item){
-                var name = item.product__brand__product__name;
-                var brand = item.product__brand__name__name;
-                var dimensions = item.product__dimensions;
+                var name = item.product.brand.product
+                var brand = item.product.brand.name
                 var price = 'R' + item.price;
-                var del = '<i class="fa fa-trash-o fa-6">';
+                var del = '<a class="btn btn-sm btn-danger" href="#"><i class="fa fa-2x fa-trash"></i></a>';
 
-                /*
                 var dimensions = '<ul>';
-                $.each(item.product__dimensions, function(index, item){
-                    dimensions += '<li>' + item.name + ': ' + item.value + '</li>';
+                $.each(item.product.dimensions, function(index, dimension){
+                    dimensions += '<li>' + dimension.name + ': ' + dimension.value + '</li>';
                 });
                 dimensions += '</ul>'
-                */
                 var entry = [name, brand, dimensions, price, del];
                 formated_data.push(entry);
             });

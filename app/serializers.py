@@ -56,3 +56,28 @@ class ClientSerializer(serializers.ModelSerializer):
         model = models.Client
         fields = ['username', 'lastname', 'firstname',
                   'contact_number', 'physical_address_id']
+
+
+class DimensionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Dimension
+        fields = ['name', 'value']
+
+
+class GeneralProductSerializer(serializers.ModelSerializer):
+    brand = ProductBrandSerializer(many=False, read_only=True)
+    dimensions = DimensionSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = models.GeneralProduct
+        fields = ['brand', 'dimensions']
+
+
+class SellingProductSerializer(serializers.ModelSerializer):
+    #dimensions = DimensionSerializer(many=True, read_only=True)
+    product = GeneralProductSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = models.SellingProduct
+        fields = ['product', 'price'] 
