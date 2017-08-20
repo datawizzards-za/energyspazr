@@ -661,26 +661,8 @@ class MyProducts(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-<<<<<<< HEAD
-        print request.POST
-        product = self.products_model_class.objects.filter(
-            name=request.POST.get('product')
-        )[0]
-
         user = self.user_model_class.objects.filter(user=request.user)[0]
         str_dimensions = request.POST.getlist('dimensions')
-
-        product_brandname = models.ProductBrandName.objects.filter(
-            name=request.POST.get('brand_name')
-        )
-        product_brand = models.ProductBrand.objects.get(
-            name=product_brandname,
-            product=product
-        )
-=======
-        user = self.user_model_class.objects.filter(user=request.user)[0]
-        str_dimensions = request.POST.getlist('dimensions')
->>>>>>> backend
         dimensions = map(lambda dim: dim.split(','), str_dimensions)
         dimensions = map(lambda dim: models.Dimension.objects.get(
             name=models.DimensionName.objects.filter(
