@@ -408,7 +408,7 @@ def generate_pdf_geyser(client, system, order):
                     'Details</font></center>'
             elements.append(Paragraph(ptext, styles["Center"]))
             elements.append(Spacer(1, 12))
-            data = [['Order number', str(system.order_number).upper()],
+            data = [['Order number', str(system.order_number).upper()[:10]],
                     ['Number of Users', order.users_number],
                     ['Need Finance', str(system.need_finance).upper()],
                     ['Required Geyser Size',
