@@ -404,7 +404,7 @@ def generate_pdf_geyser(client, system, order):
 
             elements.append(table)
             elements.append(Spacer(1, 24))
-            ptext = '<font size=12 style="text-transform:uppercase">System ' \
+            ptext = '<font size=16 style="text-transform:uppercase">System ' \
                     'Details</font></center>'
             elements.append(Paragraph(ptext, styles["Center"]))
             elements.append(Spacer(1, 12))
@@ -429,8 +429,6 @@ def generate_pdf_geyser(client, system, order):
             elements.append(table)
             elements.append(Spacer(1, 24))
 
-
-            print ("Product name %d ", product)
             try:
                 data = []
                 ptext = '<font size=16 style="text-transform:uppercase">Supplier ' \
@@ -449,7 +447,7 @@ def generate_pdf_geyser(client, system, order):
 
                 elements.append(table)
             except:
-                ptext = '<font size=16 style="text-transform:uppercase">' \
+                ptext = '<font size=12 style="text-transform:uppercase">' \
                         'We have fewer suppliers for this Item ' \
                         'We are trying to provide you with ' \
                         'best prices. Thank you for your ' \

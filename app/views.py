@@ -568,7 +568,7 @@ class OrderGeyser(View):
                     supplier=supplier,
                     order_number=order_number
                 )
-        pdf_name, status = quotation_pdf.generate_pdf_geyser(client,
+        pdf_name, status = quotation_pdf.generate_pdf_geyser(client[0],
                                                              order_number,
                                                              geyser_order
                                                              )
