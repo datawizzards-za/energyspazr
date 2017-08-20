@@ -1,0 +1,251 @@
+- model: app.dimension
+  pk: null
+  fields:
+    name: Size
+    product: Inverter
+    value: 0.8 (12V)
+
+- model: app.dimension
+  pk: null
+  fields:
+    name: Size
+    product: Inverter
+    value: 2.4 (12V)
+
+- model: app.dimension
+  pk: null
+  fields:
+    name: Size
+    product: Inverter
+    value: 2.4 (24V)
+
+- model: app.dimension
+  pk: null
+  fields:
+    name: Size
+    product: Inverter
+    value: 2.4 (48V)
+
+- model: app.dimension
+  pk: null
+  fields:
+    name: Size
+    product: Inverter
+    value: 4 (48V)
+
+- model: app.dimension
+  pk: null
+  fields:
+    name: Size
+    product: Inverter
+    value: SE 2200
+
+- model: app.dimension
+  pk: null
+  fields:
+    name: Size
+    product: Inverter
+    value: SE 3000
+
+- model: app.dimension
+  pk: null
+  fields:
+    name: Size
+    product: Inverter
+    value: SE 3500
+
+- model: app.dimension
+  pk: null
+  fields:
+    name: Size
+    product: Inverter
+    value: SE 4000
+
+- model: app.dimension
+  pk: null
+  fields:
+    name: Size
+    product: Inverter
+    value: SE 5K
+
+- model: app.dimension
+  pk: null
+  fields:
+    name: Size
+    product: Inverter
+    value: SE 7K
+
+- model: app.dimension
+  pk: null
+  fields:
+    name: Size
+    product: Inverter
+    value: SMA SB 1.5-1VL-40
+
+- model: app.dimension
+  pk: null
+  fields:
+    name: Size
+    product: Inverter
+    value: SMA SB 2.5-1VL-40
+
+- model: app.dimension
+  pk: null
+  fields:
+    name: Size
+    product: Inverter
+    value: SMA SB 3000TL-21
+
+- model: app.dimension
+  pk: null
+  fields:
+    name: Size
+    product: Inverter
+    value: SMA SB 4000TL-21
+
+- model: app.dimension
+  pk: null
+  fields:
+    name: Size
+    product: Inverter
+    value: SMA SB 5000TL-20
+
+- model: app.dimension
+  pk: null
+  fields:
+    name: Size
+    product: Inverter
+    value: SMA SB 6000TL-20
+
+- model: app.dimension
+  pk: null
+  fields:
+    name: Size
+    product: Inverter
+    value: SMA SB 7000TL-20
+
+- model: app.productbrand
+  pk: null
+  fields:
+    name: Axpert
+    product: Inverter
+
+- model: app.productbrand
+  pk: null
+  fields:
+    name: SolarEdge
+    product: Inverter
+
+- model: app.productbrand
+  pk: null
+  fields:
+    name: SMA
+    product: Inverter
+
+- model: app.generalproduct
+  pk: null
+  fields:
+    brand: [Axpert, Inverter]
+    dimensions: [[Inverter, Size, 0.8 (12V)]]
+
+- model: app.generalproduct
+  pk: null
+  fields:
+    brand: [Axpert, Inverter]
+    dimensions: [[Inverter, Size, 2.4 (12V)]]
+
+- model: app.generalproduct
+  pk: null
+  fields:
+    brand: [Axpert, Inverter]
+    dimensions: [[Inverter, Size, 2.4 (24V)]]
+
+- model: app.generalproduct
+  pk: null
+  fields:
+    brand: [Axpert, Inverter]
+    dimensions: [[Inverter, Size, 2.4 (48V)]]
+
+- model: app.generalproduct
+  pk: null
+  fields:
+    brand: [Axpert, Inverter]
+    dimensions: [[Inverter, Size, 4 (48V)]]
+
+- model: app.generalproduct
+  pk: null
+  fields:
+    brand: [SolarEdge, Inverter]
+    dimensions: [[Inverter, Size, SE 2200]]
+
+- model: app.generalproduct
+  pk: null
+  fields:
+    brand: [SolarEdge, Inverter]
+    dimensions: [[Inverter, Size, SE 3000]]
+
+- model: app.generalproduct
+  pk: null
+  fields:
+    brand: [SolarEdge, Inverter]
+    dimensions: [[Inverter, Size, SE 3500]]
+
+- model: app.generalproduct
+  pk: null
+  fields:
+    brand: [SolarEdge, Inverter]
+    dimensions: [[Inverter, Size, SE 4000]]
+
+- model: app.generalproduct
+  pk: null
+  fields:
+    brand: [SolarEdge, Inverter]
+    dimensions: [[Inverter, Size, SE 5K]]
+
+- model: app.generalproduct
+  pk: null
+  fields:
+    brand: [SolarEdge, Inverter]
+    dimensions: [[Inverter, Size, SE 7K]]
+
+- model: app.generalproduct
+  pk: null
+  fields:
+    brand: [SMA, Inverter]
+    dimensions: [[Inverter, Size, SMA SB 1.5-1VL-40]]
+
+- model: app.generalproduct
+  pk: null
+  fields:
+    brand: [SMA, Inverter]
+    dimensions: [[Inverter, Size, SMA SB 2.5-1VL-40]]
+
+- model: app.generalproduct
+  pk: null
+  fields:
+    brand: [SMA, Inverter]
+    dimensions: [[Inverter, Size, SMA SB 3000TL-21]]
+
+- model: app.generalproduct
+  pk: null
+  fields:
+    brand: [SMA, Inverter]
+    dimensions: [[Inverter, Size, SMA SB 4000TL-21]]
+
+- model: app.generalproduct
+  pk: null
+  fields:
+    brand: [SMA, Inverter]
+    dimensions: [[Inverter, Size, SMA SB 5000TL-20]]
+
+- model: app.generalproduct
+  pk: null
+  fields:
+    brand: [SMA, Inverter]
+    dimensions: [[Inverter, Size, SMA SB 6000TL-20]]
+
+- model: app.generalproduct
+  pk: null
+  fields:
+    brand: [SMA, Inverter]
+    dimensions: [[Inverter, Size, SMA SB 7000TL-20]]

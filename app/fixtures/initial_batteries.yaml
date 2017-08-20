@@ -1,0 +1,31 @@
+- model: app.dimension
+  pk: null
+  fields:
+    name: Size  
+    product: Battery
+    value: 100 
+
+- model: app.dimension
+  pk: null
+  fields:
+    name: Size  
+    product: Battery
+    value: 200 
+
+- model: app.productbrand
+  pk: null
+  fields:
+    name: Vision
+    product: Battery
+
+- model: app.generalproduct
+  pk: null
+  fields:
+    brand: [Vision, Battery]
+    dimensions: [[Battery, Size, 100]]
+
+- model: app.generalproduct
+  pk: null
+  fields:
+    brand: [Vision, Battery]
+    dimensions: [[Battery, Size, 200]]

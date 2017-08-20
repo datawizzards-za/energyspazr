@@ -1,0 +1,9 @@
+.panel-checked {
+    color: green;
+}
+.panel-unchecked {
+    color: red;
+}
+th.dt-center, td.dt-center {
+    text-align: center;
+}

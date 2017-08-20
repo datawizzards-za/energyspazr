@@ -1,49 +1,36 @@
 <!DOCTYPE html>
 <html>
   <head>
-      <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      {% load staticfiles %}
-      <link rel="shortcut icon" type="image/png" href="{% static 'common/icon.png' %}"/>
-      <title>
-          {% block title %}
-          energyspazr.com
-          {% endblock%}
-      </title>
-      <!-- CSS-->
-      <link rel="stylesheet" type="text/css" href="{% static 'app/css/main.cs' %}s">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load staticfiles %}
+    <link rel="shortcut icon" type="image/png" href="{% static 'common/icon.png' %}"/>
+    <title>
+      {% block title %}
+      energyspazr.com
+      {% endblock%}
+    </title>
+    <!-- CSS-->
+    <link rel="stylesheet" type="text/css" href="{% static 'app/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'app/css/main.cs' %}s">
+    <link rel="stylesheet" type="text/css" href="{% static 'app/css/custom.cs' %}s">
   </head>
   <body class="sidebar-mini fixed">
     <div class="wrapper">
-        {% include "app/header_navbar.html" %} 
-        {% include "app/supplier/side_navbar.html" %}
-        {% block content %}
-        {% endblock content %}
+      {% include "app/header_navbar.html" %} 
+      {% include "app/supplier/side_navbar.html" %}
+      {% block content %}
+      {% endblock content %}
     </div>
     <!-- Javascripts-->
     {% include 'app/js.html' %}
-{% block extrajs %}
-{% load staticfiles %}
-<script type="text/javascript" src="{% static 'app/js/plugins/select2.min.js' %}"></script>
+    {% block extrajs %}
+    {% load staticfiles %}
+    <script type="text/javascript" src="{% static 'app/js/plugins/select2.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'app/js/plugins/jquery.dataTables.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'app/js/plugins/dataTables.bootstrap.min.js' %}"></script>
-    <script type="text/javascript">
-        $('#table_my_products').DataTable();
-        $('#table_add_products').DataTable();
-        
-        $('#add_products').hide();
-        $('#btn_add_product').click(
-                function(){
-                    $('#my_products').hide();
-                    $('#add_products').show();
-                });
-        $('#btn_return').click(
-                function(){
-                    $('#add_products').hide();
-                    $('#my_products').show();
-                });
-    </script>
-  {% endblock %}
+    <script type="text/javascript" src="{% static 'app/js/quotes.js' %}"></script>
+    {% endblock %}
   </body>
 </html>

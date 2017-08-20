@@ -1,0 +1,70 @@
+{% extends "app/supplier/layout.html" %}
+
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+{% block content %}
+      
+      <div class="content-wrapper">
+        <div class="page-title">
+          <div>
+            <h1><i class="fa fa-user"></i>  Account Settings </h1>
+          </div>
+          <div>
+            <ul class="breadcrumb">
+              <li><i class="fa fa-home fa-lg"></i></li>
+              <li><a href="">Account Settings</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="row zoomIn animated">
+          <div class="col-md-12">
+            <div class="panel panel-primary">
+              <div class="panel-heading text-center">
+                <h3 class="panel-title">Profile</h3>
+              </div>
+                <div class="panel-body">
+                    {% crispy form %}
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+  {% endblock content %}
+  {% block extrajs %}
+{% load staticfiles %}
+<script type="text/javascript" src="{% static 'app/js/plugins/select2.min.js' %}"></script>
+<script type="text/javascript">
+    $('#id_province').select2();
+    
+    $("#id_company_reg").prop("readonly", true);
+    $("#id_username").prop("readonly", true);
+    $("#submit-id-btn_delete").prop("diabled", true);
+    
+    var username = "{{user.user|safe}}";
+    var email = "{{user.user.email|safe}}";
+    var company_name = "{{user.company_name|safe}}";
+    var company_reg = "{{user.company_reg|safe}}";
+    var contact_number = "{{user.contact_number|safe}}";
+    var web_address = "{{user.web_address|safe}}";
+    var building  = "{{address.building_name|safe}}";
+    var street  = "{{address.street_name|safe}}";
+    var city  = "{{address.city|safe}}";
+    var suburb  = "{{address.suburb|safe}}";
+    var zip  = "{{address.zip_code|safe}}";
+    //console.log("Address " + zip);
+    $("#id_username").prop("value", username);
+    $("#id_email").prop("value", email);
+    $("#id_company_name").prop("value", company_name);
+    $("#id_company_reg").prop("value", company_reg);
+    $("#id_contact_number").prop("value", contact_number);
+    $("#id_web_address").prop("value", web_address);
+    $("#id_building_name").prop("value", building);
+    $("#id_street_name").prop("value", street);
+    $("#id_city").prop("value", city);
+    $("#id_suburb").prop("value", suburb);
+    $("#id_zip_code").prop("value", zip);
+</script>
+{% endblock%}

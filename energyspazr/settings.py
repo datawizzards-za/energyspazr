@@ -28,7 +28,6 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,8 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'app',
     'crispy_forms',
+    'rest_framework',
 ]
 
 
@@ -122,9 +123,9 @@ USE_L10N = True
 
 USE_TZ = True
 
-#Registration settings
+# Registration settings
 EMAIL_USE_TLS = True
-ACCOUNT_ACTIVATION_DAYS = 1
+ACCOUNT_ACTIVATION_DAYS = 2
 REGISTRATION_FORM_PATH = 'app.forms.RegistrationForm'
 REGISTRATION_AUTO_LOGIN = False
 SEND_ACTIVATION_EMAIL = True
@@ -138,7 +139,6 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 REGISTRATION_DEFAULT_FROM_EMAIL = 'simobackoff@gmail.com'
 INCLUDE_REGISTER_URL = True
 INCLUDE_AUTH_URLS = True
-
 
 
 # Crispy Forms Settings
@@ -155,3 +155,6 @@ LOGIN_URL = 'signin'
 LOGOUT_NEXT = '/accounts/signin/'
 
 SITE_ID = 2
+
+# Session Settings
+SESSION_SAVE_EVERY_REQUEST = True

@@ -19,16 +19,35 @@
 <script type="text/javascript">
     $('#id_property_type').select2();
     $('#id_roof_inclination').select2();
-    $('#id_existing_geyser').select2();
     $('#id_water_collector').select2();
     $('#id_required_geyser_size').select2();
+    $('#id_province').select2();
     $('#id_include_installation').select2();
     $('#id_need_finance').select2();
     $('.finish_order').hide();
+    $('#users_number_error').hide();
     $('#proceed').click(function(){
-        $('.finish_order').show();
-        $('#targetElement').hide();
+        if ($("#id_users_number").val() == "") {
+            $('#users_number_error').show();
+            $('#id_users_number').focus();
+            $("#proceed").prop("disabled", true);
+        }else{
+            $('#targetElement').hide();
+            $('.finish_order').show();
+        }
     });
+    
+    $("#id_users_number").keyup(
+        function() {
+            if ($("#id_users_number").val() == ""){
+                $("#proceed").prop("disabled", true);
+            } else {
+                $('#users_number_error').hide();
+                $("#proceed").prop("disabled", false);
+            }
+        }
+    );
+    
 </script>
 {% endblock%}
 

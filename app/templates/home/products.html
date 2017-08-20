@@ -1,44 +1,46 @@
 <!DOCTYPE html>
 <html lang="en" class="no-js">
-<head>
+  <head>
     {% include "home/head.html" %} 
-</head>
-<body>
+  </head>
+  <body>
     <div id="perspective" class="perspective effect-rotateleft ">
-        <div class="container effect-rotateleft">
-            <div class="wrapper animated zoomIn" style="top: 0px;"><!-- wrapper needed for scroll -->
-                <header class="codrops-header">
-                    <h1>
-                        <a class='hvr-grow' href="{% url 'home' %}"> energyspazr.com </a>
-                        <span class='hvr-pop'>The quote comparison platform you've been looking for.</span>
-                    </h1>	
-                </header>
-                <div class="main clearfix">
-                    <div class="column hvr-pop">
-                        <p>Click on this button to see the content being pushed away in 3D to reveal a navigation or other items.</p>
-                    </div>
-                    <div class="column">
-                        <nav class="codrops-demos">
-                            <a class="hvr-pop" href="{% url 'pvt-order' %}">PVT</a>
-                            <a class="hvr-pop" href="{% url 'geyser-order' %}">Solar Geyser</a>
-                            <a class="hvr-pop" href="{% url 'component-order' %}">Solar Component</a>
-                        </nav>
-                    </div>
-                    <div class="related">
-                        
-                        <p class="hvr-pulse">
-                            <i>
-                                Powered by <a href="http://www.itechhub.co.za" target="_blank">iTechHub</a>
-                            </i>
-                        </p>
-                    </div>
-                </div><!-- /main -->
-            </div><!-- wrapper -->
-        </div><!-- /container -->
+      <div class="container effect-rotateleft">
+        <div class="wrapper animated zoomIn" style="top: 0px;"><!-- wrapper needed for scroll -->
+          <header class="codrops-header">
+            <h1>
+              <a class='hvr-grow' href="{% url 'home' %}"> energyspazr.com </a>
+              <span class='hvr-pop'>The quote comparison platform you've been looking for.</span>
+            </h1>	
+          </header>
+          <div class="main clearfix">
+            <div class="column hvr-pop">
+              <p>
+                  <br /> <br />
+                  Which product do you want?
+              </p>
+            </div>
+            <div class="column">
+              <nav class="codrops-demos">
+                <a class="hvr-pop" href="{% url 'pvt-order' %}">PVT</a>
+                <a class="hvr-pop" href="{% url 'geyser-order' %}">Solar Geyser</a>
+                <a class="hvr-pop" href="{% url 'user-cart' %}">Solar Component</a>
+              </nav>
+            </div>
+            <div class="related">
+                <hr />
+              <p class="hvr-pulse">
+                <i>
+                  Powered by <a href="http://www.itechhub.co.za" target="_blank">iTechHub</a>
+                </i>
+              </p>
+            </div>
+          </div><!-- /main -->
+        </div><!-- wrapper -->
+      </div><!-- /container -->
     </div><!-- /perspective -->
-
     {% load staticfiles  %}
     <script src="{% static 'home/js/classie.js' %}"></script>
     <script src="{% static 'home/js/menu.js' %}"></script>
-</body>
+  </body>
 </html>

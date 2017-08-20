@@ -20,7 +20,7 @@ html, body, .perspective {
 }
 
 .container {
-	background-image: url('../img/home_bg_1.jpg'); /*  no-repeat center center fixed; */
+	background-image: url('../img/home_bg_1.png'); /*  no-repeat center center fixed; */
         -webkit-background-size: cover;
         -moz-background-size: cover;
         -o-background-size: cover;
@@ -135,7 +135,6 @@ html, body, .perspective {
 
 .outer-nav a {
         border: none;
-	padding: 19px;
 	background: #e86a32;
 	color: #fff;
 	font-family: 'Lato', Calibri, Arial, sans-serif;
@@ -144,13 +143,15 @@ html, body, .perspective {
 	cursor: pointer;
 	display: inline-block;
 	margin: 10px;
-	border-radius: 20px;
-	font-weight: 300;
+	border-radius: 35px;
 	outline: none;
-        font-size: 10px;
 	background: #e86a32;
         align-items: flex-start;
         text-align: center;
+        width: 300px;
+        padding: 20px;
+        font-size: 20px;
+        font-weight: 600;
 }
 
 .outer-nav a:hover {

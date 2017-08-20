@@ -1,0 +1,29 @@
+- model: app.Product
+  pk: null
+  fields:
+    name: Solar Panel
+
+- model: app.Product
+  pk: null
+  fields:
+    name: Inverter
+
+- model: app.Product
+  pk: null
+  fields:
+    name: Battery
+
+- model: app.Product
+  pk: null
+  fields:
+    name: Connector
+
+- model: app.Product
+  pk: null
+  fields:
+    name: DC Cable
+
+- model: app.Product
+  pk: null
+  fields:
+    name: Combiner

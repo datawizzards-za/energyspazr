@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url, include
-from app import views
+from app import views, api_views
 
 
 urlpatterns = [
@@ -25,11 +25,16 @@ urlpatterns = [
         name='user_account_update'),
     url(r'^our-products/$', views.OurProducts.as_view(), name='our-products'),
     url(r'^my-products/$', views.MyProducts.as_view(), name='my-products'),
+
+    url(r'^user-cart/$', views.SolarComponent.as_view(), name='user-cart'),
+
+    url(r'^my-quotes/$', views.MyQuotes.as_view(), name='my-quotes'),
+    url(r'^my-account/$', views.UserAccount.as_view(), name='my-account'),
     url(r'^pvt-order/$', views.OrderPVTSystem.as_view(), name='pvt-order'),
     url(r'^geyser-order/$', views.OrderGeyser.as_view(), name='geyser-order'),
-    url(r'^order-quotes/$', views.OrderQuotes.as_view(), name='order-quotes'),
-    url(r'^component-order/$', views.SolarComponent.as_view(),
-        name='component-order'),
+    url(r'^order-quotes/(?P<order_number>[0-9A-Fa-f-]+)/(?P<status>[0-9])/$',
+        views.OrderQuotes.as_view(),
+        name='order-quotes'),
     url(r'^add-component/$', views.AddComponent.as_view(),
         name='add-component'),
     url(r'^register/$', views.Register.as_view(), name='register'),
@@ -39,6 +44,24 @@ urlpatterns = [
     url(r'^products/component/$', views.SolarComponent.as_view(),
         name='component'),
     url(r'^register/$', views.Register.as_view(), name='register'),
-    url(r'^view-slip/(?P<generate>\w+)/$', views.DisplayPDF.as_view(),
-        name='slips'),
+
+    url(r'^view-slip/(?P<generate>[0-9A-Fa-f-]+)/(?P<pdf>[0-9])/$',
+        views.DisplayPDF.as_view(), name='slips'),
+    url(r'api/get_brand/(?P<brand_id>\d+)/$',
+        api_views.GetProductBrand.as_view(), name='get_brand'),
+    url(r'^email/(?P<uuid>[0-9A-Fa-f-]+)/(?P<order>[0-9])/$',
+        views.SendEmail.as_view(), name='email'),
+
+    url(r'api/get_order_details/(?P<order_number>[0-9A-Fa-f-]+)/$',
+        api_views.GetOrderDetails.as_view(), name='get_order_details'),
+    url(r'api/get_systemorder_details/(?P<order_number>[0-9A-Fa-f-]+)/$',
+        api_views.GetSystemOrderDetails.as_view(), name='get_systemorder_details'),
+    url(r'api/get_client_details/(?P<id>\d+)/$',
+        api_views.GetClientDetails.as_view(), name='get_client_details'),
+    url(r'api/get_client_address/(?P<id>\d+)/$',
+        api_views.GetClientAddress.as_view(), name='get_client_address'),
+    url(r'my_products_data/$', views.MyProductsData.as_view(), 
+        name='my_products_data'),
+    url(r'all_products_data/$', views.AllProductsData.as_view(), 
+        name='all_products_data'),
 ]
