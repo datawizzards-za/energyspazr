@@ -60,7 +60,7 @@ urlpatterns = [
         api_views.GetClientDetails.as_view(), name='get_client_details'),
     url(r'api/get_client_address/(?P<id>\d+)/$',
         api_views.GetClientAddress.as_view(), name='get_client_address'),
-    url(r'my_products_data/$', views.MyProductsData.as_view(), 
+    url(r'my_products_data/$', api_views.GetMyProducts.as_view(), 
         name='my_products_data'),
     url(r'all_products_data/$', views.AllProductsData.as_view(), 
         name='all_products_data'),
