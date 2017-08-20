@@ -655,6 +655,7 @@ class MyProducts(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
+        print request.POST
         product = self.products_model_class.objects.filter(
             name=request.POST.get('product')
         )[0]
@@ -663,29 +664,33 @@ class MyProducts(LoginRequiredMixin, View):
         product_brandname = models.ProductBrandName.objects.filter(
             name=request.POST.get('brand_name')
         )
-        product_brand = models.ProductBrand.objects.filter(
+        product_brand = models.ProductBrand.objects.get(
             name=product_brandname,
             product=product
         )
         dimensions = map(lambda dim: dim.split(','), str_dimensions)
         dimensions = map(lambda dim: models.Dimension.objects.filter(
             name=models.DimensionName.objects.filter(
-                name=dim.capitalize()
+                name=dim[0].capitalize()
             ),
             value=dim[1],
             product=product
         )[0],
             dimensions
         )
-        print dimensions
+
         list_dimensions = []
         for dim in dimensions:
             list_dimensions.append(dim)
+
+
 
         general_product = models.GeneralProduct.objects.filter(
             brand=product_brand,
             dimensions__in=list_dimensions
         )[0]
+
+        print general_product.dimensions
 
         # Check if product already exists
         selling = self.userproduct_model_class.objects.filter(
