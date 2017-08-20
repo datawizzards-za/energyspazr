@@ -7,10 +7,12 @@ from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
 from django.contrib.sessions.models import Session
+from django.core import serializers
 from django.db.models import Q, Count, Min
+from django.http import JsonResponse
 from django.shortcuts import render, reverse, redirect, HttpResponse
 from django.views import View
-from django.core import serializers
+from django.views.generic import TemplateView
 
 # Other Libraries
 from registration.backends.hmac.views import ActivationView
@@ -656,7 +658,6 @@ class MyProducts(LoginRequiredMixin, View):
         for prod in my_prods:
             id = prod['product__dimensions']
             dimension = models.Dimension.objects.get(id=id)
-            # value = dimension.name.name + ": " + dimension.value
             prod['product__dimensions'] = [
                 {'name': dimension.name.name, 'value': dimension.value}
             ]
@@ -668,6 +669,7 @@ class MyProducts(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
+        print request.POST
         product = self.products_model_class.objects.filter(
             name=request.POST.get('product')
         )[0]
@@ -678,7 +680,7 @@ class MyProducts(LoginRequiredMixin, View):
         product_brandname = models.ProductBrandName.objects.filter(
             name=request.POST.get('brand_name')
         )
-        product_brand = models.ProductBrand.objects.filter(
+        product_brand = models.ProductBrand.objects.get(
             name=product_brandname,
             product=product
         )
@@ -692,14 +694,19 @@ class MyProducts(LoginRequiredMixin, View):
         )[0],
             dimensions
         )
+
         list_dimensions = []
         for dim in dimensions:
             list_dimensions.append(dim)
+
+
 
         general_product = models.GeneralProduct.objects.filter(
             brand=product_brand,
             dimensions__in=list_dimensions
         )[0]
+
+        print general_product.dimensions
 
         # Check if product already exists
         selling = self.userproduct_model_class.objects.filter(
@@ -890,9 +897,91 @@ class SendEmail(View):
         quote = kwargs['order']
         email = models.Client.objects.get(
             client_id=models.Order.objects.filter(order_number_id=order)[0].client_id).username
-        data = {'email': email, 'domain':
-                '127.0.0.1:8000'}
+        data = {'email': email, 'domain': '127.0.0.1:8000'}
         tv = TransactionVerification(data, order, quote)
         tv.send_verification_mail()
         status = str(1)
         return redirect('/app/order-quotes/' + order + '/' + status)
+
+
+class JSONResponseMixin(object):
+    """
+    A mixin that can be used to render a JSON response.
+    """
+    def render_to_json_response(self, context, **response_kwargs):
+        """
+        Returns a JSON response, transforming 'context' to make the payload.
+        """
+        return JsonResponse(
+            self.get_data(context),
+            **response_kwargs
+        )
+
+    def get_data(self, context):
+        """
+        Returns an object that will be serialized as JSON by json.dumps().
+        """
+        # Note: This is *EXTREMELY* naive; in reality, you'll need
+        # to do much more complex handling to ensure that arbitrary
+        # objects -- such as Django model instances or querysets
+        # -- can be serialized as JSON.
+        return context
+
+
+class MyProductsData(JSONResponseMixin, TemplateView): 
+    def render_to_response(self, content, **response_kwargs):
+        req_user = content['view'].request.user
+        user = models.SpazrUser.objects.get(user=req_user)
+        my_prods = models.SellingProduct.objects.filter(user=user).values(
+            'product__brand__product__name',
+            'product__brand__name__name',
+            'product__dimensions',
+            'price',
+        )
+
+        return self.render_to_json_response(
+            list(my_prods),
+            safe=False,
+            **response_kwargs
+        )
+
+
+class AllProductsData(JSONResponseMixin, TemplateView): 
+    def render_to_response(self, content, **response_kwargs):
+        req_user = content['view'].request.user
+        user = models.SpazrUser.objects.get(user=req_user)
+
+        # All products with count of different brands for each product
+        prods = models.GeneralProduct.objects.exclude(
+            sellingproduct__user=user
+        ).values(
+            'brand__product'
+        ).annotate(
+            pcount=Count('brand__product'),
+        )
+
+        dims = map(
+            lambda prod: MyProducts()._prepare_dimensions(
+                models.GeneralProduct.objects.exclude(
+                    sellingproduct__user=user).filter(
+                        brand__product=prod['brand__product'],
+                ).values(
+                    'id',
+                    'brand__name',
+                    'dimensions__name',
+                    'dimensions__value'
+                )
+            ),
+            prods
+        )
+
+        all_prods = map(
+            lambda prod: dict(prod[0], dimensions=prod[1]),
+            zip(prods, dims)
+        )
+
+        return self.render_to_json_response(
+            all_prods,
+            safe=False,
+            **response_kwargs
+        )
