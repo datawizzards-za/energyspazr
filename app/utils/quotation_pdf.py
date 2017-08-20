@@ -171,9 +171,9 @@ def generate_pdf(client, system):
     return pdf_file_generate, status_response
 
 def generate_pdf_pvt():
-    client = models.Client.objects.get()
-    system = models.SystemOrder.objects.get()
-    order = models.PVTSystem.objects.get()
+    client = models.Client.objects.get(client_id=1)
+    system = models.SystemOrder.objects.get(order_number='43a957c1-a733-4062-880f-a8e0e2b9a556')
+    order = models.GeyserSystemOrder.objects.get(order_number_id='ba2e31a3-5166-4af8-9d68-43bee5c9336e')
     best_three_prices, products, supplier = pricing.QuotationCharges(
         [5, 6]).get_prices()
     status_response = 2
@@ -332,9 +332,6 @@ def generate_pdf_pvt():
     return pdf_file_generate, status_response
 
 def generate_pdf_geyser(client, system, order):
-    client = models.Client.objects.get(client_id=1)
-    system = models.SystemOrder.objects.get(order_number='43a957c1-a733-4062-880f-a8e0e2b9a556')
-    order = models.GeyserSystemOrder.objects.get(order_number_id='ba2e31a3-5166-4af8-9d68-43bee5c9336e')
     best_three_prices, product, supplier = pricing.QuotationChargesGeyser(
         5).get_prices()
     status_response = 2
