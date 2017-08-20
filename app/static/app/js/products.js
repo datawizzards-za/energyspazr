@@ -72,7 +72,7 @@ $(document).ready(function(){
                 var name = item.product.brand.product
                 var brand = item.product.brand.name
                 var price = 'R' + item.price;
-                var del = '<i class="fa fa-trash-o fa-6">';
+                var del = '<a class="btn btn-sm btn-danger" href="#"><i class="fa fa-2x fa-trash"></i></a>';
 
                 var dimensions = '<ul>';
                 $.each(item.product.dimensions, function(index, dimension){

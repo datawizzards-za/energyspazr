@@ -661,6 +661,9 @@ class MyProducts(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
+        product = self.products_model_class.objects.get(
+            name=request.POST.get('product')
+        )
         user = self.user_model_class.objects.filter(user=request.user)[0]
         str_dimensions = request.POST.getlist('dimensions')
         dimensions = map(lambda dim: dim.split(','), str_dimensions)
