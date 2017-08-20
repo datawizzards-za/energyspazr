@@ -209,13 +209,14 @@ class SolarComponent(View):
         # .product__dimensions
         for item in my_prods:
             try:
-                print(models.SellingProduct.objects.filter(product_id =
-                models.Dimension.objects.get(
-                    value =item['product__dimensions'][0]['value'],
-                product_id =item['product__brand__product__name']
-                ).id).order_by('price')[0].price * item['quantity'])
-                print (item['quantity'])
-                print ("________________")
+                for i in range(3):
+                    print(models.SellingProduct.objects.filter(dimension_id =
+                    models.Dimension.objects.get(
+                        value =item['product__dimensions'][i]['value'],
+                    product_id =item['product__brand__product__name']
+                    ).id).order_by('price')[i].price * item['quantity'])
+                    print (item['quantity'])
+                    print ("________________")
             except:
                 print('No Prices Available')
 
@@ -446,8 +447,7 @@ class OrderPVTSystem(View):
                     supplier=supplier,
                     order_number=order_number
                 )
-                pdf_name, status = quotation_pdf.generate_pdf(client[0],
-                                                              system_order)
+                pdf_name, status = quotation_pdf.generate_pdf_pvt()
 
         return redirect('/app/order-quotes/' +
                         str(system_order.order_number) + '/' + str(status))
@@ -566,11 +566,13 @@ class OrderGeyser(View):
                     supplier=supplier,
                     order_number=order_number
                 )
-                pdf_name, status = quotation_pdf.generate_pdf(client[0],
-                                                              system_order)
+        pdf_name, status = quotation_pdf.generate_pdf_geyser(client,
+                                                             order_number,
+                                                             geyser_order
+                                                             )
 
         return redirect('/app/order-quotes/' +
-                        str(system_order.order_number) + '/' + str(status))
+                        str(pdf_name) + '/' + str(status))
 
 
 class DisplayPDF(View):
@@ -763,7 +765,7 @@ class OrderQuotes(View):
         # systemorder_ptr_id
         order_number = kwargs['order_number']
         order_status = kwargs['status']
-        if order_status == 1:
+        if order_status == '1':
             order_status = True
         else:
             order_status = False
