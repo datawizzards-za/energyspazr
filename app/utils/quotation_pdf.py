@@ -6,8 +6,6 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 from reportlab.platypus.tables import Table, TableStyle
 from reportlab.lib import colors
-from django.core.mail import send_mail
-from django.core.mail import EmailMultiAlternatives
 from app.utils import pricing
 from app import models
 
