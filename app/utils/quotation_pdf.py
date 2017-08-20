@@ -11,18 +11,19 @@ from django.core.mail import EmailMultiAlternatives
 from app.utils import pricing
 from app import models
 
+
 def generate_pdf(client, system):
     best_three_prices, products, supplier = pricing.QuotationCharges(
         [3, 4]).get_prices()
     status_response = 2
     formatted_time = time.ctime()
     try:
-
         for i in range(3):
             pdf_file_generate = str(system.order_number)
             slips_dir = 'app/static/app/slips/'
             document = SimpleDocTemplate(slips_dir +
-                                         pdf_file_generate + "_" + str(i)+".pdf",
+                                         pdf_file_generate +
+                                         "_" + str(i) + ".pdf",
                                          pagesize=letter,
                                          rightMargin=72, leftMargin=72,
                                          topMargin=72, bottomMargin=18)
@@ -91,7 +92,7 @@ def generate_pdf(client, system):
             elements.append(Spacer(1, 12))
             data = [['Order number', str(system.order_number).upper()],
                     #['Intended Use',
-                    #order.intended_use.upper().replace('_', ' ')],
+                    # order.intended_use.upper().replace('_', ' ')],
                     ['Need Finance', str(system.need_finance).upper()],
                     #['Site Visit', str(order.site_visit).upper()],
                     ['Include Instalation', str(
@@ -110,18 +111,18 @@ def generate_pdf(client, system):
             elements.append(Spacer(1, 24))
 
             product_count = 0
-            for product in  products:
+            for product in products:
                 data = []
                 ptext = '<font size=16 style="text-transform:uppercase">Supplier ' \
                         'Details</font></center>'
                 elements.append(Paragraph(ptext, styles["Center"]))
                 elements.append(Spacer(1, 12))
                 data.append(['Company Name', str(supplier[product][
-                                                     product_count].company_name).upper()])
+                    product_count].company_name).upper()])
                 data.append(['Contact Number', str(supplier[product][
-                                                       product_count].contact_number).upper()])
+                    product_count].contact_number).upper()])
                 data.append(['Web Address',
-                         str(supplier[product][product_count].web_address).upper()])
+                             str(supplier[product][product_count].web_address).upper()])
 
                 table = Table(data, colWidths=190)
                 table.setStyle(TableStyle([
@@ -140,10 +141,10 @@ def generate_pdf(client, system):
                 data_ = []
                 try:
                     data_.append(['Amount ', 'R' + str(best_three_prices[
-                                                           product][product_count]
-                                                     .price).upper()])
+                        product][product_count]
+                        .price).upper()])
                     data_.append(['Items ', str(product).upper()])
-                except :
+                except:
                     data_.append(['Amount ', 'Not Available '])
                     data_.append(['Items ', str(product).upper()])
                 product_count += 1

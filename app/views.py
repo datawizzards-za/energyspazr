@@ -224,6 +224,7 @@ class SolarComponent(View):
         )[0]
 
         str_dimensions = request.POST.getlist('dimensions')
+
         product_brandname = models.ProductBrandName.objects.filter(
             name=request.POST.get('brand_name')
         )
@@ -432,13 +433,11 @@ class OrderPVTSystem(View):
                     supplier=supplier,
                     order_number=order_number
                 )
-                pdf_name = quotation_pdf.generate_pdf(client[0],
-                                                      system_order)
+                pdf_name, status = quotation_pdf.generate_pdf(client[0],
+                                                              system_order)
 
-        # pdf_name = quotation_pdf.generate_pdf(form.data)
-        # return redirect('/app/view-slip/' + pdf_name)
         return redirect('/app/order-quotes/' +
-                        str(system_order.order_number))
+                        str(system_order.order_number) + '/' + str(status))
 
     def appliances_choices(self):
         appliance = models.Appliance.objects.all()
@@ -528,7 +527,7 @@ class OrderGeyser(View):
                     contact_number=contact_number,
                     physical_address=physical_address
                 )
-                client = models.Client.objects.filter(username=username)[0]
+                client = models.Client.objects.filter(username=username)
 
             system_order = models.SystemOrder.objects.create(
                 need_finance=need_finance,
@@ -657,9 +656,10 @@ class MyProducts(LoginRequiredMixin, View):
         product = self.products_model_class.objects.filter(
             name=request.POST.get('product')
         )[0]
+
         user = self.user_model_class.objects.filter(user=request.user)[0]
-        userproduct_model_class = models.SellingProduct
         str_dimensions = request.POST.getlist('dimensions')
+
         product_brandname = models.ProductBrandName.objects.filter(
             name=request.POST.get('brand_name')
         )
@@ -693,6 +693,9 @@ class MyProducts(LoginRequiredMixin, View):
         )
 
         price = float(request.POST.get('price'))
+        dimensions_value = str_dimensions[0].split(',')[1]
+        dimensions_id = models.Dimension.objects.filter(
+            value=dimensions_value, product_id=product.name)[0]
 
         if len(selling):
             update = selling[0]
@@ -702,7 +705,8 @@ class MyProducts(LoginRequiredMixin, View):
             self.userproduct_model_class.objects.update_or_create(
                 user=user,
                 product=general_product,
-                price=float(request.POST.get('price')),
+                dimension=dimensions_id,
+                price=price
             )
 
         return redirect(reverse('my-products'))

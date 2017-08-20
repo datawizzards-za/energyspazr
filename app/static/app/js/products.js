@@ -36,23 +36,21 @@ $(document).ready(function(){
 
         $('#all_products').hide();
         $('#all_panels').show();
-        $('.panel-checked').hide();
-
-        $('.panel-price').keyup(function(){
-            var tr = $(this).closest('tr');
-            var value = $(this).val(); 
-            if (value == '') {
-                tr.find('.panel-checked').hide();
-                tr.find('.panel-unchecked').show();
-                tr.removeClass('selected');
-            }else{
-                tr.find('.panel-unchecked').hide();
-                tr.find('.panel-checked').show();
-                tr.addClass('selected');
-            }
-        });
     });
 
+    $('#table_all_panels tbody').on('keyup', 'td .panel-price', function(){
+        var tr = $(this).closest('tr');
+        var value = $(this).val(); 
+        if (value == '') {
+            tr.find('.panel-checked').hide();
+            tr.find('.panel-unchecked').show();
+            tr.removeClass('selected');
+        }else{
+            tr.find('.panel-unchecked').hide();
+            tr.find('.panel-checked').show();
+            tr.addClass('selected');
+        }
+    });
 
     $('#btn_submit_panels').click(function(){
         var selected = $('#table_all_panels tbody').find('tr.selected');
@@ -84,7 +82,7 @@ $(document).ready(function(){
                 traditional: true,
             });
         });
-        //location.reload();
+        location.reload();
     });
 
     function getCookie(name) {
@@ -161,65 +159,19 @@ $(document).ready(function(){
     );
 
     function setProductTable(selected) {
-        var table = $('#table_all_panels');
-        table.empty();
-
+        var data = [];
+        
         // Create table head
         var product = all_products[selected];
         window.product_name = product.brand__product;
         document.getElementById("product-head").innerHTML = 'Available ' + product.brand__product + 's';  
         var keys = Object.keys(product.dimensions);
 
-        // Compile headers
-        var thead = document.createElement('thead');
-        var tr = document.createElement('tr');
-        var product_name = product.brand__product.replace(" ","_").toLowerCase();
-
-        $.each(keys, function(index, value) {
-            data_field = product_name + "_" + value;
-            var th = document.createElement('th');
-            th.setAttribute('data-field', data_field);
-            $(th).addClass("text-center");
-            th.innerHTML = value.charAt(0).toUpperCase() + value.slice(1);
-            tr.appendChild(th);
-        });
-
-        // Add Price column
-        data_field = product_name + "_price";
-        th = document.createElement('th');
-        th.setAttribute('data-field', data_field);
-        $(th).addClass("col-md-3 text-center");
-        th.innerHTML = "Price";
-        tr.appendChild(th);
-
-        // Add Add column
-        data_field = product_name + "_add";
-        th = document.createElement('th');
-        th.setAttribute('data-field', data_field);
-        $(th).addClass("col-md-2 text-center");
-        th.innerHTML = "Add";
-        tr.appendChild(th);
-        
-        thead.appendChild(tr);
-
-        var tbody = document.createElement('tbody');
-        var values = [];
-        for (var i = 0; i < product.pcount; i++) {
-            values.push([]);
-        }
-        $.each(product.dimensions, function(key, value) {
-            $.each(value, function(index, value) {
-                values[index].push(value);
-            });
-        });
-
         for (var i = 0; i < product.pcount; i++) {
             tr = document.createElement('tr');
+            var entry = [];
             for (var j = 0; j < keys.length; j++) {
-                var td = document.createElement('td');
-                $(td).addClass("text-center");
-                td.innerHTML = product.dimensions[keys[j]][i];
-                tr.append(td);
+                entry.push(product.dimensions[keys[j]][i]);
             }
 
             // Price Data
@@ -239,7 +191,7 @@ $(document).ready(function(){
             input.setAttribute("placeholder", "Enter price e.g. 150.56");
             out_div.append(input);
             td.append(out_div);
-            tr.append(td);
+            entry.push(td.innerHTML);
 
             // Add Data
             td = document.createElement('td');
@@ -249,13 +201,30 @@ $(document).ready(function(){
             td.append(icon1);
             var icon2 = document.createElement('i'); 
             $(icon2).addClass("fa fa-check fa-2x panel-checked");
+            $(icon2).hide();
             td.append(icon2);
-            tr.append(td);
 
-            tbody.append(tr);
+            entry.push(td.innerHTML);
+            data.push(entry);
         }
 
-        table.append(thead);
-        table.append(tbody);
+        var columns = keys;
+        columns.push('price', 'added');
+        columns = columns.map(
+            function(name) {
+                return name[0].toUpperCase() + name.substring(1, name.length);
+            }
+        );
+        columns = columns.map(function(name){ return {title: name}; });
+
+        $('#table_all_panels').DataTable( {
+            destroy: true,
+            data: data,
+            "columns": columns,
+            "bAutoWidth": false,
+            "columnDefs": [
+                {"className": "dt-center", "targets": "_all"}
+            ],
+        } );
     }
 }); 
