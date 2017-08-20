@@ -209,7 +209,6 @@ class SolarComponent(View):
                 {'name': dimension.name.name, 'value': dimension.value}
             ]
         # .product__dimensions
-        print my_prods[0]['product__dimensions'][0]['value']
         context = {'my_products': my_prods,
                    'all_products': all_prods, 'json_all_prods': all_prods_json}
 
@@ -633,20 +632,7 @@ class MyProducts(LoginRequiredMixin, View):
         )
 
         all_prods_json = json.dumps(all_prods)
-
-        my_prods = self.userproduct_model_class.objects.filter(user=user).values(
-            'product__brand__product__name',
-            'product__brand__name__name',
-            'product__dimensions',
-            'price',
-        )
-
-        for prod in my_prods:
-            id = prod['product__dimensions']
-            dimension = models.Dimension.objects.get(id=id)
-            prod['product__dimensions'] = [
-                {'name': dimension.name.name, 'value': dimension.value}
-            ]
+        my_prods = self.userproduct_model_class.objects.filter(user=user)
 
         context = {'user': user, 'averages': averages, 'my_products': my_prods,
                    'all_products': all_prods, 'json_all_prods': all_prods_json,
@@ -655,27 +641,16 @@ class MyProducts(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        print request.POST
-        product = self.products_model_class.objects.filter(
-            name=request.POST.get('product')
-        )[0]
         user = self.user_model_class.objects.filter(user=request.user)[0]
         str_dimensions = request.POST.getlist('dimensions')
-        product_brandname = models.ProductBrandName.objects.filter(
-            name=request.POST.get('brand_name')
-        )
-        product_brand = models.ProductBrand.objects.get(
-            name=product_brandname,
-            product=product
-        )
         dimensions = map(lambda dim: dim.split(','), str_dimensions)
-        dimensions = map(lambda dim: models.Dimension.objects.filter(
+        dimensions = map(lambda dim: models.Dimension.objects.get(
             name=models.DimensionName.objects.filter(
                 name=dim[0].capitalize()
             ),
             value=dim[1],
-            product=product
-        )[0],
+            product=request.POST.get('product')
+        ),
             dimensions
         )
 
@@ -683,14 +658,11 @@ class MyProducts(LoginRequiredMixin, View):
         for dim in dimensions:
             list_dimensions.append(dim)
 
-
-
         general_product = models.GeneralProduct.objects.filter(
-            brand=product_brand,
+            brand__name=request.POST.get('brand_name'),
+            brand__product=request.POST.get('product'),
             dimensions__in=list_dimensions
-        )[0]
-
-        print general_product.dimensions
+        ).distinct()[0]
 
         # Check if product already exists
         selling = self.userproduct_model_class.objects.filter(
@@ -710,6 +682,7 @@ class MyProducts(LoginRequiredMixin, View):
                 product=general_product,
                 price=float(request.POST.get('price')),
             )
+
 
         return redirect(reverse('my-products'))
 
@@ -906,24 +879,6 @@ class JSONResponseMixin(object):
         # objects -- such as Django model instances or querysets
         # -- can be serialized as JSON.
         return context
-
-
-class MyProductsData(JSONResponseMixin, TemplateView): 
-    def render_to_response(self, content, **response_kwargs):
-        req_user = content['view'].request.user
-        user = models.SpazrUser.objects.get(user=req_user)
-        my_prods = models.SellingProduct.objects.filter(user=user).values(
-            'product__brand__product__name',
-            'product__brand__name__name',
-            'product__dimensions',
-            'price',
-        )
-
-        return self.render_to_json_response(
-            list(my_prods),
-            safe=False,
-            **response_kwargs
-        )
 
 
 class AllProductsData(JSONResponseMixin, TemplateView): 
