@@ -449,7 +449,12 @@ class OrderPVTSystem(View):
                     supplier=supplier,
                     order_number=order_number
                 )
-                pdf_name, status = quotation_pdf.generate_pdf_pvt()
+
+            pdf_name, status = quotation_pdf.generate_pdf_pvt(
+                client[0],
+                system_order,
+                pvt_system
+            )
 
         return redirect('/app/order-quotes/' +
                         str(system_order.order_number) + '/' + str(status))
