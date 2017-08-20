@@ -107,7 +107,7 @@ class SigninForm(auth_forms.AuthenticationForm):
              '</i>SIGN IN</h3>'),
         Div(
             Field('username', css_class='form-control text-center',
-                  placeholder='Email Address', autofocus=True),
+                  placeholder='Username', autofocus=True),
             css_class='form-group'
         ),
         Div(
@@ -336,8 +336,8 @@ class PVTOrderForm(ModelForm):
 
     site_visit = forms.ChoiceField(choices=((True, 'YES'), (False, 'NO')))
 
-    #OPTIONS = ((p.name, p.name) for p in models.Appliance.objects.all())
-    #name = forms.ChoiceField(choices=OPTIONS, required=True)
+    OPTIONS = ((p.name, p.name) for p in models.Appliance.objects.all())
+    name = forms.ChoiceField(choices=OPTIONS, required=True)
 
     building_name = forms.CharField(max_length=30, required=True)
     street_name = forms.CharField(max_length=30)

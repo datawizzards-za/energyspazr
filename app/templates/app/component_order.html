@@ -6,7 +6,7 @@
 {% block content %}
     <div class="col-md-10 animated card zoomIn" id='my_comps'>
         <div class="card-title-w-btn">
-          <h3 class="title">Let's add the components</h3>
+          <h3 class="title">Click 'add item' to add the components you want.</h3>
           <p>
               <a class="btn btn-primary icon-btn" id="btn_add_comp">
                   <i class="fa fa-plus"></i>Add Item
@@ -18,20 +18,19 @@
             <thead>
               <tr>
                 <th data-field="product_name" class='col-md-6 text-center'>Item</th>
-                <th data-field="product_size" class='col-md-3 text-center'>Quantity</th>
-                <th class='col-md-3 text-center'>Actions</th>
+                <th data-field="product_size" class='col-md-4 text-center'>Quantity</th>
+                <th class='col-md-2 text-center'>Actions</th>
               </tr>
             </thead>
             <tbody>
               {% for product in my_products %}
               <tr value={{ product.pk }}>
-                <td class="text-center">{{ product.product__brand__product__name }}</td>
-                <td class="text-center">{{ product.product__brand__name__name }}</td>
                 <td class="text-center">
-                    <div class="btn-group">
-                        <a class="btn btn-info" href="#"><i class="fa fa-lg fa-edit"></i></a>
-                        <a class="btn btn-warning" href="#"><i class="fa fa-lg fa-trash"></i></a>
-                    </div>
+                      {{ product.product__brand__product__name }}, Size: {{product.product__dimensions.0.value}}, Brand: {{product.product__brand__name__name}}
+                </td>
+                <td class="text-center">{{ product.quantity }}</td>
+                <td class="text-center">
+                    <a class="btn btn-sm btn-danger" href="#"><i class="fa fa-2x fa-trash"></i></a>
                 </td>
               </tr>
               {% endfor %}

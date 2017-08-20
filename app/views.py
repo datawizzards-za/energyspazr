@@ -7,10 +7,12 @@ from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
 from django.contrib.sessions.models import Session
+from django.core import serializers
 from django.db.models import Q, Count, Min
+from django.http import JsonResponse
 from django.shortcuts import render, reverse, redirect, HttpResponse
 from django.views import View
-from django.core import serializers
+from django.views.generic import TemplateView
 
 # Other Libraries
 from registration.backends.hmac.views import ActivationView
@@ -151,6 +153,7 @@ class SolarGeyser(View):
 
 class SolarComponent(View):
     template_name = 'app/component_order.html'
+    cart_model_class = models.Cart
 
     def get(self, request, *args, **kwargs):
         """
@@ -160,8 +163,6 @@ class SolarComponent(View):
 
         session_key = request.session.session_key
         session_user = Session.objects.get(pk=session_key)
-
-        cart_model_class = models.Cart
 
         prods = models.GeneralProduct.objects.exclude(
             cart__session_user=session_user
@@ -173,12 +174,11 @@ class SolarComponent(View):
 
         dims = map(
             lambda prod: MyProducts()._prepare_dimensions(
-                models.GeneralProduct.objects.filter(
-                    brand__product=prod['brand__product'],
-                    sellingproduct__product__isnull=True
+                models.GeneralProduct.objects.exclude(
+                    cart__session_user=session_user).filter(
+                        brand__product=prod['brand__product'],
                 ).values(
-                    'brand__name',
-                    'dimensions__name',
+                    'id',
                     'brand__name',
                     'dimensions__name',
                     'dimensions__value'
@@ -194,7 +194,7 @@ class SolarComponent(View):
 
         all_prods_json = json.dumps(all_prods)
 
-        my_prods = cart_model_class.objects.filter(session_user=session_user).values(
+        my_prods = self.cart_model_class.objects.filter(session_user=session_user).values(
             'product__brand__product__name',
             'product__brand__name__name',
             'product__dimensions',
@@ -204,10 +204,23 @@ class SolarComponent(View):
         for prod in my_prods:
             id = prod['product__dimensions']
             dimension = models.Dimension.objects.get(id=id)
-            #value = dimension.name.name + ": " + dimension.value
+            # value = dimension.name.name + ": " + dimension.value
             prod['product__dimensions'] = [
                 {'name': dimension.name.name, 'value': dimension.value}
             ]
+        # .product__dimensions
+        for item in my_prods:
+            try:
+                for i in range(3):
+                    print(models.SellingProduct.objects.filter(dimension_id =
+                    models.Dimension.objects.get(
+                        value =item['product__dimensions'][i]['value'],
+                    product_id =item['product__brand__product__name']
+                    ).id).order_by('price')[i].price * item['quantity'])
+                    print (item['quantity'])
+                    print ("________________")
+            except:
+                print('No Prices Available')
 
         context = {'my_products': my_prods,
                    'all_products': all_prods, 'json_all_prods': all_prods_json}
@@ -217,7 +230,6 @@ class SolarComponent(View):
     def post(self, request, *args, **kwargs):
         products_model_class = models.Product
         user_model_class = Session
-        cart_model_class = models.Cart
 
         user = user_model_class.objects.get(pk=request.session.session_key)
 
@@ -226,6 +238,7 @@ class SolarComponent(View):
         )[0]
 
         str_dimensions = request.POST.getlist('dimensions')
+
         product_brandname = models.ProductBrandName.objects.filter(
             name=request.POST.get('brand_name')
         )
@@ -253,7 +266,7 @@ class SolarComponent(View):
         )[0]
 
         # Check if product already exists
-        cart = cart_model_class.objects.filter(
+        cart = self.cart_model_class.objects.filter(
             session_user=user,
             product=general_product,
         )
@@ -265,7 +278,7 @@ class SolarComponent(View):
             update.quantity = quantity
             update.save()
         else:
-            cart_model_class.objects.update_or_create(
+            self.cart_model_class.objects.update_or_create(
                 session_user=user,
                 product=general_product,
                 quantity=quantity,
@@ -285,6 +298,7 @@ class Register(View):
 
 class ClientOrder(View):
     template_name = 'app/client_order.html'
+
     """
     address_model_class = PhysicalAddress
 
@@ -314,13 +328,14 @@ class ClientOrder(View):
                 contact_number=contact_number,
                 web_address=web_address,
                 physical_address=physical_address)
-            
+
         return render(request , self.template_name)
         """
 
     def get(self, request, *args, **kwargs):
         """
         """
+        print request.session.session_key
         return render(request, self.template_name)
 
 
@@ -390,7 +405,7 @@ class OrderPVTSystem(View):
                 client = models.Client.objects.filter(username=username)
             else:
                 self.address_model_class.objects.filter(
-                    id=client[0].physical_address_id).update(
+                    address_id=client[0].physical_address_id).update(
                         building_name=form.cleaned_data['building_name'],
                         street_name=form.cleaned_data['street_name'],
                         suburb=form.cleaned_data['suburb'],
@@ -399,7 +414,7 @@ class OrderPVTSystem(View):
                         zip_code=form.cleaned_data['zip_code']
                 )
                 physical_address = self.address_model_class.objects.filter(
-                    id=client[0].physical_address_id)[0]
+                    address_id=client[0].physical_address_id)[0]
 
                 models.Client.objects.filter(username=username).update(
                     username=username,
@@ -434,13 +449,10 @@ class OrderPVTSystem(View):
                     supplier=supplier,
                     order_number=order_number
                 )
-                pdf_name = quotation_pdf.generate_pdf(client[0],
-                                                      system_order)
+                pdf_name, status = quotation_pdf.generate_pdf_pvt()
 
-        # pdf_name = quotation_pdf.generate_pdf(form.data)
-        # return redirect('/app/view-slip/' + pdf_name)
         return redirect('/app/order-quotes/' +
-                        str(system_order.order_number))
+                        str(system_order.order_number) + '/' + str(status))
 
     def appliances_choices(self):
         appliance = models.Appliance.objects.all()
@@ -488,7 +500,7 @@ class OrderGeyser(View):
             province = \
                 self.province_model_class.objects.get(pk=province_id)
 
-            client = models.Client.objects.get(username=username)
+            client = models.Client.objects.filter(username=username)
             physical_address = ''
 
             if len(client) == 0:
@@ -509,10 +521,10 @@ class OrderGeyser(View):
                     physical_address=physical_address
                 )
 
-                client = models.Client.objects.get(username=username)
+                client = models.Client.objects.filter(username=username)
             else:
                 self.address_model_class.objects.filter(
-                    id=client.physical_address_id).update(
+                    address_id=client[0].physical_address_id).update(
                         building_name=form.cleaned_data['building_name'],
                         street_name=form.cleaned_data['street_name'],
                         suburb=form.cleaned_data['suburb'],
@@ -521,7 +533,7 @@ class OrderGeyser(View):
                         zip_code=form.cleaned_data['zip_code']
                 )
                 physical_address = self.address_model_class.objects.get(
-                    id=client.physical_address_id)
+                    address_id=client[0].physical_address_id)
 
                 models.Client.objects.filter(username=username).update(
                     username=username,
@@ -537,8 +549,8 @@ class OrderGeyser(View):
                 include_installation=include_installation
             )
 
-            order_number = models.SystemOrder.objects.get(
-                order_number=system_order.order_number)
+            order_number = models.SystemOrder.objects.filter(
+                order_number=system_order.order_number)[0]
 
             geyser_order = models.GeyserSystemOrder.objects.create(
                 property_type=property_type,
@@ -546,33 +558,35 @@ class OrderGeyser(View):
                 water_collector=water_collector,
                 users_number=users_number,
                 required_geyser_size=required_geyser_size,
-                order_number=models.SystemOrder.objects.filter(
-                order_number=order_number)
+                order_number=order_number
             )
 
             suppliers = self.supplier_model_class.objects.all()
             for supplier in suppliers:
                 order = models.Order.objects.create(
-                    client=client,
+                    client=client[0],
                     supplier=supplier,
                     order_number=order_number
                 )
-                pdf_name = quotation_pdf.generate_pdf(client, system_order)
+        pdf_name, status = quotation_pdf.generate_pdf_geyser(client,
+                                                             order_number,
+                                                             geyser_order
+                                                             )
 
         return redirect('/app/order-quotes/' +
-                        str(system_order.order_number))
+                        str(pdf_name) + '/' + str(status))
 
 
 class DisplayPDF(View):
     def get(self, request, *args, **kwargs):
-        pdf_dir = 'app/static/app/slips/'
-        image_data = open(pdf_dir + str(kwargs['generate']) + '_' +
-                          str(kwargs['pdf']) + '.pdf', "r")
-        response = HttpResponse(FileWrapper(image_data),
-                                content_type='application/pdf')
+        pdf_dir = 'app/static/app/slips/' + str(kwargs['generate']) + '_' + \
+                  str(kwargs['pdf']) + '.pdf'
+        fw = open(pdf_dir, "r")
+        response = HttpResponse(FileWrapper(
+            fw), content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename=' + str(
-            kwargs['generate']) +  '_' + str(kwargs['pdf']) + '.pdf'
-        image_data.close()
+            kwargs['generate']) + '_' + str(kwargs['pdf']) + '.pdf'
+        fw.close()
         return response
 
 
@@ -644,7 +658,6 @@ class MyProducts(LoginRequiredMixin, View):
         for prod in my_prods:
             id = prod['product__dimensions']
             dimension = models.Dimension.objects.get(id=id)
-            #value = dimension.name.name + ": " + dimension.value
             prod['product__dimensions'] = [
                 {'name': dimension.name.name, 'value': dimension.value}
             ]
@@ -656,16 +669,18 @@ class MyProducts(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
+        print request.POST
         product = self.products_model_class.objects.filter(
             name=request.POST.get('product')
         )[0]
+
         user = self.user_model_class.objects.filter(user=request.user)[0]
-        userproduct_model_class = models.SellingProduct
         str_dimensions = request.POST.getlist('dimensions')
+
         product_brandname = models.ProductBrandName.objects.filter(
             name=request.POST.get('brand_name')
         )
-        product_brand = models.ProductBrand.objects.filter(
+        product_brand = models.ProductBrand.objects.get(
             name=product_brandname,
             product=product
         )
@@ -679,14 +694,19 @@ class MyProducts(LoginRequiredMixin, View):
         )[0],
             dimensions
         )
+
         list_dimensions = []
         for dim in dimensions:
             list_dimensions.append(dim)
+
+
 
         general_product = models.GeneralProduct.objects.filter(
             brand=product_brand,
             dimensions__in=list_dimensions
         )[0]
+
+        print general_product.dimensions
 
         # Check if product already exists
         selling = self.userproduct_model_class.objects.filter(
@@ -695,6 +715,9 @@ class MyProducts(LoginRequiredMixin, View):
         )
 
         price = float(request.POST.get('price'))
+        dimensions_value = str_dimensions[0].split(',')[1]
+        dimensions_id = models.Dimension.objects.filter(
+            value=dimensions_value, product_id=product.name)[0]
 
         if len(selling):
             update = selling[0]
@@ -704,7 +727,8 @@ class MyProducts(LoginRequiredMixin, View):
             self.userproduct_model_class.objects.update_or_create(
                 user=user,
                 product=general_product,
-                price=float(request.POST.get('price')),
+                dimension=dimensions_id,
+                price=price
             )
 
         return redirect(reverse('my-products'))
@@ -747,18 +771,23 @@ class OrderQuotes(View):
         """
         # systemorder_ptr_id
         order_number = kwargs['order_number']
+        order_status = kwargs['status']
+        if order_status == '1':
+            order_status = True
+        else:
+            order_status = False
         data = models.GeyserSystemOrder.objects.filter(
             order_number=order_number)
         products = models.Product.objects.all()
-        context = {'data': data, 'products': products, 'user_id': order_number}
-        return render(request, self.template_name, context)  # , context)
+        context = {'data': data, 'products': products, 'user_id': order_number,
+                   'order_status': order_status}
+        return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        pdf_dir = 'app/static/app/slips/'
-        image_data = open(pdf_dir + str(kwargs['generate']) + '.pdf',
-                          "rb")
-        response = HttpResponse(FileWrapper(image_data),
-                                content_type='application/pdf')
+        pdf_dir = 'app/static/app/slips/' + str(kwargs['generate']) + '.pdf'
+        fw = open(pdf_dir, "rb")
+        response = HttpResponse(FileWrapper(
+            fw), content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename=quotation.pdf'
         return response
 
@@ -866,10 +895,93 @@ class SendEmail(View):
     def get(self, request, *args, **kwargs):
         order = kwargs['uuid']
         quote = kwargs['order']
-        email = 'ofentswel@gmail.com'
-        data = {'email': email, 'domain':
-                '127.0.0.1:8000'}
+        email = models.Client.objects.get(
+            client_id=models.Order.objects.filter(order_number_id=order)[0].client_id).username
+        data = {'email': email, 'domain': '127.0.0.1:8000'}
         tv = TransactionVerification(data, order, quote)
-
         tv.send_verification_mail()
-        return redirect('/app/order-quotes/' + order + '/' + str(quote))
+        status = str(1)
+        return redirect('/app/order-quotes/' + order + '/' + status)
+
+
+class JSONResponseMixin(object):
+    """
+    A mixin that can be used to render a JSON response.
+    """
+    def render_to_json_response(self, context, **response_kwargs):
+        """
+        Returns a JSON response, transforming 'context' to make the payload.
+        """
+        return JsonResponse(
+            self.get_data(context),
+            **response_kwargs
+        )
+
+    def get_data(self, context):
+        """
+        Returns an object that will be serialized as JSON by json.dumps().
+        """
+        # Note: This is *EXTREMELY* naive; in reality, you'll need
+        # to do much more complex handling to ensure that arbitrary
+        # objects -- such as Django model instances or querysets
+        # -- can be serialized as JSON.
+        return context
+
+
+class MyProductsData(JSONResponseMixin, TemplateView): 
+    def render_to_response(self, content, **response_kwargs):
+        req_user = content['view'].request.user
+        user = models.SpazrUser.objects.get(user=req_user)
+        my_prods = models.SellingProduct.objects.filter(user=user).values(
+            'product__brand__product__name',
+            'product__brand__name__name',
+            'product__dimensions',
+            'price',
+        )
+
+        return self.render_to_json_response(
+            list(my_prods),
+            safe=False,
+            **response_kwargs
+        )
+
+
+class AllProductsData(JSONResponseMixin, TemplateView): 
+    def render_to_response(self, content, **response_kwargs):
+        req_user = content['view'].request.user
+        user = models.SpazrUser.objects.get(user=req_user)
+
+        # All products with count of different brands for each product
+        prods = models.GeneralProduct.objects.exclude(
+            sellingproduct__user=user
+        ).values(
+            'brand__product'
+        ).annotate(
+            pcount=Count('brand__product'),
+        )
+
+        dims = map(
+            lambda prod: MyProducts()._prepare_dimensions(
+                models.GeneralProduct.objects.exclude(
+                    sellingproduct__user=user).filter(
+                        brand__product=prod['brand__product'],
+                ).values(
+                    'id',
+                    'brand__name',
+                    'dimensions__name',
+                    'dimensions__value'
+                )
+            ),
+            prods
+        )
+
+        all_prods = map(
+            lambda prod: dict(prod[0], dimensions=prod[1]),
+            zip(prods, dims)
+        )
+
+        return self.render_to_json_response(
+            all_prods,
+            safe=False,
+            **response_kwargs
+        )

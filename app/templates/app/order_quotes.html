@@ -4,13 +4,14 @@
 
 {% block content %}
     <div class="col-md-8 animated card zoomIn">
+      {% if order_status %}
         <div class="card-title-w-btn">
           <h1 class="title">Your top three Quotes</h1>
           <p>
-              <a class="btn btn-primary icon-btn" href="">
+              <a class="btn btn-primary icon-btn" href="{% url 'email' user_id 4 %}">
                   <i class="fa fa-mail-forward"></i>Email
               </a>
-              <a class="btn btn-primary icon-btn" href="">
+              <a class="btn btn-primary icon-btn" href="{% url 'slips' user_id 4 %}">
                   <i class="fa fa-download"></i>PDF
               </a>
           </p>
@@ -26,14 +27,6 @@
                   </tr>
                 </thead>
                 <tbody>
-                 <!--  {% for item in products %}
-                  <tr>
-                    <td class='text-center'>{{item.name}}</td>
-                    <td class='text-center'>Mark</td>
-                    <td class='text-center'>Otto</td>
-                    <td class='text-center'>@mdo</td>
-                  </tr>
-                  {% endfor %} -->
                   <tr>
                       <td class="text-center">Actions</td>
                     <td class='text-center'>
@@ -86,6 +79,26 @@
             </a>
             </div>
         </div>
+        {% else %}
+
+          <div class="card-footer">
+            <div class="col-md-12 text-center">
+                <h3>
+                    Oops!! We couldn't find any suppliers for the products you requested. <br /> <br />
+                    Please try again some time later.
+                </h3>
+                <br />
+            </div>
+              <hr /> <hr /> <hr />
+            <div class="col-md-4"><br /></div>
+            <div class="col-md-4">
+                <a class="btn btn-primary btn-block" href="/">
+                    FINISH
+                </a>
+            </div>
+          </div>
+
+        {% endif %}
     </div>
 {% endblock %}
 {% block extrajs %}

@@ -13,7 +13,7 @@
 
 body {
 	background: #ddd;
-	color: #e86a32;
+	color: #673AB7;
 	font-weight: 400;
 	font-size: 16px;
 	font-family: 'Lato', Calibri, Arial, sans-serif;
@@ -23,7 +23,7 @@ body {
 
 a {
 	text-decoration: none;
-	color: #000;
+	color: #673AB7;
 	outline: none;
 }
 
@@ -185,8 +185,12 @@ button {
 	text-align: center;
 	font-size: 1.5em;
 	clear: both;
-	padding: 5em 0 0;
-        font-weight: 500;
+	padding: 4em 0 0;
+}
+
+.related p {
+	font-weight: 700;
+	font-size: 0.9em;
 }
 
 .related a {

@@ -136,6 +136,7 @@ class GeneralProduct(models.Model):
 class SellingProduct(models.Model):
     user = models.ForeignKey(SpazrUser, on_delete=models.CASCADE)
     product = models.ForeignKey(GeneralProduct, on_delete=models.CASCADE)
+    dimension = models.ForeignKey(Dimension, on_delete=models.CASCADE)
     price = models.FloatField()
 
 
