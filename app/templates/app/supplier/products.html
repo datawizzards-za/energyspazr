@@ -29,32 +29,6 @@
       </div>
       <div class="card-body">
         <table class="table table-hover table-bordered" id="table_my_products">
-          <thead>
-            <tr>
-              <th data-field="product_name" class='col-md-3 text-center'>Name</th>
-              <th data-field="product_brand" class='col-md-3 text-center'>Brand</th>
-              <th data-field="product_dimensions" class='col-md-3 text-center'>Dimensions</th>
-              <th data-field="product_price" class='col-md-2 text-center'>Price</th>
-              <th data-field="product_delete" class='col-md-1 text-center'>Delete</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for product in my_products %}
-            <tr value={{ product.pk }}>
-              <td class="text-center">{{ product.product__brand__product__name }}</td>
-              <td class="text-center">{{ product.product__brand__name__name }}</td>
-              <td>
-                <ul>
-                {% for dimension in product.product__dimensions %}
-                <li>{{ dimension.name }}: {{ dimension.value }}</li>
-                {% endfor %}
-                </ul>
-              </td>
-              <td class="text-center">R{{ product.price }}</td>
-              <td class="text-center"><i class="fa fa-trash-o fa-6"></i></td>
-            </tr>
-            {% endfor %}
-          </tbody>
         </table>
       </div>
     </div>
@@ -72,20 +46,6 @@
       </div>
       <div class="card-body">
         <table class="table table-hover table-bordered highlight" id="table_all_products">
-          <thead>
-            <tr>
-              <th data-field="product_name" class='col-md-6 text-center'>Product Name</th>
-              <th data-field="product_price" class='col-md-6 text-center'>Product Count</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for product in all_products %}
-            <tr value={{ forloop.counter }}>
-              <td class="text-center">{{ product.brand__product }}</td>
-              <td class="text-center">{{ product.pcount }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
         </table>
       </div>
     </div>
@@ -135,33 +95,6 @@
       </div>
       <div class="card-body">
         <table class="table table-hover table-bordered" id="table_all_panels">
-          <thead>
-            <tr>
-              <th data-field="panel_brand_name" class='col-md-4 text-center'>Brand Name</th>
-              <th data-field="panel_size" class='col-md-4 text-center'>Size</th>
-              <th data-field="panel_price" class='col-md-4 text-center'>Price</th>
-              <th data-field="panel_add" class='col-md-4 text-center'>Add</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for product in all_products %}
-            {% if product.brand__product == 'Solar Panels' %}
-            {% for brand in product.data %}
-            <tr>
-              <td class="text-center">{{ brand }}</td>
-              <td class="text-center">{{ product.dimensions.size.0|intcomma }} Watts</td>
-              <td class="text-center">
-                <div class="input-group form-group mb-2 mr-sm-2 mb-sm-0 has-danger">
-                  <div class="input-group-addon">R</div>
-                  <input type="number" step=0.1 min=0 class="form-control panel-price" placeholder="Enter price e.g. 150.56">
-                </div>
-              </td>
-              <td class="text-center"><i class="fa fa-close fa-2x panel-unchecked"></i><i class="fa fa-check fa-2x panel-checked"></i></td>
-            </tr>
-            {% endfor %}
-            {% endif %}
-            {% endfor %}
-          </tbody>
         </table>
         <p class="text-center">
           <a class="btn btn-success icon-btn" id="btn_submit_panels">
