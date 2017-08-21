@@ -52,6 +52,15 @@ class GetClientAddress(generics.ListAPIView):
         return models.PhysicalAddress.objects.filter(address_id=address_id)
 
 
+class GetMyProducts(generics.ListAPIView):
+    serializer_class = serializers.SellingProductSerializer
+    permissions  = (IsAuthenticated,)
+
+    def get_queryset(self):
+        user = models.SpazrUser.objects.get(user=self.request.user)
+        return models.SellingProduct.objects.filter(user=user)
+
+
 """
 @api_view(['GET', 'POST'])
 def system_order_details(request, order_num):
